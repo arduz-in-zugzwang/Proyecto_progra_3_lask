@@ -18,7 +18,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 nombre = "Borro Cassette",
                 artista = "Maluma",
                 portadaResId = R.drawable.malumabeibi,
-                audioResId = R.raw.Borro_Cassette
+                audioResId = R.raw.borro_cassette
             )
             // Agrega aquí más canciones con el mismo formato:
             // Song("Nombre", "Artista", R.drawable.tu_portada, R.raw.tu_audio)
