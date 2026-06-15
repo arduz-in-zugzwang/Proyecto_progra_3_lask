@@ -21,7 +21,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:scaleType="centerCrop"
-            android:src="@android:drawable/ic_menu_gallery"
+            android:src="@drawable/portadadefault"
             android:contentDescription="Portada" />
 
         <!-- Nombre de la canción y artista -->
@@ -37,7 +37,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nombre de la canción"
-                android:textColor="#3A5BA0"
+                android:textColor="@color/black"
+                android:fontFamily="@font/schoolbell_regular"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -53,11 +54,11 @@
 
         <!-- Icono de acción (agregar a playlist, etc) -->
         <ImageView
-            android:id="@+id/ivAgregar"
+            android:id="@+id/ivPlay"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@android:drawable/ic_menu_add"
-            android:contentDescription="Agregar" />
+            android:src="@android:drawable/ic_media_play"
+            android:contentDescription="Reproducir" />
 
     </LinearLayout>
 

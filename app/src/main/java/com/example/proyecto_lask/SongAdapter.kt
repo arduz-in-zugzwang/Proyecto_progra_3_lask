@@ -1,5 +1,6 @@
 package com.example.proyecto_lask
 
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +28,7 @@ class SongAdapter(private val songs: List<Song>) :
         return SongViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: SongViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SongViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val song = songs[position]
         holder.tvNombre.text = song.nombre
         holder.tvArtista.text = song.artista
