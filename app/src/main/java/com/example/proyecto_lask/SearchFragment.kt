@@ -1,59 +1,46 @@
 package com.example.proyecto_lask
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class SearchFragment : Fragment(R.layout.fragment_search) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class SearchFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+        // --- Álbumes (horizontal: portada + nombre + artista) ---
+        val rvAlbumes = view.findViewById<RecyclerView>(R.id.rvAlbumes)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
+        val albumes = listOf(
+            Album("Nombre álbum 1", "Artista 1", R.drawable.portadadefault),
+            Album("Nombre álbum 2", "Artista 2", R.drawable.portadadefault),
+            Album("Nombre álbum 3", "Artista 3", R.drawable.portadadefault),
+            Album("Nombre álbum 4", "Artista 4", R.drawable.portadadefault)
+            // Reemplaza por tus álbumes reales: Album("Nombre", "Artista", R.drawable.tu_portada)
+        )
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SearchFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SearchFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        rvAlbumes.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        rvAlbumes.adapter = AlbumAdapter(albumes)
+
+        // --- Canciones (vertical: todas las disponibles, reutiliza item_song) ---
+        val rvCanciones = view.findViewById<RecyclerView>(R.id.rvCancionesBuscar)
+
+        val canciones = listOf(
+            Song(
+                nombre = "Borro Cassette",
+                artista = "Maluma",
+                portadaResId = R.drawable.malumabeibi,
+                audioResId = R.raw.borrro_cassette
+            )
+            // Agrega aquí todas las canciones disponibles:
+            // Song("Nombre", "Artista", R.drawable.tu_portada, R.raw.tu_audio)
+        )
+
+        rvCanciones.layoutManager = LinearLayoutManager(requireContext())
+        rvCanciones.adapter = SongAdapter(canciones)
     }
 }
