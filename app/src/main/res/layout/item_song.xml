@@ -37,7 +37,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nombre de la canción"
-                android:textColor="#3A5BA0"
+                android:textColor="@color/black"
+                android:fontFamily="@font/schoolbell_regular"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 

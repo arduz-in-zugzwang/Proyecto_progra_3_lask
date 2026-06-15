@@ -3,21 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
-
-    <!-- Pantalla de login: el bottom nav se oculta aquí -->
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.proyecto_lask.LoginFragment"
-        android:label="Login"
-        tools:layout="@layout/fragment_login">
-
-        <action
-            android:id="@+id/action_login_to_home"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
+    app:startDestination="@id/homeFragment">
 
     <!-- Pantalla principal -->
     <fragment

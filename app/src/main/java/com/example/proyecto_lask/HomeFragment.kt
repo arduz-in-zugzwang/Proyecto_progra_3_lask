@@ -1,8 +1,8 @@
 package com.example.proyecto_lask
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,13 +10,15 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
-
-    // Colores que van rotando para los chips de tags
     private val coloresTags = listOf(
-        "#FBE7A1", // amarillo claro
-        "#F6D743", // amarillo
-        "#A8D6A8", // verde
-        "#CBAEEB"  // morado
+        R.color.tag_amarillo_claro,
+        R.color.tag_amarillo,
+        R.color.tag_verde,
+        R.color.tag_morado,
+        R.color.tag_celeste,
+        R.color.tag_rosado,
+        R.color.tag_naranja,
+        R.color.tag_turquesa
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,7 +32,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 nombre = "Borro Cassette",
                 artista = "Maluma",
                 portadaResId = R.drawable.malumabeibi,
-                audioResId = R.raw.borro_cassette
+                audioResId = R.raw.borrro_cassette
             ),
             Song(
                 nombre = "Mami Silicon",
@@ -41,7 +43,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             Song(
                 nombre = "Nose ",
                 artista = "insertar texto",
-                portadaResId = R.drawable.perfildefault,
+                portadaResId = R.drawable.portadadefault,
                 audioResId = R.raw.mami_silicon
             )
             // Agrega aquí más canciones con el mismo formato:
@@ -60,10 +62,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val rvArtistas = view.findViewById<RecyclerView>(R.id.rvArtistas)
 
         val artistas = listOf(
-            Artist("Stray Kids", R.drawable.perfildefault),
-            Artist("The Smiths", R.drawable.perfildefault),
-            Artist("Jovani Vasquez", R.drawable.perfildefault)
-            // Reemplaza R.drawable.perfildefault por la imagen real de cada artista
+            Artist("Stray Kids", R.drawable.artistadefault),
+            Artist("The Smiths", R.drawable.artistadefault),
+            Artist("Jovani Vasquez", R.drawable.artistadefault)
+            // Reemplaza R.drawable.artistadefault por la imagen real de cada artista
         )
 
         rvArtistas.layoutManager = LinearLayoutManager(requireContext())
@@ -79,7 +81,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             chip.text = tag
             chip.isCheckable = false
             chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(
-                Color.parseColor(coloresTags[index % coloresTags.size])
+                ContextCompat.getColor(requireContext(), coloresTags[index % coloresTags.size])
             )
             chipGroup.addView(chip)
         }
