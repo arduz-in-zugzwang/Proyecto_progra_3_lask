@@ -214,11 +214,11 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
-                android:backgroundTint="#A9CCEB"
+                android:backgroundTint="#666666"
                 android:paddingStart="32dp"
                 android:paddingEnd="32dp"
                 android:text="Crear playlist"
-                android:textColor="#3A5BA0" />
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
