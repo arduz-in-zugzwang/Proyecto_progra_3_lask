@@ -41,6 +41,7 @@
             android:layout_marginStart="12dp"
             android:text="Nombre del artista"
             android:textColor="@color/black"
+            android:fontFamily="@font/schoolbell_regular"
             android:textSize="15sp" />
 
     </LinearLayout>
