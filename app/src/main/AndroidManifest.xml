@@ -12,28 +12,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Proyecto_LASK">
         <activity
-            android:name=".Album"
+            android:name=".CrearPlaylist"
+            android:exported="false" />
+        <activity
+            android:name=".CrearCancion"
+            android:exported="false" />
+        <activity
+            android:name=".CrearAlbum"
             android:exported="false" />
         <activity
             android:name=".Loguin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
+
     </application>
 
 </manifest>
