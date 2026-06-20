@@ -14,4 +14,12 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="Maluma">Maluma</string>
+    <string name="Borro">Borro Cassette</string>
+    <string name="one">0.25</string>
+    <string name="two">-0.25</string>
+
+
+
 </resources>
