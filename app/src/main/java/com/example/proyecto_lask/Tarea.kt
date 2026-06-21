@@ -33,6 +33,9 @@ class Tarea : AppCompatActivity() {
         val btnBuscarTag = findViewById<Button>(R.id.btnBuscarTag)
         val etIdBuscar = findViewById<EditText>(R.id.etIdBuscar)
 
+        val btnModificarTag =findViewById<Button>(R.id.btnModificarTag)
+        val btnEliminarTag =findViewById<Button>(R.id.btnEliminarTag)
+
         btnInsertarTag.setOnClickListener {
 
             val nombre = etNombreTag.text.toString()
@@ -55,6 +58,30 @@ class Tarea : AppCompatActivity() {
             }
 
             buscarTag(idTexto.toInt())
+        }
+
+
+        btnModificarTag.setOnClickListener {
+
+            val id =
+                findViewById<EditText>(R.id.etIdBuscar).text.toString().toInt()
+
+            val nombre = findViewById<EditText>(R.id.etNombreTag).text.toString()
+
+            val descripcion =findViewById<EditText>(R.id.etDescripcionTag).text.toString()
+
+            modificarTag(
+                id,
+                nombre,
+                descripcion
+            )
+        }
+
+        btnEliminarTag.setOnClickListener {
+
+            val id =findViewById<EditText>(R.id.etIdBuscar).text.toString().toInt()
+
+            eliminarTag(id)
         }
 
         getTags()
@@ -205,11 +232,115 @@ class Tarea : AppCompatActivity() {
                         findViewById<TextView>(R.id.tvResultadoDescripcion)
                             .text = "Descripción: ${response.descripcion_tag}"
 
+                        findViewById<EditText>(R.id.etNombreTag)
+                            .setText(response.nombre_tag)
+
+                        findViewById<EditText>(R.id.etDescripcionTag)
+                            .setText(response.descripcion_tag.toString())
+
                     }else{
 
                         Toast.makeText(
                             this@Tarea,
                             "Tag no encontrado",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+            }catch(e:Exception){
+
+                withContext(Dispatchers.Main){
+
+                    Toast.makeText(
+                        this@Tarea,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+    private fun modificarTag(
+        id:Int,
+        nombre:String,
+        descripcion:String
+    ){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val call =
+                    RetrofitClient.create()
+                        .actualizarTag(
+                            id,
+                            nombre,
+                            descripcion
+                        )
+
+                withContext(Dispatchers.Main){
+
+                    if(call.isSuccessful){
+
+                        Toast.makeText(
+                            this@Tarea,
+                            "Tag actualizado",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        getTags()
+
+                    }else{
+
+                        Toast.makeText(
+                            this@Tarea,
+                            "Error al actualizar",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+            }catch(e:Exception){
+
+                withContext(Dispatchers.Main){
+
+                    Toast.makeText(
+                        this@Tarea,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+    private fun eliminarTag(id:Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val call =
+                    RetrofitClient.create()
+                        .deleteTag(id)
+
+                withContext(Dispatchers.Main){
+
+                    if(call.isSuccessful){
+
+                        Toast.makeText(
+                            this@Tarea,
+                            "Tag eliminado",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        getTags()
+
+                    }else{
+
+                        Toast.makeText(
+                            this@Tarea,
+                            "Error al eliminar",
                             Toast.LENGTH_LONG
                         ).show()
                     }
