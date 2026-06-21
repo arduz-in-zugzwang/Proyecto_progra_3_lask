@@ -1,9 +1,12 @@
 package com.example.proyecto_lask
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -22,6 +25,17 @@ class Tarea : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+        val btnInsertarTag = findViewById<Button>(R.id.btnInsertarTag)
+        val etNombreTag = findViewById<EditText>(R.id.etNombreTag)
+        val etDescripcionTag = findViewById<EditText>(R.id.etDescripcionTag)
+
+        btnInsertarTag.setOnClickListener {
+
+            val nombre = etNombreTag.text.toString()
+            val descripcion = etDescripcionTag.text.toString()
+
+            createTag(nombre, descripcion)
         }
 
         getTags()
@@ -47,6 +61,12 @@ class Tarea : AppCompatActivity() {
 
                         val data =
                             response?.data ?: emptyList()
+
+                        val childCount = tableTags.childCount
+
+                        if (childCount > 1) {
+                            tableTags.removeViews(1, childCount - 1)
+                        }
 
                         data.forEach { tag ->
 
@@ -84,6 +104,59 @@ class Tarea : AppCompatActivity() {
 
                 e.printStackTrace()
 
+            }
+        }
+    }
+
+    private fun createTag(
+        nombre: String,
+        descripcion: String
+    ){
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val call =
+                    RetrofitClient.create()
+                        .createTags(
+                            nombre,
+                            descripcion
+                        )
+
+                withContext(Dispatchers.Main){
+
+                    if(call.isSuccessful){
+                        findViewById<EditText>(R.id.etNombreTag).text.clear()
+                        findViewById<EditText>(R.id.etDescripcionTag).text.clear()
+
+                        Toast.makeText(
+                            this@Tarea,
+                            "Tag creado correctamente",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        getTags()
+
+                    }else{
+
+                        Toast.makeText(
+                            this@Tarea,
+                            "Error al crear tag",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+            }catch(e:Exception){
+
+                withContext(Dispatchers.Main){
+
+                    Toast.makeText(
+                        this@Tarea,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }

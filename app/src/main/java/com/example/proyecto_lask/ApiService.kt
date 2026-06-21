@@ -21,7 +21,7 @@ interface ApiService {
     @GET(value="api/tags/{id}")
     suspend fun getTag(@Path("id") id: Int): Response<respuestaTagPorId>
     @POST("api/tags")
-    suspend fun createTags(@Field("nombre_tag")nombre_tag: String): Response<respuestaCreateTag>
+    suspend fun createTags(@Field("nombre_tag")nombre_tag: String,@Field("descripcion_tag") descripcion_tag: String): Response<respuestaCreateTag>
     @PATCH("api/tags/{id}")
     suspend fun actualizarTag(@Path("id") id: Int, @Field("nombre_tag")nombre_tag: String): Response<respuestaUpdateTag>
     @DELETE("api/tags/{id}")
@@ -30,7 +30,7 @@ interface ApiService {
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
         val retrofit= Retrofit.Builder()
-            .baseUrl("http://192.168.0.10/lask_bd/public/")
+            .baseUrl("http://192.168.1.8/lask_bd/public/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
