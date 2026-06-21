@@ -10,13 +10,31 @@ import com.example.proyecto_lask.artistas.respuestaDeleteArtista
 import com.example.proyecto_lask.artistas.respuestaGetArtista
 import com.example.proyecto_lask.artistas.respuestaGetArtistas
 import com.example.proyecto_lask.artistas.respuestaUpdateArtista
+import com.example.proyecto_lask.canciones.respuestaCreateCancion
+import com.example.proyecto_lask.canciones.respuestaDeleteCancion
+import com.example.proyecto_lask.canciones.respuestaGetCancion
+import com.example.proyecto_lask.canciones.respuestaGetCanciones
+import com.example.proyecto_lask.canciones.respuestaUpdateCancion
+import com.example.proyecto_lask.comentarios.respuestaCreateComentario
+import com.example.proyecto_lask.comentarios.respuestaDeleteComentario
+import com.example.proyecto_lask.letras.respuestaCreateLetra
+import com.example.proyecto_lask.letras.respuestaGetAllLetras
+import com.example.proyecto_lask.letras.respuestaGetLetras
+import com.example.proyecto_lask.letras.respuestaUpdateLetra
 import com.example.proyecto_lask.paises.respuestaGetPaises
+import com.example.proyecto_lask.playlists.respuestaCreatePlaylist
+import com.example.proyecto_lask.playlists.respuestaDeletePlaylist
+import com.example.proyecto_lask.playlists.respuestaUpdatePlaylist
+import com.example.proyecto_lask.roles.respuestagetRoles
 import com.example.proyecto_lask.tags.respuestaCreateTag
 import com.example.proyecto_lask.tags.respuestaDeleteTag
 import com.example.proyecto_lask.tags.respuestaTagPorId
 import com.example.proyecto_lask.tags.respuestaTags
 import com.example.proyecto_lask.tags.respuestaUpdateTag
 import com.example.proyecto_lask.users.respuestaCreateUser
+import com.example.proyecto_lask.users.respuestaGetUser
+import com.example.proyecto_lask.users.respuestaGetUsers
+import com.example.proyecto_lask.users.respuestaUpdateUser
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -46,15 +64,12 @@ interface ApiService {
 
 
 // albumes
-
     @GET("api/albumes")
     suspend fun getAlbumes(): Response<respuestaGetAlbumes>
-
     @GET("api/albumes/{id}")
     suspend fun getAlbum(
         @Path("id") id: Int
     ): Response<respuestaGetAlbum>
-
     @FormUrlEncoded
     @POST("api/albumes")
     suspend fun createAlbum(
@@ -63,7 +78,6 @@ interface ApiService {
         @Field("portada_album") portada_album: String,
         @Field("id_artista") id_artista: Int
     ): Response<respuestaCreateAlbum>
-
     @FormUrlEncoded
     @PATCH("api/albumes/{id}")
     suspend fun actualizarAlbum(
@@ -72,7 +86,6 @@ interface ApiService {
         @Field("descripcion_album") descripcion_album: String,
         @Field("portada_album") portada_album: String
     ): Response<respuestaUpdateAlbum>
-
     @DELETE("api/albumes/{id}")
     suspend fun deleteAlbum(
         @Path("id") id: Int
@@ -82,27 +95,22 @@ interface ApiService {
     //artistas
     @GET("api/artistas")
     suspend fun getArtistas(): Response<respuestaGetArtistas>
-
     @GET("api/artistas/{id}")
     suspend fun getArtista(
         @Path("id") id: Int
     ): Response<respuestaGetArtista>
-
     @FormUrlEncoded
     @POST("api/artistas")
     suspend fun createArtista(
         @Field("id_usuario") id_usuario: Int,
         @Field("nombre_artistico") nombre_artistico: String
-
     ): Response<respuestaCreateArtista>
-
     @FormUrlEncoded
     @PATCH("api/artistas/{id}")
     suspend fun actualizarArtista(
         @Path("id") id: Int,
-        @Field("nombre_artistico") nombre_artistico: String,
+        @Field("nombre_artistico") nombre_artistico: String
     ): Response<respuestaUpdateArtista>
-
     @DELETE("api/artistas/{id}")
     suspend fun deleteArtista(
         @Path("id") id: Int
@@ -110,43 +118,133 @@ interface ApiService {
 
 
             //users
+    @GET("api/users")
+    suspend fun getUsers(): Response<respuestaGetUsers>
+    @GET("api/users/{id}")
+    suspend fun getUser(
+        @Path("id") id: Int
+    ): Response<respuestaGetUser>
     @FormUrlEncoded
     @POST("api/users")
     suspend fun createUser(
-                @Field("name") name: String,
-                @Field("password") password: String,
-                @Field("id_pais") idPais: Int,
-                @Field("id_rol") idRol: Int,
-                @Field("email") email: String = "",
-                @Field("pfp") pfp: String = "",
-                @Field("bio") bio: String = ""
+        @Field("name") name: String,
+        @Field("password") password: String,
+        @Field("id_pais") idPais: Int,
+        @Field("id_rol") idRol: Int,
+        @Field("email") email: String = "",
+        @Field("pfp") pfp: String = "",
+        @Field("bio") bio: String = ""
     ): Response<respuestaCreateUser>
+    @FormUrlEncoded
+    @PATCH("api/users/{id}")
+    suspend fun updateUser(
+        @Path("id") id: Int,
+        @Field("name") name: String,
+        @Field("password") password: String,
+        @Field("id_pais") idPais: Int,
+        @Field("id_rol") idRol: Int,
+        @Field("email") email: String = "",
+        @Field("pfp") pfp: String = "",
+        @Field("bio") bio: String = ""
+    ): Response<respuestaUpdateUser>
+
 
     //paises
     @GET("api/paises")
     suspend fun getPaises(): Response<respuestaGetPaises>
 
+    //canciones
+    @GET(value="api/canciones")
+    suspend fun getCanciones(): Response<respuestaGetCanciones>
+    @GET(value="api/canciones/{id}")
+    suspend fun getCancion(@Path("id") id: Int): Response<respuestaGetCancion>
+    @FormUrlEncoded
+    @POST("api/canciones")
+    suspend fun createCancion(
+        @Field("id_album") id_album: Int,
+        @Field("id_artista") id_artista: Int,
+        @Field("nombre_cancion") nombre_cancion: String,
+        @Field("portada_cancion") portada_cancion: String,
+        @Field("path_link") path_link: String
+    ): Response<respuestaCreateCancion>
+    @FormUrlEncoded
+    @PATCH("api/canciones/{id}")
+    suspend fun updateCancion(
+        @Path("id") id: Int,
+        @Field("id_album") id_album: Int,
+        @Field("nombre_cancion") nombre_cancion: String,
+        @Field("portada_cancion") portada_cancion: String,
+        @Field("path_link") path_link: String
+    ): Response<respuestaUpdateCancion>
+    @DELETE("api/canciones/{id}")
+    suspend fun deleteCancion(
+        @Path("id") id: Int
+    ): Response<respuestaDeleteCancion>
+
+    //comentarios
+    @FormUrlEncoded
+    @POST("api/comentarios-artista")
+    suspend fun createComentario(
+        @Field("id_artista") id_artista: Int,
+        @Field("id_usuario") id_usuario: Int,
+        @Field("texto") texto: String,
+    ): Response<respuestaCreateComentario>
+    @DELETE("api/comentarios-artista/{id}")
+    suspend fun deleteComentario(
+        @Path("id") id: Int
+    ): Response<respuestaDeleteComentario>
+
+    //letras
+    @FormUrlEncoded
+    @POST("api/letras")
+    suspend fun createLetra(
+        @Field("id_cancion") id_cancion: Int,
+        @Field("texto_fonetico") texto_fonetico: String?,
+        @Field("letra_cancion") letra_cancion: String
+    ): Response<respuestaCreateLetra>
+    @FormUrlEncoded
+    @PATCH("api/letras/{id}")
+    suspend fun updateLetra(
+        @Path("id") id: Int,
+        @Field("id_cancion") id_cancion: Int,
+        @Field("texto_fonetico") texto_fonetico: String?,
+        @Field("letra_cancion") letra_cancion: String
+    ): Response<respuestaUpdateLetra>
+    @DELETE("api/letras/{id}")
+    suspend fun deleteLetra(
+        @Path("id") id: Int
+    ): Response<respuestaDelete>
+    @GET("api/letras")
+    suspend fun getLetras(): Response<respuestaGetAllLetras>
+    @GET("api/letras/{id}")
+    suspend fun getLetra(
+        @Path("id") id: Int
+    ): Response<respuestaGetLetras>
+
+    //roles
+    @GET("api/roles")
+    suspend fun getRoles(): Response<respuestagetRoles>
+
+    //playlists
+    @FormUrlEncoded
+    @POST("api/playlists")
+    suspend fun createPlaylist(
+        @Field("nombre_playlist") nombre_playlist: String,
+        @Field("id_usuario") id_usuario: Int,
+        @Field("privacidad_playlist") privacidad_playlist: Boolean
+    ): Response<respuestaCreatePlaylist>
+    @DELETE("api/playlists/{id}")
+    suspend fun deletePlaylist(
+        @Path("id") id: Int
+    ): Response<respuestaDeletePlaylist>
+    @FormUrlEncoded
+    @PATCH("api/playlists/{id}")
+    suspend fun updatePlaylist(
+        @Path("id") id: Int,
+        @Field("nombre_playlist") nombre: String?,
+        @Field("privacidad_playlist") privacidad: Boolean?
+    ): Response<respuestaUpdatePlaylist>
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
         val retrofit= Retrofit.Builder()
