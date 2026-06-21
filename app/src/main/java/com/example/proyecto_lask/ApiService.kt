@@ -30,7 +30,8 @@ interface ApiService {
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
         val retrofit= Retrofit.Builder()
-            .baseUrl("http://192.168.1.8/lask_bd/public/")
+            //AQUI CAMBIAR EL IP ASAP
+            .baseUrl("http://10.134.40.49/lask_bd/public/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

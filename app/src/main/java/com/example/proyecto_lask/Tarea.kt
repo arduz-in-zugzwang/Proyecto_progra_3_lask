@@ -69,27 +69,32 @@ class Tarea : AppCompatActivity() {
                         }
 
                         data.forEach { tag ->
+                            val row = TableRow(this@Tarea).apply {
+                                layoutParams = TableRow.LayoutParams(
+                                    TableRow.LayoutParams.MATCH_PARENT,
+                                    TableRow.LayoutParams.WRAP_CONTENT
+                                )
+                                setPadding(0, 8, 0, 8) // Un poco de espacio entre filas
+                            }
 
-                            val row =
-                                TableRow(this@Tarea)
+                            // Celda ID (Peso: 1)
+                            val tvId = TextView(this@Tarea).apply {
+                                layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+                                text = tag.id.toString()
+                            }
 
-                            val tvId =
-                                TextView(this@Tarea)
+                            // Celda Nombre (Peso: 2)
+                            val tvNombre = TextView(this@Tarea).apply {
+                                layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2f)
+                                text = tag.nombre_tag
+                            }
 
-                            tvId.text =
-                                tag.id.toString()
-
-                            val tvNombre =
-                                TextView(this@Tarea)
-
-                            tvNombre.text =
-                                tag.nombre_tag
-
-                            val tvDescripcion =
-                                TextView(this@Tarea)
-
-                            tvDescripcion.text =
-                                tag.descripcion_tag.toString()
+                            // Celda Descripción (Peso: 3)
+                            val tvDescripcion = TextView(this@Tarea).apply {
+                                layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 3f)
+                                // Controlamos los nulos de tu base de datos para que no muestre la palabra "null"
+                                text = tag.descripcion_tag?.toString() ?: ""
+                            }
 
                             row.addView(tvId)
                             row.addView(tvNombre)
