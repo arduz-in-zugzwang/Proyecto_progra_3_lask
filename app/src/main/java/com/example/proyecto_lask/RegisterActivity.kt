@@ -10,6 +10,10 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -23,6 +27,8 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var cbTerms: CheckBox
     private lateinit var btnRegister: Button
+    private var listaPaises = mutableListOf<com.example.proyecto_lask.paises.Data>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,18 +47,9 @@ class RegisterActivity : AppCompatActivity() {
         cbTerms = findViewById(R.id.cbTerms)
         btnRegister = findViewById(R.id.btnRegister)
 
-        // Cargar países desde strings.xml
-        val adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.countries_array,
-            android.R.layout.simple_spinner_item
-        )
+        //cargar paises
+        cargarPaises()
 
-        adapter.setDropDownViewResource(
-            android.R.layout.simple_spinner_dropdown_item
-        )
-
-        spCountry.adapter = adapter
 
         // Botón Registrar
         btnRegister.setOnClickListener {
@@ -116,14 +113,114 @@ class RegisterActivity : AppCompatActivity() {
                 "Artista"
             }
 
-            // Por ahora solo muestra la información
-            Toast.makeText(
-                this,
-                "Usuario: $username\nRol: $role\nPaís: $country",
-                Toast.LENGTH_LONG
-            ).show()
+            val idRol = if (rbListener.isChecked) 1 else 2
+            CoroutineScope(Dispatchers.IO).launch {
+                val idPais =
+                    listaPaises[spCountry.selectedItemPosition].id
 
-            // Aquí después podrás guardar los datos en Firebase o SQLite.
+                try {
+
+                    val respuesta =
+                        RetrofitClient.create().createUser(
+                            name = username,
+                            password = password,
+                            idPais = idPais,
+                            idRol = idRol,
+                            email = "${username}@lask.com"
+                        )
+
+                    if (respuesta.isSuccessful) {
+
+                        val usuario = respuesta.body()
+
+                        if (usuario != null && idRol == 2) {
+
+                            val respuestaArtista =
+                                RetrofitClient.create().createArtista(
+                                    usuario.id,
+                                    artisticName
+                                )
+
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(
+                                    this@RegisterActivity,
+                                    "Artista: ${respuestaArtista.code()}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                "Cuenta creada correctamente",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
+                } catch (e: Exception) {
+
+                    withContext(Dispatchers.Main) {
+
+                        Toast.makeText(
+                            this@RegisterActivity,
+                            e.toString(),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+
+        }
+    }
+    private fun cargarPaises() {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val respuesta =
+                    RetrofitClient.create().getPaises()
+
+                if (respuesta.isSuccessful) {
+
+                    val paises =
+                        respuesta.body()?.data ?: emptyList()
+
+                    listaPaises.clear()
+                    listaPaises.addAll(paises)
+
+                    val nombresPaises =
+                        paises.map { it.nombre_pais }
+
+                    withContext(Dispatchers.Main) {
+
+                        val adapter = ArrayAdapter(
+                            this@RegisterActivity,
+                            android.R.layout.simple_spinner_item,
+                            nombresPaises
+                        )
+
+                        adapter.setDropDownViewResource(
+                            android.R.layout.simple_spinner_dropdown_item
+                        )
+
+                        spCountry.adapter = adapter
+                    }
+                }
+
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
     }
 }
