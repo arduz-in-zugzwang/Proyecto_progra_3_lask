@@ -1,6 +1,6 @@
-package com.example.proyecto_lask.model
+package com.example.proyecto_lask.tags
 
-data class respuestaCreateTag(
+data class  respuestaTagPorId(
     val created_at: String,
     val descripcion_tag: Any,
     val id: Int,

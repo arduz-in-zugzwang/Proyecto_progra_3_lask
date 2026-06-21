@@ -1,10 +1,10 @@
 package com.example.proyecto_lask
 
-import com.example.proyecto_lask.model.respuestaCreateTag
-import com.example.proyecto_lask.model.respuestaDeleteTag
-import com.example.proyecto_lask.model.respuestaTagPorId
-import com.example.proyecto_lask.model.respuestaTags
-import com.example.proyecto_lask.model.respuestaUpdateTag
+import com.example.proyecto_lask.tags.respuestaCreateTag
+import com.example.proyecto_lask.tags.respuestaDeleteTag
+import com.example.proyecto_lask.tags.respuestaTagPorId
+import com.example.proyecto_lask.tags.respuestaTags
+import com.example.proyecto_lask.tags.respuestaUpdateTag
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

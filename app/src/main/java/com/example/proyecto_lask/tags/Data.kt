@@ -1,4 +1,4 @@
-package com.example.proyecto_lask.model
+package com.example.proyecto_lask.tags
 
 data class Data(
     val created_at: String,

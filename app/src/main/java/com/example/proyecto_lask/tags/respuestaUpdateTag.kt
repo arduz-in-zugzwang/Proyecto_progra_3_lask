@@ -1,4 +1,4 @@
-package com.example.proyecto_lask.model
+package com.example.proyecto_lask.tags
 
 data class respuestaUpdateTag(
     val created_at: String,

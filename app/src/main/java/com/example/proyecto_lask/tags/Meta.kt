@@ -1,4 +1,4 @@
-package com.example.proyecto_lask.model
+package com.example.proyecto_lask.tags
 
 data class Meta(
     val current_page: Int,

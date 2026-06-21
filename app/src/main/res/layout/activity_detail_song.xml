@@ -1,10 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailSong">
+    tools:context=".DetailSong"
+    android:background="#000000">
+<!--    cambiar colorcito dependiendo del fondo-->
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="40dp"
+    android:text="Tame Impala"
+    android:textColor="#FFFFFF"
+    android:textSize="20sp"
+    android:textStyle="bold"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgAlbum"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/album_cover"
+        android:scaleType="centerCrop" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_toEndOf="@+id/imgAlbum"
+        android:rotation="270"
+        android:thumb="@drawable/seekbar_thumb"/>
+    <TextView
+        android:id="@+id/songName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imgAlbum"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="The Less I Know The Better"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/songName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Currents"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"/>
+    
+<!--    aqui viene el coso de la cancion-->
+
+    
+    <Button
+        android:id="@+id/playBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/outline_play_circle_24"
+        android:onClick="PlayButton"/>
+    <!--        CAMBIAR COLOR DEL BOTON-->
+    <Button
+        android:id="@+id/playBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/outline_play_circle_24"
+        android:onClick="PlayButton"/>
+    <Button
+        android:id="@+id/backSong"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@id/playBtn"
+        android:layout_toStartOf="@id/playBtn"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/outline_play_circle_24"
+        android:onClick="BackSong" />
+    <Button
+        android:id="@+id/nextSong"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@id/playBtn"
+        android:layout_toEndOf="@id/playBtn"
+        android:layout_marginStart="40dp"
+        android:background="@drawable/outline_play_circle_24"
+        android:onClick="NextSong" />
+
+
+</RelativeLayout>
