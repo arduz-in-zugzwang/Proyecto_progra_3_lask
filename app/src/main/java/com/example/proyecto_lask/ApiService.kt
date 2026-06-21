@@ -10,11 +10,13 @@ import com.example.proyecto_lask.artistas.respuestaDeleteArtista
 import com.example.proyecto_lask.artistas.respuestaGetArtista
 import com.example.proyecto_lask.artistas.respuestaGetArtistas
 import com.example.proyecto_lask.artistas.respuestaUpdateArtista
+import com.example.proyecto_lask.paises.respuestaGetPaises
 import com.example.proyecto_lask.tags.respuestaCreateTag
 import com.example.proyecto_lask.tags.respuestaDeleteTag
 import com.example.proyecto_lask.tags.respuestaTagPorId
 import com.example.proyecto_lask.tags.respuestaTags
 import com.example.proyecto_lask.tags.respuestaUpdateTag
+import com.example.proyecto_lask.users.respuestaCreateUser
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -89,15 +91,16 @@ interface ApiService {
     @FormUrlEncoded
     @POST("api/artistas")
     suspend fun createArtista(
-        @Field("nombre_artistico") nombre_artistico: String,
         @Field("id_usuario") id_usuario: Int,
+        @Field("nombre_artistico") nombre_artistico: String
+
     ): Response<respuestaCreateArtista>
 
     @FormUrlEncoded
     @PATCH("api/artistas/{id}")
     suspend fun actualizarArtista(
         @Path("id") id: Int,
-        @Field("nombre_artisco") nombre_artistico: String,
+        @Field("nombre_artistico") nombre_artistico: String,
     ): Response<respuestaUpdateArtista>
 
     @DELETE("api/artistas/{id}")
@@ -107,6 +110,21 @@ interface ApiService {
 
 
             //users
+    @FormUrlEncoded
+    @POST("api/users")
+    suspend fun createUser(
+                @Field("name") name: String,
+                @Field("password") password: String,
+                @Field("id_pais") idPais: Int,
+                @Field("id_rol") idRol: Int,
+                @Field("email") email: String = "",
+                @Field("pfp") pfp: String = "",
+                @Field("bio") bio: String = ""
+    ): Response<respuestaCreateUser>
+
+    //paises
+    @GET("api/paises")
+    suspend fun getPaises(): Response<respuestaGetPaises>
 
 }
 
