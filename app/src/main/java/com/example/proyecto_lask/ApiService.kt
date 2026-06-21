@@ -7,6 +7,7 @@ import com.example.proyecto_lask.model.respuestaUpdateTag
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -22,6 +23,8 @@ interface ApiService {
     suspend fun createTags(@Field("nombre_tag")nombre_tag: String): Response<respuestaCreateTag>
     @PATCH("api/tags/{id}")
     suspend fun actualizarTag(@Path("id") id: Int, @Field("nombre_tag")nombre_tag: String): Response<respuestaUpdateTag>
+    @DELETE("api/tags/{id}")
+    suspend fun deleteTag(@Path("id") id: Int): Response<Unit>
 }
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
