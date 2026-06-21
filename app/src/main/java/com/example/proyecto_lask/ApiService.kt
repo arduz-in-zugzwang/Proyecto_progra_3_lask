@@ -1,5 +1,15 @@
 package com.example.proyecto_lask
 
+import com.example.proyecto_lask.albumes.respuestaCreateAlbum
+import com.example.proyecto_lask.albumes.respuestaDeleteAlbum
+import com.example.proyecto_lask.albumes.respuestaGetAlbum
+import com.example.proyecto_lask.albumes.respuestaGetAlbumes
+import com.example.proyecto_lask.albumes.respuestaUpdateAlbum
+import com.example.proyecto_lask.artistas.respuestaCreateArtista
+import com.example.proyecto_lask.artistas.respuestaDeleteArtista
+import com.example.proyecto_lask.artistas.respuestaGetArtista
+import com.example.proyecto_lask.artistas.respuestaGetArtistas
+import com.example.proyecto_lask.artistas.respuestaUpdateArtista
 import com.example.proyecto_lask.tags.respuestaCreateTag
 import com.example.proyecto_lask.tags.respuestaDeleteTag
 import com.example.proyecto_lask.tags.respuestaTagPorId
@@ -17,6 +27,8 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
+
+    //tags
     @GET(value="api/tags")
     suspend fun getTags(): Response<respuestaTags>
     @GET(value="api/tags/{id}")
@@ -29,7 +41,91 @@ interface ApiService {
     suspend fun actualizarTag(@Path("id") id: Int, @Field("nombre_tag")nombre_tag: String,@Field("descripcion_tag") descripcion_tag: String): Response<respuestaUpdateTag>
     @DELETE("api/tags/{id}")
     suspend fun deleteTag(@Path("id") id: Int): Response<respuestaDeleteTag>
+
+
+// albumes
+
+    @GET("api/albumes")
+    suspend fun getAlbumes(): Response<respuestaGetAlbumes>
+
+    @GET("api/albumes/{id}")
+    suspend fun getAlbum(
+        @Path("id") id: Int
+    ): Response<respuestaGetAlbum>
+
+    @FormUrlEncoded
+    @POST("api/albumes")
+    suspend fun createAlbum(
+        @Field("nombre_album") nombre_album: String,
+        @Field("descripcion_album") descripcion_album: String,
+        @Field("portada_album") portada_album: String,
+        @Field("id_artista") id_artista: Int
+    ): Response<respuestaCreateAlbum>
+
+    @FormUrlEncoded
+    @PATCH("api/albumes/{id}")
+    suspend fun actualizarAlbum(
+        @Path("id") id: Int,
+        @Field("nombre_album") nombre_album: String,
+        @Field("descripcion_album") descripcion_album: String,
+        @Field("portada_album") portada_album: String
+    ): Response<respuestaUpdateAlbum>
+
+    @DELETE("api/albumes/{id}")
+    suspend fun deleteAlbum(
+        @Path("id") id: Int
+    ): Response<respuestaDeleteAlbum>
+
+
+    //artistas
+    @GET("api/artistas")
+    suspend fun getArtistas(): Response<respuestaGetArtistas>
+
+    @GET("api/artistas/{id}")
+    suspend fun getArtista(
+        @Path("id") id: Int
+    ): Response<respuestaGetArtista>
+
+    @FormUrlEncoded
+    @POST("api/artistas")
+    suspend fun createArtista(
+        @Field("nombre_artistico") nombre_artistico: String,
+        @Field("pfp") pfp: String,
+    ): Response<respuestaCreateArtista>
+
+    @FormUrlEncoded
+    @PATCH("api/artistas/{id}")
+    suspend fun actualizarArtista(
+        @Path("id") id: Int,
+        @Field("nombre_artisco") nombre_artistico: String,
+        @Field("pfp") pfp: String,
+    ): Response<respuestaUpdateArtista>
+
+    @DELETE("api/artistas/{id}")
+    suspend fun deleteArtista(
+        @Path("id") id: Int
+    ): Response<respuestaDeleteArtista>
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
         val retrofit= Retrofit.Builder()
