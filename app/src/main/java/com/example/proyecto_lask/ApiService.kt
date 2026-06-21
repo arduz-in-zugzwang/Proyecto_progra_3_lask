@@ -5,19 +5,15 @@ import com.example.proyecto_lask.model.respuestaTags
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 
 interface ApiService {
     @GET(value="api/tags")
     suspend fun getTags(): Response<respuestaTags>
     @POST("api/tags")
     suspend fun createTags(@Field("nombre_tag")nombre_tag: String): Response<respuestaCreateTag>
-    @DELETE("api/tags/{id}")
-    suspend fun deleteTag(@Path("id") id: Int): Response<Unit>
 }
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
