@@ -1,5 +1,6 @@
 package com.example.proyecto_lask
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -106,13 +107,6 @@ class RegisterActivity : AppCompatActivity() {
                 ).show()
                 return@setOnClickListener
             }
-
-            val role = if (rbListener.isChecked) {
-                "Listener"
-            } else {
-                "Artista"
-            }
-
             val idRol = if (rbListener.isChecked) 1 else 2
             CoroutineScope(Dispatchers.IO).launch {
                 val idPais =
@@ -147,6 +141,7 @@ class RegisterActivity : AppCompatActivity() {
                                     "Artista: ${respuestaArtista.code()}",
                                     Toast.LENGTH_LONG
                                 ).show()
+
                             }
                         }
 
@@ -156,6 +151,14 @@ class RegisterActivity : AppCompatActivity() {
                                 "Cuenta creada correctamente",
                                 Toast.LENGTH_LONG
                             ).show()
+                            val intent = Intent(
+                                this@RegisterActivity,
+                                Bienvenido::class.java
+                            )
+
+                            startActivity(intent)
+
+                            finish()
                         }
                     }
 
