@@ -30,12 +30,31 @@ class Tarea : AppCompatActivity() {
         val etNombreTag = findViewById<EditText>(R.id.etNombreTag)
         val etDescripcionTag = findViewById<EditText>(R.id.etDescripcionTag)
 
+        val btnBuscarTag = findViewById<Button>(R.id.btnBuscarTag)
+        val etIdBuscar = findViewById<EditText>(R.id.etIdBuscar)
+
         btnInsertarTag.setOnClickListener {
 
             val nombre = etNombreTag.text.toString()
             val descripcion = etDescripcionTag.text.toString()
 
             createTag(nombre, descripcion)
+        }
+
+        btnBuscarTag.setOnClickListener {
+
+            val idTexto = etIdBuscar.text.toString()
+
+            if(idTexto.isBlank()){
+                Toast.makeText(
+                    this,
+                    "Ingrese un ID",
+                    Toast.LENGTH_LONG
+                ).show()
+                return@setOnClickListener
+            }
+
+            buscarTag(idTexto.toInt())
         }
 
         getTags()
@@ -147,6 +166,50 @@ class Tarea : AppCompatActivity() {
                         Toast.makeText(
                             this@Tarea,
                             "Error al crear tag",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+            }catch(e:Exception){
+
+                withContext(Dispatchers.Main){
+
+                    Toast.makeText(
+                        this@Tarea,
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private fun buscarTag(id: Int){
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val call = RetrofitClient.create().getTag(id)
+
+                val response = call.body()
+
+                withContext(Dispatchers.Main){
+
+                    if(call.isSuccessful && response != null){
+
+                        findViewById<TextView>(R.id.tvResultadoNombre)
+                            .text = "Nombre: ${response.nombre_tag}"
+
+                        findViewById<TextView>(R.id.tvResultadoDescripcion)
+                            .text = "Descripción: ${response.descripcion_tag}"
+
+                    }else{
+
+                        Toast.makeText(
+                            this@Tarea,
+                            "Tag no encontrado",
                             Toast.LENGTH_LONG
                         ).show()
                     }
