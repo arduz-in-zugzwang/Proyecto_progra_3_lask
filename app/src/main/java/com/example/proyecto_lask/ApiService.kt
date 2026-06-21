@@ -26,7 +26,7 @@ interface ApiService {
     suspend fun createTags(@Field("nombre_tag")nombre_tag: String,@Field("descripcion_tag") descripcion_tag: String): Response<respuestaCreateTag>
     @FormUrlEncoded
     @PATCH("api/tags/{id}")
-    suspend fun actualizarTag(@Path("id") id: Int, @Field("nombre_tag")nombre_tag: String): Response<respuestaUpdateTag>
+    suspend fun actualizarTag(@Path("id") id: Int, @Field("nombre_tag")nombre_tag: String,@Field("descripcion_tag") descripcion_tag: String): Response<respuestaUpdateTag>
     @DELETE("api/tags/{id}")
     suspend fun deleteTag(@Path("id") id: Int): Response<respuestaDeleteTag>
 }
