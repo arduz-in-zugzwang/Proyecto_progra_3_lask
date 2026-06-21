@@ -90,7 +90,7 @@ interface ApiService {
     @POST("api/artistas")
     suspend fun createArtista(
         @Field("nombre_artistico") nombre_artistico: String,
-        @Field("pfp") pfp: String,
+        @Field("id_usuario") id_usuario: Int,
     ): Response<respuestaCreateArtista>
 
     @FormUrlEncoded
@@ -98,13 +98,16 @@ interface ApiService {
     suspend fun actualizarArtista(
         @Path("id") id: Int,
         @Field("nombre_artisco") nombre_artistico: String,
-        @Field("pfp") pfp: String,
     ): Response<respuestaUpdateArtista>
 
     @DELETE("api/artistas/{id}")
     suspend fun deleteArtista(
         @Path("id") id: Int
     ): Response<respuestaDeleteArtista>
+
+
+            //users
+
 }
 
 
