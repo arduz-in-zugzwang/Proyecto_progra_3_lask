@@ -226,11 +226,11 @@ class Tarea : AppCompatActivity() {
 
                     if(call.isSuccessful && response != null){
 
-                        findViewById<TextView>(R.id.tvResultadoNombre)
-                            .text = "Nombre: ${response.nombre_tag}"
-
-                        findViewById<TextView>(R.id.tvResultadoDescripcion)
-                            .text = "Descripción: ${response.descripcion_tag}"
+//                        findViewById<TextView>(R.id.tvResultadoNombre)
+//                            .text = "Nombre: ${response.nombre_tag}"
+//
+//                        findViewById<TextView>(R.id.tvResultadoDescripcion)
+//                            .text = "Descripción: ${response.descripcion_tag}"
 
                         findViewById<EditText>(R.id.etNombreTag)
                             .setText(response.nombre_tag)
