@@ -1,5 +1,6 @@
 package com.example.proyecto_lask
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -17,16 +18,21 @@ class CrearCancion : AppCompatActivity() {
     private lateinit var btnPortada: ImageButton
     private lateinit var etNombreCancion: EditText
     private lateinit var btnAudio: Button
-    private lateinit var btnSubirCancion: Button
+    private lateinit var btnAgregar: Button
     private lateinit var listaTags: LinearLayout
 
     private var portadaBase64: String = ""
     private var audioUri: Uri? = null
     private var audioPathLink: String = ""
+    private var idArtista: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crear_cancion)
+
+        // Recibir id_artista desde CrearAlbum
+        idArtista = intent.getIntExtra("id_artista", -1)
+
         initViews()
         setupListeners()
         cargarTags()
@@ -36,17 +42,20 @@ class CrearCancion : AppCompatActivity() {
         btnPortada      = findViewById(R.id.btnPortada)
         etNombreCancion = findViewById(R.id.etNombreCancion)
         btnAudio        = findViewById(R.id.btnAudio)
-        btnSubirCancion = findViewById(R.id.btnSubirCancion)
+        btnAgregar      = findViewById(R.id.btnSubirCancion)
         listaTags       = findViewById(R.id.listaTags)
 
         btnPortada.scaleType = ImageView.ScaleType.CENTER_CROP
         btnPortada.adjustViewBounds = false
+
+        // Cambiar texto del botón — ahora agrega, no sube
+        btnAgregar.text = "Agregar canción"
     }
 
     private fun setupListeners() {
         btnPortada.setOnClickListener { abrirGaleria() }
         btnAudio.setOnClickListener { abrirAudio() }
-        btnSubirCancion.setOnClickListener { subirCancion() }
+        btnAgregar.setOnClickListener { agregarCancion() }
     }
 
     private fun abrirGaleria() {
@@ -97,7 +106,7 @@ class CrearCancion : AppCompatActivity() {
 
     private fun convertirBitmap(bitmap: Bitmap): String {
         val maxSize = 500
-        val scale = minOf(maxSize.toFloat() / bitmap.width, maxSize.toFloat() / bitmap.height, 1f)
+        val scale   = minOf(maxSize.toFloat() / bitmap.width, maxSize.toFloat() / bitmap.height, 1f)
         val resized = if (scale < 1f) {
             Bitmap.createScaledBitmap(
                 bitmap,
@@ -112,11 +121,10 @@ class CrearCancion : AppCompatActivity() {
         return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
     }
 
-    // Carga los tags disponibles desde la API y muestra checkboxes
     private fun cargarTags() {
         lifecycleScope.launch {
             try {
-                val api = RetrofitClient.create()
+                val api      = RetrofitClient.create()
                 val response = api.getTags()
                 if (response.isSuccessful) {
                     val tags = response.body()?.data ?: return@launch
@@ -132,12 +140,12 @@ class CrearCancion : AppCompatActivity() {
                     }
                 }
             } catch (e: Exception) {
-                // Si falla cargar tags, no bloquear el flujo
+                // No bloquear si falla cargar tags
             }
         }
     }
 
-    private fun subirCancion() {
+    private fun agregarCancion() {
         val nombre = etNombreCancion.text.toString().trim()
 
         if (nombre.isEmpty()) {
@@ -153,40 +161,13 @@ class CrearCancion : AppCompatActivity() {
             return
         }
 
-        val prefs = getSharedPreferences("sesion_lask", MODE_PRIVATE)
-        val idArtista = prefs.getInt("artista_id", -1)
-        val idAlbum   = prefs.getInt("id_album", -1)  // Si viene desde un álbum específico
-
-        if (idArtista == -1) {
-            Toast.makeText(this, "No se encontró el perfil de artista", Toast.LENGTH_SHORT).show()
-            return
+        // Devolver datos a CrearAlbum sin subir a la API todavía
+        val result = Intent().apply {
+            putExtra("nombre_cancion",  nombre)
+            putExtra("portada_cancion", portadaBase64)
+            putExtra("path_link",       audioPathLink)
         }
-
-        btnSubirCancion.isEnabled = false
-
-        lifecycleScope.launch {
-            try {
-                val api = RetrofitClient.create()
-                val response = api.createCancion(
-                    id_album        = if (idAlbum != -1) idAlbum else 0,
-                    id_artista      = idArtista,
-                    nombre_cancion  = nombre,
-                    portada_cancion = portadaBase64,
-                    path_link       = audioPathLink
-                )
-
-                if (response.isSuccessful) {
-                    Toast.makeText(this@CrearCancion, "¡Canción subida correctamente!", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    val errorBody = response.errorBody()?.string() ?: "sin detalle"
-                    Toast.makeText(this@CrearCancion, "Error ${response.code()}: $errorBody", Toast.LENGTH_LONG).show()
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@CrearCancion, "Fallo de conexión: ${e.message}", Toast.LENGTH_LONG).show()
-            } finally {
-                btnSubirCancion.isEnabled = true
-            }
-        }
+        setResult(Activity.RESULT_OK, result)
+        finish()
     }
 }

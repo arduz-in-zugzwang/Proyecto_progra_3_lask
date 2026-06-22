@@ -229,19 +229,6 @@
 
                 <!-- Solo artistas, empieza oculto -->
                 <Button
-                    android:id="@+id/btnSubirCancion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:backgroundTint="#547daf"
-                    android:paddingStart="32dp"
-                    android:paddingEnd="32dp"
-                    android:text="Subir canción"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
-
-                <!-- Solo artistas, empieza oculto -->
-                <Button
                     android:id="@+id/btnCrearAlbum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

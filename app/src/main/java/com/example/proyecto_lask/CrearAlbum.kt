@@ -1,28 +1,44 @@
 package com.example.proyecto_lask
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
+// Datos temporales de una canción antes de subir
+data class CancionTemporal(
+    val nombre: String,
+    val portadaBase64: String,
+    val pathLink: String
+)
+
 class CrearAlbum : AppCompatActivity() {
 
     private lateinit var etNombre: EditText
     private lateinit var etDescripcion: EditText
     private lateinit var btnPortada: ImageButton
-    private lateinit var btnInsertarCanciones: Button
+    private lateinit var btnInsertarCanciones: ImageButton
     private lateinit var btnPublicar: Button
     private lateinit var listaCanciones: LinearLayout
+    private lateinit var progressBar: ProgressBar
 
     private var portadaBase64: String = ""
-    private val canciones = mutableListOf<Uri>()
+    // Lista de canciones acumuladas desde CrearCancion
+    private val canciones = mutableListOf<CancionTemporal>()
+
+    companion object {
+        const val REQUEST_CREAR_CANCION = 300
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,22 +48,35 @@ class CrearAlbum : AppCompatActivity() {
     }
 
     private fun initViews() {
-        etNombre            = findViewById(R.id.etNombreAlbum)
-        etDescripcion       = findViewById(R.id.etDescripcionAlbum)
-        btnPortada          = findViewById(R.id.cambiarPortada)
+        etNombre             = findViewById(R.id.etNombreAlbum)
+        etDescripcion        = findViewById(R.id.etDescripcionAlbum)
+        btnPortada           = findViewById(R.id.cambiarPortada)
         btnInsertarCanciones = findViewById(R.id.btnInsertarCanciones)
-        btnPublicar         = findViewById(R.id.btnPublicarAlbum)
-        listaCanciones      = findViewById(R.id.listaCanciones)
+        btnPublicar          = findViewById(R.id.btnPublicarAlbum)
+        listaCanciones       = findViewById(R.id.listaCanciones)
+        progressBar          = findViewById(R.id.progressBar)
 
-        // Que la imagen de portada llene el botón correctamente
         btnPortada.scaleType = ImageView.ScaleType.CENTER_CROP
         btnPortada.adjustViewBounds = false
     }
 
     private fun setupListeners() {
         btnPortada.setOnClickListener { abrirGaleria() }
-        btnInsertarCanciones.setOnClickListener { abrirMusica() }
-        btnPublicar.setOnClickListener { crearAlbum() }
+
+        btnInsertarCanciones.setOnClickListener {
+            // Abre CrearCancion pasando el id_artista
+            val prefs     = getSharedPreferences("sesion_lask", MODE_PRIVATE)
+            val idArtista = prefs.getInt("artista_id", -1)
+            if (idArtista == -1) {
+                Toast.makeText(this, "No se encontró el perfil de artista", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val intent = Intent(this, CrearCancion::class.java)
+            intent.putExtra("id_artista", idArtista)
+            startActivityForResult(intent, REQUEST_CREAR_CANCION)
+        }
+
+        btnPublicar.setOnClickListener { publicarAlbum() }
     }
 
     private fun abrirGaleria() {
@@ -55,18 +84,11 @@ class CrearAlbum : AppCompatActivity() {
         startActivityForResult(intent, 100)
     }
 
-    private fun abrirMusica() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "audio/*"
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        }
-        startActivityForResult(Intent.createChooser(intent, "Selecciona canciones"), 200)
-    }
-
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        // Portada del álbum
         if (requestCode == 100 && resultCode == RESULT_OK) {
             val uri = data?.data ?: return
             try {
@@ -79,11 +101,13 @@ class CrearAlbum : AppCompatActivity() {
             }
         }
 
-        if (requestCode == 200 && resultCode == RESULT_OK) {
-            canciones.clear()
-            data?.clipData?.let { clip ->
-                for (i in 0 until clip.itemCount) canciones.add(clip.getItemAt(i).uri)
-            } ?: data?.data?.let { canciones.add(it) }
+        // Canción devuelta desde CrearCancion
+        if (requestCode == REQUEST_CREAR_CANCION && resultCode == RESULT_OK) {
+            val nombre   = data?.getStringExtra("nombre_cancion") ?: return
+            val portada  = data.getStringExtra("portada_cancion") ?: ""
+            val pathLink = data.getStringExtra("path_link") ?: ""
+
+            canciones.add(CancionTemporal(nombre, portada, pathLink))
             mostrarCanciones()
         }
     }
@@ -91,7 +115,6 @@ class CrearAlbum : AppCompatActivity() {
     private fun mostrarCanciones() {
         listaCanciones.removeAllViews()
 
-        // Mantener el label original
         val label = TextView(this).apply {
             text = "Canciones agregadas"
             setTextColor(0xFFAAAAAA.toInt())
@@ -99,10 +122,9 @@ class CrearAlbum : AppCompatActivity() {
         }
         listaCanciones.addView(label)
 
-        canciones.forEach { uri ->
-            val nombre = obtenerNombreCancion(uri)
+        canciones.forEachIndexed { index, cancion ->
             val tv = TextView(this).apply {
-                text = nombre
+                text = "${index + 1}. ${cancion.nombre}"
                 setTextColor(0xFF333333.toInt())
                 textSize = 12f
                 setPadding(0, 6, 0, 6)
@@ -111,22 +133,9 @@ class CrearAlbum : AppCompatActivity() {
         }
     }
 
-    private fun obtenerNombreCancion(uri: Uri): String {
-        return try {
-            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                val idx = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
-                cursor.moveToFirst()
-                if (idx >= 0) cursor.getString(idx) else uri.lastPathSegment ?: "canción"
-            } ?: uri.lastPathSegment ?: "canción"
-        } catch (e: Exception) {
-            uri.lastPathSegment ?: "canción"
-        }
-    }
-
     private fun convertirBitmap(bitmap: Bitmap): String {
-        // Redimensionar a max 500x500 para evitar error 500 por payload demasiado grande
         val maxSize = 500
-        val scale = minOf(maxSize.toFloat() / bitmap.width, maxSize.toFloat() / bitmap.height, 1f)
+        val scale   = minOf(maxSize.toFloat() / bitmap.width, maxSize.toFloat() / bitmap.height, 1f)
         val resized = if (scale < 1f) {
             Bitmap.createScaledBitmap(
                 bitmap,
@@ -141,7 +150,7 @@ class CrearAlbum : AppCompatActivity() {
         return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
     }
 
-    private fun crearAlbum() {
+    private fun publicarAlbum() {
         val nombre = etNombre.text.toString().trim()
         val desc   = etDescripcion.text.toString().trim()
 
@@ -157,38 +166,78 @@ class CrearAlbum : AppCompatActivity() {
             Toast.makeText(this, "Selecciona una portada", Toast.LENGTH_SHORT).show()
             return
         }
+        if (canciones.isEmpty()) {
+            Toast.makeText(this, "Agrega al menos una canción", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        // Leer id_artista desde SharedPreferences (guardado al hacer login)
-        val prefs = getSharedPreferences("sesion_lask", MODE_PRIVATE)
+        val prefs     = getSharedPreferences("sesion_lask", MODE_PRIVATE)
         val idArtista = prefs.getInt("artista_id", -1)
         if (idArtista == -1) {
             Toast.makeText(this, "No se encontró el perfil de artista", Toast.LENGTH_SHORT).show()
             return
         }
 
-        btnPublicar.isEnabled = false
+        btnPublicar.isEnabled    = false
+        progressBar.visibility   = View.VISIBLE
 
         lifecycleScope.launch {
             try {
                 val api = RetrofitClient.create()
-                val response = api.createAlbum(
+
+                // 1. Crear el álbum
+                val albumResponse = api.createAlbum(
                     nombre_album      = nombre,
                     descripcion_album = desc,
                     portada_album     = portadaBase64,
                     id_artista        = idArtista
                 )
 
-                if (response.isSuccessful) {
-                    Toast.makeText(this@CrearAlbum, "¡Álbum creado correctamente!", Toast.LENGTH_SHORT).show()
-                    finish()
-                } else {
-                    val errorBody = response.errorBody()?.string() ?: "sin detalle"
-                    Toast.makeText(this@CrearAlbum, "Error ${response.code()}: $errorBody", Toast.LENGTH_LONG).show()
+                if (!albumResponse.isSuccessful) {
+                    val err = albumResponse.errorBody()?.string() ?: "sin detalle"
+                    Toast.makeText(this@CrearAlbum, "Error al crear álbum ${albumResponse.code()}: $err", Toast.LENGTH_LONG).show()
+                    return@launch
                 }
+
+                val idAlbum = albumResponse.body()?.id ?: run {
+                    Toast.makeText(this@CrearAlbum, "No se obtuvo el ID del álbum", Toast.LENGTH_SHORT).show()
+                    return@launch
+                }
+
+                // 2. Subir cada canción con el id_album recién creado
+                var cancionesOk = 0
+                var cancionesFallidas = 0
+
+                canciones.forEach { cancion ->
+                    try {
+                        val cancionResponse = api.createCancion(
+                            id_album        = idAlbum,
+                            id_artista      = idArtista,
+                            nombre_cancion  = cancion.nombre,
+                            portada_cancion = cancion.portadaBase64,
+                            path_link       = cancion.pathLink
+                        )
+                        if (cancionResponse.isSuccessful) cancionesOk++
+                        else cancionesFallidas++
+                    } catch (e: Exception) {
+                        cancionesFallidas++
+                    }
+                }
+
+                // 3. Resultado final
+                val msg = if (cancionesFallidas == 0) {
+                    "¡Álbum creado con $cancionesOk canción(es)!"
+                } else {
+                    "Álbum creado. $cancionesOk canción(es) subidas, $cancionesFallidas fallaron."
+                }
+                Toast.makeText(this@CrearAlbum, msg, Toast.LENGTH_LONG).show()
+                finish()
+
             } catch (e: Exception) {
                 Toast.makeText(this@CrearAlbum, "Fallo de conexión: ${e.message}", Toast.LENGTH_LONG).show()
             } finally {
-                btnPublicar.isEnabled = true
+                btnPublicar.isEnabled  = true
+                progressBar.visibility = View.GONE
             }
         }
     }
