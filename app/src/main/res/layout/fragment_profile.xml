@@ -206,19 +206,53 @@
                 android:layout_marginTop="8dp"
                 android:clipToPadding="false" />
 
-            <!-- Crear playlist -->
-            <Button
-                android:id="@+id/btnCrearPlaylist"
-                android:layout_width="wrap_content"
+            <!-- Botones según rol -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
-                android:backgroundTint="#666666"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp"
-                android:text="Crear playlist"
-                android:textColor="@color/white" />
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <!-- Siempre visible -->
+                <Button
+                    android:id="@+id/btnCrearPlaylist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#666666"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="Crear playlist"
+                    android:textColor="@color/white" />
+
+                <!-- Solo artistas, empieza oculto -->
+                <Button
+                    android:id="@+id/btnSubirCancion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#547daf"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="Subir canción"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+                <!-- Solo artistas, empieza oculto -->
+                <Button
+                    android:id="@+id/btnCrearAlbum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#547daf"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="Crear álbum"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

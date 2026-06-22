@@ -137,20 +137,24 @@ class RegisterActivity : AppCompatActivity() {
                         val usuario = respuesta.body()
 
                         if (usuario != null && idRol == 2) {
-
-                            val respuestaArtista =
-                                RetrofitClient.create().createArtista(
-                                    usuario.id,
-                                    artisticName
-                                )
-
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(
-                                    this@RegisterActivity,
-                                    "Artista: ${respuestaArtista.code()}",
-                                    Toast.LENGTH_LONG
-                                ).show()
-
+                            val respuestaArtista = RetrofitClient.create().createArtista(
+                                usuario.id,
+                                artisticName
+                            )
+                            if (respuestaArtista.isSuccessful) {
+                                val idArtista = respuestaArtista.body()?.id ?: -1
+                                getSharedPreferences("sesion_lask", MODE_PRIVATE)
+                                    .edit()
+                                    .putInt("artista_id", idArtista)
+                                    .apply()
+                            } else {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        this@RegisterActivity,
+                                        "Error al crear perfil artista: ${respuestaArtista.code()}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
                         }
 
