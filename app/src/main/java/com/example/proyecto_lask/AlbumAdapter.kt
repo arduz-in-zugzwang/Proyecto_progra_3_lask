@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_lask.albumes.Data
 
 class AlbumAdapter(
-    private val albumes: List<Data>
+    private val albumes: List<Data>,
+    private val onClick: (Data) -> Unit
 ) : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
 
     class AlbumViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -40,11 +41,9 @@ class AlbumAdapter(
 
         val album = albumes[position]
 
-        holder.tvNombre.text =
-            album.nombre_album
-
-        holder.tvArtista.text =
-            "Artista ID: ${album.id_artista}"
+        holder.tvNombre.text = album.nombre_album
+        holder.tvArtista.text = "Artista ID: ${album.id_artista}"
+        holder.itemView.setOnClickListener { onClick(album) }
     }
 
     override fun getItemCount(): Int =

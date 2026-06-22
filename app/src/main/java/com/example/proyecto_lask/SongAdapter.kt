@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_lask.canciones.DataX
 
 class SongAdapter(
-    private val songs: List<DataX>
+    private val songs: List<DataX>,
+    private val onClick: (DataX) -> Unit
 ) : RecyclerView.Adapter<SongAdapter.SongViewHolder>() {
 
     class SongViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -39,6 +40,7 @@ class SongAdapter(
 
         holder.tvNombre.text = song.nombre_cancion
         holder.tvArtista.text = song.nombre_artistico
+        holder.itemView.setOnClickListener { onClick(song) }
     }
 
     override fun getItemCount(): Int = songs.size

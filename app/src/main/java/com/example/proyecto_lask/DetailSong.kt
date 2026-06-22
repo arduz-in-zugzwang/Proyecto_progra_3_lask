@@ -52,7 +52,6 @@ class DetailSong : AppCompatActivity() {
 
         // Recibir datos desde el Intent
         val idAlbum    = intent.getIntExtra("id_album", -1)
-        posicionActual = intent.getIntExtra("posicion", 0)
 
         if (idAlbum == -1) {
             Toast.makeText(this, "Error al abrir canción", Toast.LENGTH_SHORT).show()
@@ -94,6 +93,22 @@ class DetailSong : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val todas = response.body()?.data ?: emptyList()
                     listaCanciones = todas.filter { it.id_album == idAlbum }.toMutableList()
+//                    esto agrgue
+                    val idCancion =
+                        intent.getIntExtra(
+                            "id_cancion",
+                            -1
+                        )
+
+                    posicionActual =
+                        listaCanciones.indexOfFirst {
+                            it.id == idCancion
+                        }
+
+                    if (posicionActual == -1) {
+                        posicionActual = 0
+                    }
+//                    hasta aqui
 
                     if (listaCanciones.isEmpty()) {
                         Toast.makeText(this@DetailSong, "No hay canciones en este álbum", Toast.LENGTH_SHORT).show()

@@ -53,8 +53,31 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         rvCanciones.layoutManager =
                             LinearLayoutManager(requireContext())
 
+                        val cancionesHome = canciones.take(5)
+
                         rvCanciones.adapter =
-                            SongAdapter(canciones.take(5))
+                            SongAdapter(cancionesHome) { cancion ->
+
+                                val posicion =
+                                    cancionesHome.indexOf(cancion)
+
+                                val intent = Intent(
+                                    requireContext(),
+                                    DetailSong::class.java
+                                )
+
+                                intent.putExtra(
+                                    "id_album",
+                                    cancion.id_album
+                                )
+
+                                intent.putExtra(
+                                    "id_cancion",
+                                    cancion.id
+                                )
+
+                                startActivity(intent)
+                            }
                     }
                 }
 
@@ -169,7 +192,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             )
 
                         rvAlbumes.adapter =
-                            AlbumAdapter(albumes.take(5))
+                            AlbumAdapter(albumes.take(5)){ album ->
+
+                                val intent = Intent(
+                                    requireContext(),
+                                    AlbumDetail::class.java
+                                )
+
+                                intent.putExtra("id_album", album.id)
+
+                                startActivity(intent)
+                            }
                     }
                 }
 
