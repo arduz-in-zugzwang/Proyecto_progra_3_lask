@@ -64,8 +64,11 @@ class CrearCancion : AppCompatActivity() {
     }
 
     private fun abrirAudio() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "audio/*" }
-        startActivityForResult(Intent.createChooser(intent, "Selecciona un archivo de audio"), 200)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type = "audio/*"
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+        startActivityForResult(intent, 200)
     }
 
     @Suppress("DEPRECATION")
@@ -87,6 +90,10 @@ class CrearCancion : AppCompatActivity() {
         if (requestCode == 200 && resultCode == RESULT_OK) {
             val uri = data?.data ?: return
             audioUri = uri
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
             audioPathLink = obtenerNombreArchivo(uri)
             btnAudio.text = audioPathLink
         }

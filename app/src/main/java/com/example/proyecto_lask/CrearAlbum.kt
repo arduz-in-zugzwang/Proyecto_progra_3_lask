@@ -267,7 +267,13 @@ class CrearAlbum : AppCompatActivity() {
                 finish()
 
             } catch (e: Exception) {
-                Toast.makeText(this@CrearAlbum, "Fallo de conexión: ${e.message}", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
+
+                Toast.makeText(
+                    this@CrearAlbum,
+                    e.toString(),
+                    Toast.LENGTH_LONG
+                ).show()
             } finally {
                 btnPublicar.isEnabled  = true
                 progressBar.visibility = View.GONE
