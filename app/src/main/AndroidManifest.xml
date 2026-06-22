@@ -22,6 +22,9 @@
             android:name=".PerfilArtistaActivity"
             android:exported="false" />
         <activity
+            android:name=".DetailAlbum"
+            android:exported="true" />
+        <activity
             android:name=".Bienvenido"
             android:exported="true">
             <intent-filter>
