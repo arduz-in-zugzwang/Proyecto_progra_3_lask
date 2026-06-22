@@ -96,9 +96,20 @@ class CrearCancion : AppCompatActivity() {
     }
 
     private fun convertirBitmap(bitmap: Bitmap): String {
+        val maxSize = 500
+        val scale = minOf(maxSize.toFloat() / bitmap.width, maxSize.toFloat() / bitmap.height, 1f)
+        val resized = if (scale < 1f) {
+            Bitmap.createScaledBitmap(
+                bitmap,
+                (bitmap.width * scale).toInt(),
+                (bitmap.height * scale).toInt(),
+                true
+            )
+        } else bitmap
+
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
-        return Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT)
+        resized.compress(Bitmap.CompressFormat.JPEG, 60, stream)
+        return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
     }
 
     // Carga los tags disponibles desde la API y muestra checkboxes
