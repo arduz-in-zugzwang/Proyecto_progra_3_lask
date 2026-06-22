@@ -26,7 +26,6 @@
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".DetailAlbum" -->
         <!-- android:exported="false" /> -->
-
         <activity
             android:name=".Bienvenido"
             android:exported="true">
