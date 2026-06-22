@@ -23,7 +23,7 @@
             android:exported="false" />
         <activity
             android:name=".AlbumDetail"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".PerfilArtistaActivity"
             android:exported="false" /> <!-- <activity -->
@@ -51,7 +51,7 @@
         </activity>
         <activity
             android:name=".DetailSong"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false">
@@ -65,13 +65,13 @@
         </activity>
         <activity
             android:name=".CrearPlaylist"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".CrearCancion"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".CrearAlbum"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Loguin"
             android:exported="false">

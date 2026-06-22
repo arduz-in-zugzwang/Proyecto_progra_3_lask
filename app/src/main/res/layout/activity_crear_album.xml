@@ -182,18 +182,25 @@
 
                     </LinearLayout>
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/btnInsertarCanciones"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FFFFFF"
-                        android:text="+ Insertar canciones"
-                        android:textColor="#888888"
-                        android:textSize="12sp" />
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/round_library_music_24"
+                        android:scaleType="fitCenter"
+                        android:background="@android:color/transparent"
+                        />
 
                 </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="8dp"
+                    android:visibility="gone"
+                    android:indeterminateTint="#547daf" />
 
                 <Button
                     android:id="@+id/btnPublicarAlbum"
