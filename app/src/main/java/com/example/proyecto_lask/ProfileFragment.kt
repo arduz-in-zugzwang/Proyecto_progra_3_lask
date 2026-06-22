@@ -29,11 +29,12 @@ class ProfileFragment : Fragment() {
     private lateinit var tvDescripcion: EditText
     private lateinit var ivEditarPerfil: ImageView
     private lateinit var ivAvatar: ImageView
-    private lateinit var tvNombreArtistico: TextView
+    private lateinit var tvNombreArtistico: EditText
 
     private var userId: Int = -1
     private var modoEdicion = false
     private var base64NuevaFoto: String? = null
+    private var artistaId: Int = -1
 
     private lateinit var btnCrearPlaylist: Button
     private lateinit var btnCrearAlbum: Button
@@ -67,6 +68,8 @@ class ProfileFragment : Fragment() {
         ivEditarPerfil = view.findViewById(R.id.ivEditarPerfil)
         ivAvatar       = view.findViewById(R.id.ivAvatar)
 
+        tvNombreArtistico = view.findViewById(R.id.tvNombreArtistico)
+        tvNombreArtistico.isEnabled = false
         tvNombre.isEnabled      = false
         tvDescripcion.isEnabled = false
         tvNombreArtistico = view.findViewById(R.id.tvNombreArtistico)
@@ -90,9 +93,13 @@ class ProfileFragment : Fragment() {
 
         ivEditarPerfil.setOnClickListener {
             if (!modoEdicion) {
-                modoEdicion             = true
-                tvNombre.isEnabled      = true
-                tvDescripcion.isEnabled = true
+                modoEdicion                  = true
+                tvNombre.isEnabled           = true
+                tvDescripcion.isEnabled      = true
+                // Solo si es artista
+                if (tvNombreArtistico.visibility == View.VISIBLE) {
+                    tvNombreArtistico.isEnabled = true
+                }
                 tvNombre.requestFocus()
                 ivEditarPerfil.setImageResource(android.R.drawable.ic_menu_save)
                 Toast.makeText(requireContext(), "Editando perfil", Toast.LENGTH_SHORT).show()
@@ -123,10 +130,11 @@ class ProfileFragment : Fragment() {
     private fun mostrarDialogAvatar() {
         AlertDialog.Builder(requireContext())
             .setTitle("Foto de perfil")
-            .setItems(arrayOf("Ver perfil", "Actualizar foto")) { _, opcion ->
+            .setItems(arrayOf("Ver foto", "Actualizar foto", "Cerrar sesión")) { _, opcion ->
                 when (opcion) {
                     0 -> mostrarFotoCompleta()
                     1 -> mostrarDialogActualizarFoto()
+                    2 -> cerrarSesion()
                 }
             }
             .show()
@@ -261,7 +269,8 @@ class ProfileFragment : Fragment() {
                         val artista = respuesta.body()?.data
                             ?.firstOrNull { it.id_usuario == userId }
                         if (artista != null) {
-                            tvNombreArtistico.text = artista.nombre_artistico
+                            artistaId = artista.id  // <- agregar esta línea
+                            tvNombreArtistico.setText(artista.nombre_artistico)
                             tvNombreArtistico.visibility = View.VISIBLE
                         }
                     }
@@ -275,6 +284,7 @@ class ProfileFragment : Fragment() {
     private fun guardarCambios() {
         val nuevoNombre = tvNombre.text.toString().trim()
         val nuevaBio    = tvDescripcion.text.toString().trim()
+
 
         if (nuevoNombre.isEmpty()) {
             tvNombre.error = "El nombre no puede estar vacío"
@@ -312,11 +322,18 @@ class ProfileFragment : Fragment() {
 
                 withContext(Dispatchers.Main) {
                     if (respuestaPatch.isSuccessful) {
+                        if (tvNombreArtistico.visibility == View.VISIBLE && artistaId != -1) {
+                            val nuevoNombreArtistico = tvNombreArtistico.text.toString().trim()
+                            if (nuevoNombreArtistico.isNotEmpty()) {
+                                RetrofitClient.create().actualizarArtista(artistaId, nuevoNombreArtistico)
+                            }
+                        }
                         prefs.edit().putString("user_name", nuevoNombre).apply()
                         modoEdicion             = false
                         base64NuevaFoto         = null
                         tvNombre.isEnabled      = false
                         tvDescripcion.isEnabled = false
+                        tvNombreArtistico.isEnabled      = false
                         ivEditarPerfil.setImageResource(android.R.drawable.ic_menu_edit)
                         Toast.makeText(requireContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show()
                     } else {
