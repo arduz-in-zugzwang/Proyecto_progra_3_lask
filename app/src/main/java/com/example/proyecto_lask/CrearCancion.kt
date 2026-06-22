@@ -166,6 +166,8 @@ class CrearCancion : AppCompatActivity() {
             putExtra("nombre_cancion",  nombre)
             putExtra("portada_cancion", portadaBase64)
             putExtra("path_link",       audioPathLink)
+            putExtra("audio_uri", audioUri?.toString()
+            )
         }
         setResult(Activity.RESULT_OK, result)
         finish()

@@ -14,12 +14,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 
 // Datos temporales de una canción antes de subir
 data class CancionTemporal(
     val nombre: String,
     val portadaBase64: String,
-    val pathLink: String
+    val pathLink: String,
+    val audioUri: String
 )
 
 class CrearAlbum : AppCompatActivity() {
@@ -106,8 +113,9 @@ class CrearAlbum : AppCompatActivity() {
             val nombre   = data?.getStringExtra("nombre_cancion") ?: return
             val portada  = data.getStringExtra("portada_cancion") ?: ""
             val pathLink = data.getStringExtra("path_link") ?: ""
+            val audioUri = data.getStringExtra("audio_uri") ?: ""
 
-            canciones.add(CancionTemporal(nombre, portada, pathLink))
+            canciones.add(CancionTemporal(nombre, portada, pathLink, audioUri))
             mostrarCanciones()
         }
     }
@@ -148,6 +156,10 @@ class CrearAlbum : AppCompatActivity() {
         val stream = ByteArrayOutputStream()
         resized.compress(Bitmap.CompressFormat.JPEG, 60, stream)
         return Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
+    }
+
+    private fun String.toRequestBodyText(): RequestBody {
+        return this.toRequestBody("text/plain".toMediaTypeOrNull())
     }
 
     private fun publicarAlbum() {
@@ -209,19 +221,40 @@ class CrearAlbum : AppCompatActivity() {
                 var cancionesFallidas = 0
 
                 canciones.forEach { cancion ->
-                    try {
-                        val cancionResponse = api.createCancion(
-                            id_album        = idAlbum,
-                            id_artista      = idArtista,
-                            nombre_cancion  = cancion.nombre,
-                            portada_cancion = cancion.portadaBase64,
-                            path_link       = cancion.pathLink
-                        )
-                        if (cancionResponse.isSuccessful) cancionesOk++
-                        else cancionesFallidas++
-                    } catch (e: Exception) {
-                        cancionesFallidas++
+
+                    val uri = Uri.parse(cancion.audioUri)
+
+                    val inputStream = contentResolver.openInputStream(uri)
+                        ?: throw Exception("No se pudo abrir el audio")
+
+                    val tempFile = File.createTempFile("audio", ".mp3", cacheDir)
+
+                    tempFile.outputStream().use { output ->
+                        inputStream.copyTo(output)
                     }
+
+                    val audioBody = tempFile.asRequestBody(
+                        "audio/mpeg".toMediaTypeOrNull()
+                    )
+
+                    val audioPart = MultipartBody.Part.createFormData(
+                        "audio",
+                        tempFile.name,
+                        audioBody
+                    )
+
+                    val cancionResponse = api.createCancion(
+                        id_album = idAlbum.toString().toRequestBodyText(),
+                        id_artista = idArtista.toString().toRequestBodyText(),
+                        nombre_cancion = cancion.nombre.toRequestBodyText(),
+                        portada_cancion = cancion.portadaBase64.toRequestBodyText(),
+                        audio = audioPart
+                    )
+
+                    if (cancionResponse.isSuccessful)
+                        cancionesOk++
+                    else
+                        cancionesFallidas++
                 }
 
                 // 3. Resultado final

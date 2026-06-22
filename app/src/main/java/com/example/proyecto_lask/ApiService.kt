@@ -46,6 +46,10 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.http.Multipart
+import retrofit2.http.Part
 
 interface ApiService {
 
@@ -159,14 +163,14 @@ interface ApiService {
     suspend fun getCanciones(): Response<respuestaGetCanciones>
     @GET(value="api/canciones/{id}")
     suspend fun getCancion(@Path("id") id: Int): Response<respuestaGetCancion>
-    @FormUrlEncoded
+    @Multipart
     @POST("api/canciones")
     suspend fun createCancion(
-        @Field("id_album") id_album: Int,
-        @Field("id_artista") id_artista: Int,
-        @Field("nombre_cancion") nombre_cancion: String,
-        @Field("portada_cancion") portada_cancion: String,
-        @Field("path_link") path_link: String
+        @Part("id_album") id_album: RequestBody,
+        @Part("id_artista") id_artista: RequestBody,
+        @Part("nombre_cancion") nombre_cancion: RequestBody,
+        @Part("portada_cancion") portada_cancion: RequestBody,
+        @Part audio: MultipartBody.Part
     ): Response<respuestaCreateCancion>
     @FormUrlEncoded
     @PATCH("api/canciones/{id}")
