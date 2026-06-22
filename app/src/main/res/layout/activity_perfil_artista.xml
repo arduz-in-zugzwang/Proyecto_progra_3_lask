@@ -30,6 +30,18 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Nombre artístico (encima del nombre de usuario) -->
+        <TextView
+            android:id="@+id/tvNombreArtistico"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:textColor="#FFD700"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:visibility="gone" />
+
         <!-- Nombre -->
         <TextView
             android:id="@+id/tvNombreArtista"
@@ -69,6 +81,41 @@
                 android:textSize="13sp" />
 
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Canciones -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Canciones"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCancionesArtista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Álbumes -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Álbumes"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAlbumesArtista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:nestedScrollingEnabled="false" />
 
     </LinearLayout>
 
