@@ -6,7 +6,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,33 +22,23 @@ class Loguin : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loguin)
+
         etUsuario = findViewById(R.id.etUsuario)
         etContra = findViewById(R.id.etContra)
         botonRegistrate = findViewById(R.id.botonRegistrate)
         btnIniciarSesion = findViewById(R.id.btnIniciarSesion)
-        logo=findViewById(R.id.logo)
+        logo = findViewById(R.id.logo)
 
         logo.setOnClickListener {
-            startActivity(Intent(
-                    this, Bienvenido::class.java
-                )
-            )
+            startActivity(Intent(this, Bienvenido::class.java))
             finish()
         }
 
         botonRegistrate.setOnClickListener {
-
-            startActivity(
-                Intent(this, RegisterActivity::class.java)
-            )
-        }
-        botonRegistrate.setOnClickListener {
-            val intent= Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         btnIniciarSesion.setOnClickListener {
-
             val usuario = etUsuario.text.toString().trim()
             val contra = etContra.text.toString().trim()
 
@@ -57,28 +46,27 @@ class Loguin : AppCompatActivity() {
                 etUsuario.error = "Ingrese un usuario"
                 return@setOnClickListener
             }
-
             if (contra.isEmpty()) {
                 etContra.error = "Ingrese una contraseña"
                 return@setOnClickListener
             }
 
             CoroutineScope(Dispatchers.IO).launch {
-
                 try {
-
-                    val respuesta =
-                        RetrofitClient.create().login(
-                            usuario,
-                            contra
-                        )
+                    val respuesta = RetrofitClient.create().login(usuario, contra)
 
                     withContext(Dispatchers.Main) {
-
                         if (respuesta.isSuccessful) {
+                            val usuarioLogueado = respuesta.body()
 
-                            val usuarioLogueado =
-                                respuesta.body()
+                            // Guardar sesión en SharedPreferences
+                            getSharedPreferences("sesion_lask", MODE_PRIVATE)
+                                .edit()
+                                .putInt("user_id", usuarioLogueado?.id ?: -1)
+                                .putString("user_name", usuarioLogueado?.name ?: "")
+                                .putInt("user_id_pais", usuarioLogueado?.id_pais ?: 1)
+                                .putInt("user_id_rol", usuarioLogueado?.id_rol ?: 1)
+                                .apply()
 
                             Toast.makeText(
                                 this@Loguin,
@@ -86,17 +74,10 @@ class Loguin : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            startActivity(
-                                Intent(
-                                    this@Loguin,
-                                    MainActivity::class.java
-                                )
-                            )
-
+                            startActivity(Intent(this@Loguin, MainActivity::class.java))
                             finish()
 
                         } else {
-
                             Toast.makeText(
                                 this@Loguin,
                                 "Usuario o contraseña incorrectos",
@@ -106,14 +87,8 @@ class Loguin : AppCompatActivity() {
                     }
 
                 } catch (e: Exception) {
-
                     withContext(Dispatchers.Main) {
-
-                        Toast.makeText(
-                            this@Loguin,
-                            e.message,
-                            Toast.LENGTH_LONG
-                        ).show()
+                        Toast.makeText(this@Loguin, e.message, Toast.LENGTH_LONG).show()
                     }
                 }
             }

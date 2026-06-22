@@ -58,15 +58,34 @@
         </LinearLayout>
 
         <!-- Texto "Nuevos Lanzamientos" -->
-        <TextView
-            android:id="@+id/tvNuevos"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Nuevos Lanzamientos"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvNuevos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Nuevos Lanzamientos Canciones"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:id="@+id/tvVerMasCanciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Ver más >"/>
+        </LinearLayout>
 
         <!-- Lista de canciones -->
         <androidx.recyclerview.widget.RecyclerView
@@ -77,15 +96,33 @@
             android:nestedScrollingEnabled="false" />
 
         <!-- Texto "Tus Tags" -->
-        <TextView
-            android:id="@+id/tvTags"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Tus Tags"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tvTags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Tags que te interesarian"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:id="@+id/tvVerMasTags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Ver más >"/>
+        </LinearLayout>
 
         <!-- Chips de tags: se generan dinámicamente en HomeFragment.kt -->
         <com.google.android.material.chip.ChipGroup
@@ -95,19 +132,71 @@
             android:layout_marginTop="8dp" />
 
         <!-- Texto "Tus Artistas Favoritos" -->
-        <TextView
-            android:id="@+id/tvArtistas"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Tus Artistas Favoritos"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="16sp" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tvArtistas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Artistas Nuevos"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:id="@+id/tvVerMasArtistas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Ver más >"/>
+        </LinearLayout>
 
         <!-- Lista de artistas favoritos -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvArtistas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:nestedScrollingEnabled="false" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Nuevos Lanzamientos Albumes"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:id="@+id/tvVerMasAlbumes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Ver más >"/>
+        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAlbumes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

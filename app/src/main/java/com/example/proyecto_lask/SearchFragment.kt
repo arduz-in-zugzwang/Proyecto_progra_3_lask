@@ -41,6 +41,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         )
 
         rvCanciones.layoutManager = LinearLayoutManager(requireContext())
-        rvCanciones.adapter = SongAdapter(canciones)
+//        rvCanciones.adapter = SongAdapter(canciones)
     }
 }

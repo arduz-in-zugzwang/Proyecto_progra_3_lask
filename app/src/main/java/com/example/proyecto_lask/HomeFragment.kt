@@ -2,14 +2,24 @@ package com.example.proyecto_lask
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
+
+    private lateinit var rvCanciones: RecyclerView
+    private lateinit var rvArtistas: RecyclerView
+    private lateinit var rvAlbumes: RecyclerView
+    private lateinit var chipGroupTags: ChipGroup
     private val coloresTags = listOf(
         R.color.tag_amarillo_claro,
         R.color.tag_amarillo,
@@ -27,31 +37,39 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         // Lista de canciones
         val rvCanciones = view.findViewById<RecyclerView>(R.id.rvCanciones)
 
-        val canciones = listOf(
-            Song(
-                nombre = "Borro Cassette",
-                artista = "Maluma",
-                portadaResId = R.drawable.malumabeibi,
-                audioResId = R.raw.borrro_cassette
-            ),
-            Song(
-                nombre = "Mami Silicon",
-                artista = "Colibritany",
-                portadaResId = R.drawable.mamisilicon,
-                audioResId = R.raw.mami_silicon
-            ),
-            Song(
-                nombre = "Nose ",
-                artista = "insertar texto",
-                portadaResId = R.drawable.portadadefault,
-                audioResId = R.raw.mami_silicon
-            )
-            // Agrega aquí más canciones con el mismo formato:
-            // Song("Nombre", "Artista", R.drawable.tu_portada, R.raw.tu_audio)
-        )
+        CoroutineScope(Dispatchers.IO).launch {
 
-        rvCanciones.layoutManager = LinearLayoutManager(requireContext())
-        rvCanciones.adapter = SongAdapter(canciones)
+            try {
+
+                val respuesta =
+                    RetrofitClient.create().getCanciones()
+
+                if (respuesta.isSuccessful) {
+
+                    val canciones =
+                        respuesta.body()?.data ?: emptyList()
+
+                    withContext(Dispatchers.Main) {
+                        rvCanciones.layoutManager =
+                            LinearLayoutManager(requireContext())
+
+                        rvCanciones.adapter =
+                            SongAdapter(canciones.take(5))
+                    }
+                }
+
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(
+                        requireContext(),
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
 
         // Tags: por ahora son de prueba, luego vendrán de la API
         // (los tags únicos de las canciones que el usuario escuchó)

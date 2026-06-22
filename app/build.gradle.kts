@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
