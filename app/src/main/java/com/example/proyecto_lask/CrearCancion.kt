@@ -142,8 +142,8 @@ class CrearCancion : AppCompatActivity() {
             return
         }
 
-        val prefs = getSharedPreferences("sesion", MODE_PRIVATE)
-        val idArtista = prefs.getInt("id_artista", -1)
+        val prefs = getSharedPreferences("sesion_lask", MODE_PRIVATE)
+        val idArtista = prefs.getInt("artista_id", -1)
         val idAlbum   = prefs.getInt("id_album", -1)  // Si viene desde un álbum específico
 
         if (idArtista == -1) {

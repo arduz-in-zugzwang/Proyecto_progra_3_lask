@@ -147,8 +147,8 @@ class CrearAlbum : AppCompatActivity() {
         }
 
         // Leer id_artista desde SharedPreferences (guardado al hacer login)
-        val prefs = getSharedPreferences("sesion", MODE_PRIVATE)
-        val idArtista = prefs.getInt("id_artista", -1)
+        val prefs = getSharedPreferences("sesion_lask", MODE_PRIVATE)
+        val idArtista = prefs.getInt("artista_id", -1)
         if (idArtista == -1) {
             Toast.makeText(this, "No se encontró el perfil de artista", Toast.LENGTH_SHORT).show()
             return
