@@ -19,6 +19,9 @@
         android:theme="@style/Base.Theme.Proyecto_LASK"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".TagDetail"
+            android:exported="false" />
+        <activity
             android:name=".AlbumDetail"
             android:exported="false" />
         <activity
@@ -26,9 +29,6 @@
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".DetailAlbum" -->
         <!-- android:exported="false" /> -->
-        <activity
-            android:name=".AlbumDetail"
-            android:exported="true" />
         <activity
             android:name=".Bienvenido"
             android:exported="true">

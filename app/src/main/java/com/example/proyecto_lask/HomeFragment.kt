@@ -53,8 +53,31 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         rvCanciones.layoutManager =
                             LinearLayoutManager(requireContext())
 
+                        val cancionesHome = canciones.take(5)
+
                         rvCanciones.adapter =
-                            SongAdapter(canciones.take(5))
+                            SongAdapter(cancionesHome) { cancion ->
+
+                                val posicion =
+                                    cancionesHome.indexOf(cancion)
+
+                                val intent = Intent(
+                                    requireContext(),
+                                    DetailSong::class.java
+                                )
+
+                                intent.putExtra(
+                                    "id_album",
+                                    cancion.id_album
+                                )
+
+                                intent.putExtra(
+                                    "id_cancion",
+                                    cancion.id
+                                )
+
+                                startActivity(intent)
+                            }
                     }
                 }
 
@@ -89,7 +112,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                         mostrarTags(
                             view,
-                            tags.map { it.nombre_tag }
+                            tags
                         )
                     }
                 }
@@ -169,7 +192,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             )
 
                         rvAlbumes.adapter =
-                            AlbumAdapter(albumes.take(5))
+                            AlbumAdapter(albumes.take(5)){ album ->
+
+                                val intent = Intent(
+                                    requireContext(),
+                                    AlbumDetail::class.java
+                                )
+
+                                intent.putExtra("id_album", album.id)
+
+                                startActivity(intent)
+                            }
                     }
                 }
 
@@ -188,17 +221,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     }
 
-    private fun mostrarTags(view: View, tags: List<String>) {
+    private fun mostrarTags(view: View, tags: List<com.example.proyecto_lask.tags.Data>
+    ) {
         chipGroupTags = view.findViewById(R.id.chipGroupTags)
         chipGroupTags.removeAllViews()
 
         tags.forEachIndexed { index, tag ->
             val chip = Chip(requireContext())
-            chip.text = tag
+            chip.text = tag.nombre_tag
             chip.isCheckable = false
             chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), coloresTags[index % coloresTags.size])
             )
+            chip.setOnClickListener {
+
+                val intent = Intent(
+                    requireContext(),
+                    TagDetail::class.java
+                )
+
+                intent.putExtra("id_tag", tag.id)
+                intent.putExtra("nombre_tag", tag.nombre_tag)
+
+                startActivity(intent)
+            }
             chipGroupTags.addView(chip)
         }
     }
