@@ -24,7 +24,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         rvAlbumes.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        rvAlbumes.adapter = AlbumAdapter(albumes)
+//        rvAlbumes.adapter = AlbumAdapter(albumes)
 
         // --- Canciones (vertical: todas las disponibles, reutiliza item_song) ---
         val rvCanciones = view.findViewById<RecyclerView>(R.id.rvCancionesBuscar)

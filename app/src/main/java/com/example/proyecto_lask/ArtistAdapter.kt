@@ -6,26 +6,41 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.proyecto_lask.artistas.Data
 
-class ArtistAdapter(private val artistas: List<Artist>) :
-    RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
+
+class ArtistAdapter(
+    private val artistas: List<Data>
+) : RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder>() {
 
     class ArtistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val ivAvatar: ImageView = view.findViewById(R.id.ivAvatar)
-        val tvNombre: TextView = view.findViewById(R.id.tvNombreArtista)
+
+        val tvNombre: TextView =
+            view.findViewById(R.id.tvNombreArtista)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, position: Int): ArtistViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ArtistViewHolder {
+
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_artist, parent, false)
+
         return ArtistViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ArtistViewHolder,
+        position: Int
+    ) {
+
         val artista = artistas[position]
-        holder.tvNombre.text = artista.nombre
-        holder.ivAvatar.setImageResource(artista.avatarResId)
+
+        holder.tvNombre.text =
+            artista.nombre_artistico
     }
 
-    override fun getItemCount(): Int = artistas.size
+    override fun getItemCount(): Int =
+        artistas.size
 }
