@@ -1,5 +1,6 @@
 package com.example.proyecto_lask
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +39,23 @@ class MainActivity : AppCompatActivity() {
         val ivLogo = findViewById<ImageView>(R.id.ivLogo)
         ivLogo.setOnClickListener {
             irAInicio()
+        }
+
+        // Manejar navegación externa (ej: desde VerTodosArtistasActivity)
+        intent.getStringExtra("NAVIGATE_TO")?.let { destination ->
+            if (destination == "profile") {
+                navController.navigate(R.id.profileFragment)
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent) // Actualizamos el intent de la activity
+        intent.getStringExtra("NAVIGATE_TO")?.let { destination ->
+            if (destination == "profile") {
+                navController.navigate(R.id.profileFragment)
+            }
         }
     }
 
