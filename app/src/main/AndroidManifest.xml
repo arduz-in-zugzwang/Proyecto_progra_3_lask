@@ -27,9 +27,6 @@
         <!-- android:name=".DetailAlbum" -->
         <!-- android:exported="false" /> -->
         <activity
-            android:name=".AlbumDetail"
-            android:exported="true" />
-        <activity
             android:name=".Bienvenido"
             android:exported="true">
             <intent-filter>
