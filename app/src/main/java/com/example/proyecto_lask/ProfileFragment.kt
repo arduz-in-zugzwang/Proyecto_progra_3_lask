@@ -29,6 +29,7 @@ class ProfileFragment : Fragment() {
     private lateinit var tvDescripcion: EditText
     private lateinit var ivEditarPerfil: ImageView
     private lateinit var ivAvatar: ImageView
+    private lateinit var tvNombreArtistico: TextView
 
     private var userId: Int = -1
     private var modoEdicion = false
@@ -68,7 +69,7 @@ class ProfileFragment : Fragment() {
 
         tvNombre.isEnabled      = false
         tvDescripcion.isEnabled = false
-
+        tvNombreArtistico = view.findViewById(R.id.tvNombreArtistico)
         val prefs  = requireContext().getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
         userId     = prefs.getInt("user_id", -1)
 
@@ -223,6 +224,11 @@ class ProfileFragment : Fragment() {
                             else "Escribe algo sobre ti..."
                         )
 
+                        val idRol = requireContext()
+                            .getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
+                            .getInt("user_id_rol", 1)
+                        if (idRol == 2) cargarNombreArtistico()
+
                         val pfp = usuario?.pfp?.toString()
                         if (!pfp.isNullOrEmpty()) {
                             val bytes  = Base64.decode(pfp, Base64.DEFAULT)
@@ -243,6 +249,25 @@ class ProfileFragment : Fragment() {
                     Toast.makeText(requireContext(),
                         "Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
+            }
+        }
+    }
+    private fun cargarNombreArtistico() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val respuesta = RetrofitClient.create().getArtistas()
+                withContext(Dispatchers.Main) {
+                    if (respuesta.isSuccessful) {
+                        val artista = respuesta.body()?.data
+                            ?.firstOrNull { it.id_usuario == userId }
+                        if (artista != null) {
+                            tvNombreArtistico.text = artista.nombre_artistico
+                            tvNombreArtistico.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // silencioso
             }
         }
     }
