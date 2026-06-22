@@ -4,13 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class Loguin : AppCompatActivity() {
     private lateinit var etUsuario: EditText
     private lateinit var etContra: EditText
     private lateinit var btnIniciarSesion: Button
     private lateinit var botonRegistrate: Button
+    private lateinit var logo: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,12 +27,25 @@ class Loguin : AppCompatActivity() {
         etContra = findViewById(R.id.etContra)
         botonRegistrate = findViewById(R.id.botonRegistrate)
         btnIniciarSesion = findViewById(R.id.btnIniciarSesion)
+        logo=findViewById(R.id.logo)
+
+        logo.setOnClickListener {
+            startActivity(Intent(
+                    this, Bienvenido::class.java
+                )
+            )
+            finish()
+        }
 
         botonRegistrate.setOnClickListener {
 
             startActivity(
                 Intent(this, RegisterActivity::class.java)
             )
+        }
+        botonRegistrate.setOnClickListener {
+            val intent= Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         btnIniciarSesion.setOnClickListener {
@@ -42,15 +63,60 @@ class Loguin : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Aquí irá la llamada a la API
+            CoroutineScope(Dispatchers.IO).launch {
+
+                try {
+
+                    val respuesta =
+                        RetrofitClient.create().login(
+                            usuario,
+                            contra
+                        )
+
+                    withContext(Dispatchers.Main) {
+
+                        if (respuesta.isSuccessful) {
+
+                            val usuarioLogueado =
+                                respuesta.body()
+
+                            Toast.makeText(
+                                this@Loguin,
+                                "Bienvenido ${usuarioLogueado?.name}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            startActivity(
+                                Intent(
+                                    this@Loguin,
+                                    MainActivity::class.java
+                                )
+                            )
+
+                            finish()
+
+                        } else {
+
+                            Toast.makeText(
+                                this@Loguin,
+                                "Usuario o contraseña incorrectos",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
+                } catch (e: Exception) {
+
+                    withContext(Dispatchers.Main) {
+
+                        Toast.makeText(
+                            this@Loguin,
+                            e.message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
         }
-
-
-//        btnIniciarSesion.setOnClickListener {
-//            // TODO: aquí va tu validación de usuario y contraseña
-//            val intent = Intent(this, MainActivity::class.java)
-//            startActivity(intent)
-//            finish() // para que no pueda volver al login con el botón "atrás"
-//        }
     }
 }

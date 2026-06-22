@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
@@ -28,6 +29,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private lateinit var cbTerms: CheckBox
     private lateinit var btnRegister: Button
+    private lateinit var imgLogo: ImageView
     private var listaPaises = mutableListOf<com.example.proyecto_lask.paises.Data>()
 
 
@@ -47,10 +49,17 @@ class RegisterActivity : AppCompatActivity() {
 
         cbTerms = findViewById(R.id.cbTerms)
         btnRegister = findViewById(R.id.btnRegister)
+        imgLogo=findViewById(R.id.imgLogo)
 
         //cargar paises
         cargarPaises()
 
+
+        imgLogo.setOnClickListener {
+            startActivity(Intent(
+                this, Bienvenido::class.java))
+            finish()
+        }
 
         // Botón Registrar
         btnRegister.setOnClickListener {

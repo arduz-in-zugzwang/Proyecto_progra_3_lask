@@ -34,6 +34,7 @@ import com.example.proyecto_lask.tags.respuestaUpdateTag
 import com.example.proyecto_lask.users.respuestaCreateUser
 import com.example.proyecto_lask.users.respuestaGetUser
 import com.example.proyecto_lask.users.respuestaGetUsers
+import com.example.proyecto_lask.users.respuestaLogin
 import com.example.proyecto_lask.users.respuestaUpdateUser
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -244,6 +245,14 @@ interface ApiService {
         @Field("nombre_playlist") nombre: String?,
         @Field("privacidad_playlist") privacidad: Boolean?
     ): Response<respuestaUpdatePlaylist>
+
+    //para loguin
+    @FormUrlEncoded
+    @POST("api/login")
+    suspend fun login(
+        @Field("name") name: String,
+        @Field("password") password: String
+    ): Response<respuestaLogin>
 }
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
