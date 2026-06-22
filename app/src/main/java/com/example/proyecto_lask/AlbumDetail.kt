@@ -1,5 +1,6 @@
 package com.example.proyecto_lask
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
@@ -106,7 +107,13 @@ class AlbumDetail : AppCompatActivity() {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
+                isClickable = true
+                isFocusable = true
+                setBackgroundResource(
+                    android.R.drawable.list_selector_background
+                )
             }
+
 
             // Número de pista
             val tvNumero = TextView(this).apply {
@@ -146,6 +153,25 @@ class AlbumDetail : AppCompatActivity() {
             fila.addView(tvNumero)
             fila.addView(imgMini)
             fila.addView(tvNombreCancion)
+            fila.setOnClickListener {
+
+                val intent = Intent(
+                    this@AlbumDetail,
+                    DetailSong::class.java
+                )
+
+                intent.putExtra(
+                    "id_album",
+                    cancion.id_album
+                )
+
+                intent.putExtra(
+                    "id_cancion",
+                    cancion.id
+                )
+
+                startActivity(intent)
+            }
             listaCanciones.addView(fila)
 
             // Separador entre canciones

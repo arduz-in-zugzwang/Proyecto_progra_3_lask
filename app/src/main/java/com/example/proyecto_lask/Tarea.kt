@@ -87,25 +87,21 @@ class Tarea : AppCompatActivity() {
     }
     private fun getTags() {
 
-        val tableTags =
-            findViewById<TableLayout>(R.id.tableTags)
+        val tableTags = findViewById<TableLayout>(R.id.tableTags)
 
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
 
-                val call =
-                    RetrofitClient.create().getTags()
+                val call = RetrofitClient.create().getTags()
 
-                val response =
-                    call.body()
+                val response = call.body()
 
                 withContext(Dispatchers.Main) {
 
                     if(call.isSuccessful){
 
-                        val data =
-                            response?.data ?: emptyList()
+                        val data = response?.data ?: emptyList()
 
                         val childCount = tableTags.childCount
 
