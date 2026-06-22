@@ -59,14 +59,33 @@ class Loguin : AppCompatActivity() {
                         if (respuesta.isSuccessful) {
                             val usuarioLogueado = respuesta.body()
 
-                            // Guardar sesión en SharedPreferences
-                            getSharedPreferences("sesion_lask", MODE_PRIVATE)
-                                .edit()
+                            // Guardar sesión base
+                            val prefs = getSharedPreferences("sesion_lask", MODE_PRIVATE)
+                            prefs.edit()
                                 .putInt("user_id", usuarioLogueado?.id ?: -1)
                                 .putString("user_name", usuarioLogueado?.name ?: "")
                                 .putInt("user_id_pais", usuarioLogueado?.id_pais ?: 1)
                                 .putInt("user_id_rol", usuarioLogueado?.id_rol ?: 1)
                                 .apply()
+
+                            // Si es artista, buscar y guardar su artista_id
+                            if ((usuarioLogueado?.id_rol ?: 1) == 2) {
+                                val userId = usuarioLogueado?.id ?: -1
+                                try {
+                                    val respuestaArtistas = RetrofitClient.create().getArtistas()
+                                    if (respuestaArtistas.isSuccessful) {
+                                        val artista = respuestaArtistas.body()?.data
+                                            ?.firstOrNull { it.id_usuario == userId }
+                                        if (artista != null) {
+                                            prefs.edit()
+                                                .putInt("artista_id", artista.id)
+                                                .apply()
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    // No bloqueamos el login si falla esto
+                                }
+                            }
 
                             Toast.makeText(
                                 this@Loguin,

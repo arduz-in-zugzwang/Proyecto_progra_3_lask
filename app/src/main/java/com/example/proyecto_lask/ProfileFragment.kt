@@ -1,6 +1,7 @@
 package com.example.proyecto_lask
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -32,6 +33,10 @@ class ProfileFragment : Fragment() {
     private var userId: Int = -1
     private var modoEdicion = false
     private var base64NuevaFoto: String? = null  // guardamos la foto nueva aquí
+
+    private lateinit var btnCrearPlaylist: Button
+    private lateinit var btnSubirCancion: Button
+    private lateinit var btnCrearAlbum: Button
 
     // Lanzador para pedir permiso de galería
     private val pedirPermiso = registerForActivityResult(
@@ -78,6 +83,13 @@ class ProfileFragment : Fragment() {
         }
 
         cargarPerfil()
+        btnCrearPlaylist = view.findViewById(R.id.btnCrearPlaylist)
+        btnSubirCancion  = view.findViewById(R.id.btnSubirCancion)
+        btnCrearAlbum    = view.findViewById(R.id.btnCrearAlbum)
+
+        val idRol = prefs.getInt("user_id_rol", 1)
+        configurarBotonesSegunRol(idRol)
+
 
         // Toca el avatar → dialog con dos opciones
         ivAvatar.setOnClickListener {
@@ -100,6 +112,23 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun configurarBotonesSegunRol(idRol: Int) {
+        if (idRol == 2) {
+            btnSubirCancion.visibility = View.VISIBLE
+            btnCrearAlbum.visibility   = View.VISIBLE
+        }
+
+        btnCrearPlaylist.setOnClickListener {
+            startActivity(Intent(requireContext(), CrearPlaylist::class.java))
+        }
+        btnSubirCancion.setOnClickListener {
+            startActivity(Intent(requireContext(), CrearCancion::class.java))
+        }
+        btnCrearAlbum.setOnClickListener {
+            startActivity(Intent(requireContext(), CrearAlbum::class.java))
+        }
+    }
+
     // Dialog: "Ver perfil" o "Actualizar perfil"
     private fun mostrarDialogAvatar() {
         AlertDialog.Builder(requireContext())
@@ -108,11 +137,32 @@ class ProfileFragment : Fragment() {
                 when (opcion) {
                     0 -> mostrarFotoCompleta()
                     1 -> mostrarDialogActualizarFoto()
+                    2 -> cerrarSesion()
                 }
             }
             .show()
     }
 
+    private fun cerrarSesion() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Cerrar sesión")
+            .setMessage("¿Seguro que quieres cerrar sesión?")
+            .setPositiveButton("Sí") { _, _ ->
+                // Limpiar todos los datos guardados
+                requireContext()
+                    .getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
+                    .edit()
+                    .clear()
+                    .apply()
+
+                // Volver al login sin posibilidad de volver atrás
+                val intent = Intent(requireContext(), Loguin::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+            .setNegativeButton("No", null)
+            .show()
+    }
     // Muestra la foto en grande (dialog simple)
     private fun mostrarFotoCompleta() {
         val dialogView = ImageView(requireContext()).apply {

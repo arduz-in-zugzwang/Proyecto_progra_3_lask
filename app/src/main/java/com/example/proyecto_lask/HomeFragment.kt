@@ -35,8 +35,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
 
         // Lista de canciones
-        val rvCanciones = view.findViewById<RecyclerView>(R.id.rvCanciones)
-
+        rvCanciones = view.findViewById(R.id.rvCanciones)
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
@@ -73,26 +72,121 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         // Tags: por ahora son de prueba, luego vendrán de la API
         // (los tags únicos de las canciones que el usuario escuchó)
-        val tags = listOf("Rock Latino", "Kpop", "Música para dormir", "Relax Beat", "Indie Lofi")
-        mostrarTags(view, tags)
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val respuesta =
+                    RetrofitClient.create().getTags()
+
+                if (respuesta.isSuccessful) {
+
+                    val tags =
+                        respuesta.body()?.data ?: emptyList()
+
+                    withContext(Dispatchers.Main) {
+
+                        mostrarTags(
+                            view,
+                            tags.map { it.nombre_tag }
+                        )
+                    }
+                }
+
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(
+                        requireContext(),
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
 
         // Lista de artistas favoritos
-        val rvArtistas = view.findViewById<RecyclerView>(R.id.rvArtistas)
+        rvArtistas = view.findViewById(R.id.rvArtistas)
+        CoroutineScope(Dispatchers.IO).launch {
 
-        val artistas = listOf(
-            Artist("Stray Kids", R.drawable.artistadefault),
-            Artist("The Smiths", R.drawable.artistadefault),
-            Artist("Jovani Vasquez", R.drawable.artistadefault)
-            // Reemplaza R.drawable.artistadefault por la imagen real de cada artista
-        )
+            try {
 
-        rvArtistas.layoutManager = LinearLayoutManager(requireContext())
-        rvArtistas.adapter = ArtistAdapter(artistas)
+                val respuesta =
+                    RetrofitClient.create().getArtistas()
+
+                if (respuesta.isSuccessful) {
+
+                    val artistas =
+                        respuesta.body()?.data ?: emptyList()
+
+                    withContext(Dispatchers.Main) {
+
+                        rvArtistas.layoutManager =
+                            LinearLayoutManager(requireContext())
+
+                        rvArtistas.adapter =
+                            ArtistAdapter(artistas.take(5))
+                    }
+                }
+
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(
+                        requireContext(),
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+        rvAlbumes = view.findViewById(R.id.rvAlbumes)
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val respuesta =
+                    RetrofitClient.create().getAlbumes()
+
+                if (respuesta.isSuccessful) {
+
+                    val albumes =
+                        respuesta.body()?.data ?: emptyList()
+
+                    withContext(Dispatchers.Main) {
+
+                        rvAlbumes.layoutManager =
+                            LinearLayoutManager(
+                                requireContext(),
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+
+                        rvAlbumes.adapter =
+                            AlbumAdapter(albumes.take(5))
+                    }
+                }
+
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(
+                        requireContext(),
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+
     }
 
     private fun mostrarTags(view: View, tags: List<String>) {
-        val chipGroup = view.findViewById<ChipGroup>(R.id.chipGroupTags)
-        chipGroup.removeAllViews()
+        chipGroupTags = view.findViewById(R.id.chipGroupTags)
+        chipGroupTags.removeAllViews()
 
         tags.forEachIndexed { index, tag ->
             val chip = Chip(requireContext())
@@ -101,7 +195,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), coloresTags[index % coloresTags.size])
             )
-            chipGroup.addView(chip)
+            chipGroupTags.addView(chip)
         }
     }
 }
