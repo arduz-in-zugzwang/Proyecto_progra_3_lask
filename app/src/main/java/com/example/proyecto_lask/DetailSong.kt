@@ -13,7 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.proyecto_lask.canciones.Data as CancionData
+import com.example.proyecto_lask.canciones.DataX as CancionData
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.launch
 
@@ -287,6 +287,7 @@ class DetailSong : AppCompatActivity() {
         tvDuracion.text = "0:00"
     }
 
+    // ---------------- CICLO DE VIDA ----------------
     // ---------------- CICLO DE VIDA ----------------
 
     override fun onPause() {
