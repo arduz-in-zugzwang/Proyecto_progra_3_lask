@@ -63,12 +63,11 @@ class Tarea : AppCompatActivity() {
 
         btnModificarTag.setOnClickListener {
 
-            val id =
-                findViewById<EditText>(R.id.etIdBuscar).text.toString().toInt()
+            val id = etIdBuscar.text.toString().toInt()
 
-            val nombre = findViewById<EditText>(R.id.etNombreTag).text.toString()
+            val nombre = etNombreTag.text.toString()
 
-            val descripcion =findViewById<EditText>(R.id.etDescripcionTag).text.toString()
+            val descripcion =etDescripcionTag.text.toString()
 
             modificarTag(
                 id,
@@ -79,7 +78,7 @@ class Tarea : AppCompatActivity() {
 
         btnEliminarTag.setOnClickListener {
 
-            val id =findViewById<EditText>(R.id.etIdBuscar).text.toString().toInt()
+            val id =etIdBuscar.text.toString().toInt()
 
             eliminarTag(id)
         }
