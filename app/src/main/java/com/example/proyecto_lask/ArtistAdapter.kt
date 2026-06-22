@@ -16,6 +16,7 @@ class ArtistAdapter(
 
     class ArtistViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvNombre: TextView = view.findViewById(R.id.tvNombreArtista)
+        val ivAvatar: ImageView = view.findViewById(R.id.ivAvatar)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistViewHolder {
@@ -27,6 +28,8 @@ class ArtistAdapter(
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         val artista = artistas[position]
         holder.tvNombre.text = artista.nombre_artistico
+        // Por ahora usamos la imagen default del XML (R.drawable.artistadefault)
+        // pero podríamos cargar una real si la API la diera
 
         // Click en el item → llama al lambda
         holder.itemView.setOnClickListener {

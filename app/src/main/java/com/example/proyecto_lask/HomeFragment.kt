@@ -1,11 +1,14 @@
 package com.example.proyecto_lask
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -132,6 +135,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         // Lista de artistas favoritos
         rvArtistas = view.findViewById(R.id.rvArtistas)
+        val tvVerMasArtistas = view.findViewById<TextView>(R.id.tvVerMasArtistas)
+
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
@@ -145,13 +150,34 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         respuesta.body()?.data ?: emptyList()
 
                     withContext(Dispatchers.Main) {
+                        if (artistas.isEmpty()) {
+                            // Opcional: mostrar un mensaje si no hay artistas
+                            // Toast.makeText(requireContext(), "No hay artistas nuevos", Toast.LENGTH_SHORT).show()
+                        }
 
                         rvArtistas.layoutManager =
                             LinearLayoutManager(requireContext())
 
-                        rvArtistas.adapter = ArtistAdapter(artistas.take(5)) { artista ->
-                            val intent = Intent(requireContext(), PerfilArtistaActivity::class.java)
-                            intent.putExtra("id_usuario", artista.id_usuario)
+                        // Obtener el ID del usuario logueado para comparar
+                        val prefs = requireContext().getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
+                        val loggedUserId = prefs.getInt("user_id", -1)
+
+                        // Mostramos inicialmente solo 3
+                        rvArtistas.adapter = ArtistAdapter(artistas.take(3)) { artista ->
+                            if (artista.id_usuario == loggedUserId) {
+                                // Si es mi propio perfil, ir al fragmento de perfil
+                                findNavController().navigate(R.id.profileFragment)
+                            } else {
+                                // Si es otro artista, ir a su actividad de perfil
+                                val intent = Intent(requireContext(), PerfilArtistaActivity::class.java)
+                                intent.putExtra("id_usuario", artista.id_usuario)
+                                startActivity(intent)
+                            }
+                        }
+
+                        // Al darle a "Ver más", abrimos la nueva pantalla con todos los artistas
+                        tvVerMasArtistas.setOnClickListener {
+                            val intent = Intent(requireContext(), VerTodosArtistasActivity::class.java)
                             startActivity(intent)
                         }
                     }

@@ -1,46 +1,220 @@
 package com.example.proyecto_lask
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import android.text.Editable
+import android.text.TextWatcher
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
+    private lateinit var rvAlbumes: RecyclerView
+    private lateinit var rvCanciones: RecyclerView
+
+    private var albumesOriginales =
+        listOf<com.example.proyecto_lask.albumes.Data>()
+
+    private var cancionesOriginales =
+        listOf<com.example.proyecto_lask.canciones.DataX>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val etBuscar = view.findViewById<EditText>(R.id.etBuscar)
+        rvAlbumes = view.findViewById(R.id.rvAlbumes)
 
-        // --- Álbumes (horizontal: portada + nombre + artista) ---
-        val rvAlbumes = view.findViewById<RecyclerView>(R.id.rvAlbumes)
+        CoroutineScope(Dispatchers.IO).launch {
 
-        val albumes = listOf(
-            Album("Nombre álbum 1", "Artista 1", R.drawable.portadadefault),
-            Album("Nombre álbum 2", "Artista 2", R.drawable.portadadefault),
-            Album("Nombre álbum 3", "Artista 3", R.drawable.portadadefault),
-            Album("Nombre álbum 4", "Artista 4", R.drawable.portadadefault)
-            // Reemplaza por tus álbumes reales: Album("Nombre", "Artista", R.drawable.tu_portada)
+            try {
+
+                val respuesta =
+                    RetrofitClient.create().getAlbumes()
+
+                if (respuesta.isSuccessful) {
+
+                    albumesOriginales =
+                        respuesta.body()?.data ?: emptyList()
+
+                    withContext(Dispatchers.Main) {
+
+                        rvAlbumes.layoutManager =
+                            LinearLayoutManager(
+                                requireContext(),
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+
+                        rvAlbumes.adapter =
+                            AlbumAdapter(albumesOriginales) { album ->
+
+                                val intent =
+                                    Intent(requireContext(), AlbumDetail::class.java)
+
+                                intent.putExtra("id_album", album.id)
+
+                                startActivity(intent)
+                            }
+                    }
+                }
+
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(
+                        requireContext(),
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+        rvCanciones =
+            view.findViewById(R.id.rvCancionesBuscar)
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val respuesta =
+                    RetrofitClient.create().getCanciones()
+
+                if (respuesta.isSuccessful) {
+
+                    cancionesOriginales =
+                        respuesta.body()?.data ?: emptyList()
+
+                    withContext(Dispatchers.Main) {
+
+                        rvCanciones.layoutManager =
+                            LinearLayoutManager(requireContext())
+
+                        rvCanciones.adapter =
+                            SongAdapter(cancionesOriginales) { cancion ->
+
+                                val intent =
+                                    Intent(requireContext(), DetailSong::class.java)
+
+                                intent.putExtra("id_album", cancion.id_album)
+
+                                startActivity(intent)
+                            }
+                    }
+                }
+
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+
+                    Toast.makeText(
+                        requireContext(),
+                        e.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+        etBuscar.addTextChangedListener(
+            object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+
+                    filtrar(
+                        s.toString()
+                    )
+                }
+
+                override fun afterTextChanged(
+                    s: Editable?
+                ) {}
+            }
         )
 
-        rvAlbumes.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-//        rvAlbumes.adapter = AlbumAdapter(albumes)
+    }
+    private fun filtrar(texto: String) {
 
-        // --- Canciones (vertical: todas las disponibles, reutiliza item_song) ---
-        val rvCanciones = view.findViewById<RecyclerView>(R.id.rvCancionesBuscar)
+        if (texto.isBlank()) {
 
-        val canciones = listOf(
-            Song(
-                nombre = "Borro Cassette",
-                artista = "Maluma",
-                portadaResId = R.drawable.malumabeibi,
-                audioResId = R.raw.borrro_cassette
-            )
-            // Agrega aquí todas las canciones disponibles:
-            // Song("Nombre", "Artista", R.drawable.tu_portada, R.raw.tu_audio)
-        )
+            rvAlbumes.adapter =
+                AlbumAdapter(albumesOriginales) { album ->
 
-        rvCanciones.layoutManager = LinearLayoutManager(requireContext())
-//        rvCanciones.adapter = SongAdapter(canciones)
+                    val intent =
+                        Intent(requireContext(), AlbumDetail::class.java)
+
+                    intent.putExtra("id_album", album.id)
+
+                    startActivity(intent)
+                }
+
+            rvCanciones.adapter =
+                SongAdapter(cancionesOriginales) { cancion ->
+
+                    val intent =
+                        Intent(requireContext(), DetailSong::class.java)
+
+                    intent.putExtra("id_album", cancion.id_album)
+
+                    startActivity(intent)
+                }
+
+            return
+        }
+
+        val albumesFiltrados =
+            albumesOriginales.filter {
+                it.nombre_album.contains(
+                    texto,
+                    ignoreCase = true
+                )
+            }
+
+        val cancionesFiltradas =
+            cancionesOriginales.filter {
+                it.nombre_cancion.contains(
+                    texto,
+                    ignoreCase = true
+                )
+            }
+
+        rvAlbumes.adapter =
+            AlbumAdapter(albumesFiltrados) { album ->
+
+                val intent =
+                    Intent(requireContext(), AlbumDetail::class.java)
+
+                intent.putExtra("id_album", album.id)
+
+                startActivity(intent)
+            }
+
+        rvCanciones.adapter =
+            SongAdapter(cancionesFiltradas) { cancion ->
+
+                val intent =
+                    Intent(requireContext(), DetailSong::class.java)
+
+                intent.putExtra("id_album", cancion.id_album)
+
+                startActivity(intent)
+            }
     }
 }
