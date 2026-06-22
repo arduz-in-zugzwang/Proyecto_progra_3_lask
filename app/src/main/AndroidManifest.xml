@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Proyecto_LASK"
+        android:theme="@style/Base.Theme.Proyecto_LASK"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".Bienvenido"
