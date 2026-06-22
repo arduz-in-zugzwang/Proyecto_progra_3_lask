@@ -2,6 +2,7 @@ package com.example.proyecto_lask
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +20,7 @@ class TagDetail : AppCompatActivity() {
 
     private lateinit var tvNombreTag: TextView
     private lateinit var rvCancionesTags: RecyclerView
+    private lateinit var loguito : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +28,12 @@ class TagDetail : AppCompatActivity() {
 
         tvNombreTag = findViewById(R.id.tvNombreTag)
         rvCancionesTags = findViewById(R.id.rvCancionesTags)
+
+        loguito=findViewById(R.id.loguito)
+
+        loguito.setOnClickListener {
+            finish()
+        }
 
         val idTag = intent.getIntExtra("id_tag", -1)
         val nombreTag = intent.getStringExtra("nombre_tag")
