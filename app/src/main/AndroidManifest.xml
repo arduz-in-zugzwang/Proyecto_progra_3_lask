@@ -19,8 +19,11 @@
         android:theme="@style/Base.Theme.Proyecto_LASK"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".DetailAlbum"
+            android:name=".PerfilArtistaActivity"
             android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".DetailAlbum"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".Bienvenido"
             android:exported="true">

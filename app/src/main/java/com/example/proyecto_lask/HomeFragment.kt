@@ -1,5 +1,6 @@
 package com.example.proyecto_lask
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -125,8 +126,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         rvArtistas.layoutManager =
                             LinearLayoutManager(requireContext())
 
-                        rvArtistas.adapter =
-                            ArtistAdapter(artistas.take(5))
+                        rvArtistas.adapter = ArtistAdapter(artistas.take(5)) { artista ->
+                            val intent = Intent(requireContext(), PerfilArtistaActivity::class.java)
+                            intent.putExtra("id_usuario", artista.id_usuario)
+                            startActivity(intent)
+                        }
                     }
                 }
 
