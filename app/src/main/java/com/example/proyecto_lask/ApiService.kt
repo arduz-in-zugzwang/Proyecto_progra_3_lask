@@ -47,9 +47,11 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import retrofit2.http.Multipart
 import retrofit2.http.Part
+import java.util.concurrent.TimeUnit
 
 interface ApiService {
 
@@ -264,9 +266,15 @@ interface ApiService {
 }
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
+        val client = OkHttpClient.Builder()
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .writeTimeout(120, TimeUnit.SECONDS)
+            .build()
         val retrofit= Retrofit.Builder()
             //AQUI CAMBIAR EL IP ASAP
             .baseUrl("http://192.168.1.11/lask_bd/public/")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
