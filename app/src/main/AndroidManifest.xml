@@ -20,10 +20,9 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".PerfilArtistaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DetailAlbum"
-            android:exported="true" />
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".DetailAlbum" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".Bienvenido"
             android:exported="true">
