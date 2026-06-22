@@ -32,22 +32,19 @@ class ProfileFragment : Fragment() {
 
     private var userId: Int = -1
     private var modoEdicion = false
-    private var base64NuevaFoto: String? = null  // guardamos la foto nueva aquí
+    private var base64NuevaFoto: String? = null
 
     private lateinit var btnCrearPlaylist: Button
-    private lateinit var btnSubirCancion: Button
     private lateinit var btnCrearAlbum: Button
+    // btnSubirCancion eliminado — CrearCancion solo se abre desde CrearAlbum
 
-    // Lanzador para pedir permiso de galería
     private val pedirPermiso = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { concedido ->
         if (concedido) abrirGaleria()
-        else Toast.makeText(requireContext(),
-            "Permiso denegado", Toast.LENGTH_SHORT).show()
+        else Toast.makeText(requireContext(), "Permiso denegado", Toast.LENGTH_SHORT).show()
     }
 
-    // Lanzador para abrir galería
     private val galeria = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -64,48 +61,40 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvNombre = view.findViewById(R.id.tvNombreUsuario)
-        tvDescripcion = view.findViewById(R.id.tvDescripcion)
+        tvNombre       = view.findViewById(R.id.tvNombreUsuario)
+        tvDescripcion  = view.findViewById(R.id.tvDescripcion)
         ivEditarPerfil = view.findViewById(R.id.ivEditarPerfil)
-        ivAvatar = view.findViewById(R.id.ivAvatar)
+        ivAvatar       = view.findViewById(R.id.ivAvatar)
 
-        tvNombre.isEnabled = false
+        tvNombre.isEnabled      = false
         tvDescripcion.isEnabled = false
 
-        val prefs = requireContext()
-            .getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
-        userId = prefs.getInt("user_id", -1)
+        val prefs  = requireContext().getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
+        userId     = prefs.getInt("user_id", -1)
 
         if (userId == -1) {
-            Toast.makeText(requireContext(),
-                "No hay sesión activa", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "No hay sesión activa", Toast.LENGTH_SHORT).show()
             return
         }
 
         cargarPerfil()
+
         btnCrearPlaylist = view.findViewById(R.id.btnCrearPlaylist)
-        btnSubirCancion  = view.findViewById(R.id.btnSubirCancion)
         btnCrearAlbum    = view.findViewById(R.id.btnCrearAlbum)
 
         val idRol = prefs.getInt("user_id_rol", 1)
         configurarBotonesSegunRol(idRol)
 
+        ivAvatar.setOnClickListener { mostrarDialogAvatar() }
 
-        // Toca el avatar → dialog con dos opciones
-        ivAvatar.setOnClickListener {
-            mostrarDialogAvatar()
-        }
-
-        // Lápiz → activa edición o guarda
         ivEditarPerfil.setOnClickListener {
             if (!modoEdicion) {
-                modoEdicion = true
-                tvNombre.isEnabled = true
+                modoEdicion             = true
+                tvNombre.isEnabled      = true
                 tvDescripcion.isEnabled = true
                 tvNombre.requestFocus()
                 ivEditarPerfil.setImageResource(android.R.drawable.ic_menu_save)
-                Toast.makeText(requireContext(),
-                    "Editando perfil", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Editando perfil", Toast.LENGTH_SHORT).show()
             } else {
                 guardarCambios()
             }
@@ -113,23 +102,23 @@ class ProfileFragment : Fragment() {
     }
 
     private fun configurarBotonesSegunRol(idRol: Int) {
+        // Solo artistas (rol 2) ven el botón de crear álbum
         if (idRol == 2) {
-            btnSubirCancion.visibility = View.VISIBLE
-            btnCrearAlbum.visibility   = View.VISIBLE
+            btnCrearAlbum.visibility = View.VISIBLE
+        } else {
+            btnCrearAlbum.visibility = View.GONE
         }
 
         btnCrearPlaylist.setOnClickListener {
             startActivity(Intent(requireContext(), CrearPlaylist::class.java))
         }
-        btnSubirCancion.setOnClickListener {
-            startActivity(Intent(requireContext(), CrearCancion::class.java))
-        }
+
+        // Crear canción ya no tiene botón propio — se accede desde CrearAlbum
         btnCrearAlbum.setOnClickListener {
             startActivity(Intent(requireContext(), CrearAlbum::class.java))
         }
     }
 
-    // Dialog: "Ver perfil" o "Actualizar perfil"
     private fun mostrarDialogAvatar() {
         AlertDialog.Builder(requireContext())
             .setTitle("Foto de perfil")
@@ -137,7 +126,6 @@ class ProfileFragment : Fragment() {
                 when (opcion) {
                     0 -> mostrarFotoCompleta()
                     1 -> mostrarDialogActualizarFoto()
-                    2 -> cerrarSesion()
                 }
             }
             .show()
@@ -148,14 +136,10 @@ class ProfileFragment : Fragment() {
             .setTitle("Cerrar sesión")
             .setMessage("¿Seguro que quieres cerrar sesión?")
             .setPositiveButton("Sí") { _, _ ->
-                // Limpiar todos los datos guardados
                 requireContext()
                     .getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
-                    .edit()
-                    .clear()
-                    .apply()
+                    .edit().clear().apply()
 
-                // Volver al login sin posibilidad de volver atrás
                 val intent = Intent(requireContext(), Loguin::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
@@ -163,25 +147,20 @@ class ProfileFragment : Fragment() {
             .setNegativeButton("No", null)
             .show()
     }
-    // Muestra la foto en grande (dialog simple)
+
     private fun mostrarFotoCompleta() {
         val dialogView = ImageView(requireContext()).apply {
             layoutParams = ViewGroup.LayoutParams(600, 600)
-            scaleType = ImageView.ScaleType.CENTER_CROP
+            scaleType    = ImageView.ScaleType.CENTER_CROP
         }
         Glide.with(this).load(ivAvatar.drawable).into(dialogView)
-
         AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .setPositiveButton("Cerrar", null)
             .show()
     }
 
-    // Dialog con botón "Insertar desde galería"
     private fun mostrarDialogActualizarFoto() {
-        val dialogView = LayoutInflater.from(requireContext())
-            .inflate(android.R.layout.activity_list_item, null)
-
         AlertDialog.Builder(requireContext())
             .setTitle("Actualizar foto de perfil")
             .setMessage("Selecciona una imagen de tu galería")
@@ -210,39 +189,23 @@ class ProfileFragment : Fragment() {
         galeria.launch("image/*")
     }
 
-    // Convierte la imagen a Base64 comprimida y la muestra
     private fun procesarImagenSeleccionada(uri: Uri) {
         try {
-            val inputStream = requireContext().contentResolver.openInputStream(uri)
-            val bitmapOriginal = BitmapFactory.decodeStream(inputStream)
+            val inputStream      = requireContext().contentResolver.openInputStream(uri)
+            val bitmapOriginal   = BitmapFactory.decodeStream(inputStream)
+            val bitmapRedimensionado = Bitmap.createScaledBitmap(bitmapOriginal, 300, 300, true)
 
-            // Redimensionar a máximo 300x300 para que el Base64 no sea enorme
-            val bitmapRedimensionado = Bitmap.createScaledBitmap(
-                bitmapOriginal,
-                300, 300,
-                true
-            )
-
-            // Comprimir a JPEG calidad 70
             val outputStream = ByteArrayOutputStream()
             bitmapRedimensionado.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
-            val bytes = outputStream.toByteArray()
-            base64NuevaFoto = Base64.encodeToString(bytes, Base64.DEFAULT)
+            base64NuevaFoto = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
 
-            // Mostrar preview inmediato en el avatar
-            Glide.with(this)
-                .load(bitmapRedimensionado)
-                .circleCrop()
-                .into(ivAvatar)
-
+            Glide.with(this).load(bitmapRedimensionado).circleCrop().into(ivAvatar)
             Toast.makeText(requireContext(),
-                "Foto lista, guarda los cambios con el lápiz",
-                Toast.LENGTH_SHORT).show()
+                "Foto lista, guarda los cambios con el lápiz", Toast.LENGTH_SHORT).show()
 
         } catch (e: Exception) {
             Toast.makeText(requireContext(),
-                "Error al procesar imagen: ${e.message}",
-                Toast.LENGTH_SHORT).show()
+                "Error al procesar imagen: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -260,10 +223,9 @@ class ProfileFragment : Fragment() {
                             else "Escribe algo sobre ti..."
                         )
 
-                        // Cargar foto si existe
                         val pfp = usuario?.pfp?.toString()
                         if (!pfp.isNullOrEmpty()) {
-                            val bytes = Base64.decode(pfp, Base64.DEFAULT)
+                            val bytes  = Base64.decode(pfp, Base64.DEFAULT)
                             val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                             Glide.with(this@ProfileFragment)
                                 .load(bitmap)
@@ -287,17 +249,16 @@ class ProfileFragment : Fragment() {
 
     private fun guardarCambios() {
         val nuevoNombre = tvNombre.text.toString().trim()
-        val nuevaBio = tvDescripcion.text.toString().trim()
+        val nuevaBio    = tvDescripcion.text.toString().trim()
 
         if (nuevoNombre.isEmpty()) {
             tvNombre.error = "El nombre no puede estar vacío"
             return
         }
 
-        val prefs = requireContext()
-            .getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
+        val prefs         = requireContext().getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
         val idPaisGuardado = prefs.getInt("user_id_pais", 1)
-        val idRolGuardado = prefs.getInt("user_id_rol", 1)
+        val idRolGuardado  = prefs.getInt("user_id_rol", 1)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -305,15 +266,12 @@ class ProfileFragment : Fragment() {
                 if (!respuestaGet.isSuccessful) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(),
-                            "No se pudo obtener datos actuales",
-                            Toast.LENGTH_SHORT).show()
+                            "No se pudo obtener datos actuales", Toast.LENGTH_SHORT).show()
                     }
                     return@launch
                 }
 
-                val actual = respuestaGet.body()!!
-
-                // Si no seleccionaron foto nueva, mantener la que ya había
+                val actual   = respuestaGet.body()!!
                 val pfpFinal = base64NuevaFoto ?: actual.pfp?.toString() ?: ""
 
                 val respuestaPatch = RetrofitClient.create().updateUser(
@@ -330,19 +288,15 @@ class ProfileFragment : Fragment() {
                 withContext(Dispatchers.Main) {
                     if (respuestaPatch.isSuccessful) {
                         prefs.edit().putString("user_name", nuevoNombre).apply()
-
-                        modoEdicion = false
-                        base64NuevaFoto = null  // limpiar foto pendiente
-                        tvNombre.isEnabled = false
+                        modoEdicion             = false
+                        base64NuevaFoto         = null
+                        tvNombre.isEnabled      = false
                         tvDescripcion.isEnabled = false
                         ivEditarPerfil.setImageResource(android.R.drawable.ic_menu_edit)
-
-                        Toast.makeText(requireContext(),
-                            "Perfil actualizado", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(requireContext(),
-                            "Error al guardar: ${respuestaPatch.code()}",
-                            Toast.LENGTH_SHORT).show()
+                            "Error al guardar: ${respuestaPatch.code()}", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
