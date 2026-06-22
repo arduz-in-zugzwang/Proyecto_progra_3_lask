@@ -56,6 +56,15 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
+                    <EditText
+                        android:id="@+id/tvNombreArtistico"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/schoolbell_regular"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="italic"
+                        android:visibility="gone" />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -69,7 +78,7 @@
                             android:fontFamily="@font/schoolbell_regular"
                             android:text="Marisol Dominguez"
                             android:textColor="#FFFFFF"
-                            android:textSize="22sp" />
+                            android:textSize="17sp" />
 
                         <ImageView
                             android:id="@+id/ivEditarPerfil"
