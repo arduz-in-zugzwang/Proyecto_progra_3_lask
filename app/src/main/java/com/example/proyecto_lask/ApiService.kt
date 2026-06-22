@@ -181,7 +181,11 @@ interface ApiService {
     suspend fun deleteCancion(
         @Path("id") id: Int
     ): Response<respuestaDeleteCancion>
-
+    // algo con los tags para mi home
+    @GET("api/tags/{id}/canciones")
+    suspend fun getCancionesPorTag(
+        @Path("id") id: Int
+    ): Response<respuestaGetCanciones>
     //comentarios
     @FormUrlEncoded
     @POST("api/comentarios-artista")
@@ -258,7 +262,7 @@ object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
         val retrofit= Retrofit.Builder()
             //AQUI CAMBIAR EL IP ASAP
-            .baseUrl("http://192.168.1.9/lask_bd/public/")
+            .baseUrl("http://192.168.1.8/lask_bd/public/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
