@@ -14,17 +14,16 @@ import java.io.ByteArrayOutputStream
 
 class CrearAlbum : AppCompatActivity() {
 
-    private var imageUri: Uri? = null
-    private var portadaBase64: String = ""
-
     private lateinit var etNombre: EditText
     private lateinit var etDescripcion: EditText
-    private lateinit var btnPublicar: Button
     private lateinit var btnPortada: ImageButton
     private lateinit var btnInsertarCanciones: Button
+    private lateinit var btnPublicar: Button
     private lateinit var listaCanciones: LinearLayout
 
-    private val cancionesSeleccionadas = mutableListOf<Uri>()
+    private var portadaBase64: String = ""
+
+    private val canciones = mutableListOf<Uri>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,44 +36,35 @@ class CrearAlbum : AppCompatActivity() {
     private fun initViews() {
         etNombre = findViewById(R.id.etNombreAlbum)
         etDescripcion = findViewById(R.id.etDescripcionAlbum)
-        btnPublicar = findViewById(R.id.btnPublicarAlbum)
         btnPortada = findViewById(R.id.cambiarPortada)
         btnInsertarCanciones = findViewById(R.id.btnInsertarCanciones)
-
-        // IMPORTANTE: este ID debe existir en tu XML
+        btnPublicar = findViewById(R.id.btnPublicarAlbum)
         listaCanciones = findViewById(R.id.listaCanciones)
     }
 
     private fun setupListeners() {
 
-        // PORTADA
         btnPortada.setOnClickListener {
             abrirGaleria()
         }
 
-        // CANCIONES
         btnInsertarCanciones.setOnClickListener {
             abrirMusica()
         }
 
-        // CREAR ÁLBUM
         btnPublicar.setOnClickListener {
             crearAlbum()
         }
     }
 
-    // -------------------------
-    // GALERÍA PORTADA
-    // -------------------------
+    // PORTADA
     private fun abrirGaleria() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         startActivityForResult(intent, 100)
     }
 
-    // -------------------------
-    // MÚSICA MP3
-    // -------------------------
+    // MUSICA
     private fun abrirMusica() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.type = "audio/*"
@@ -87,88 +77,55 @@ class CrearAlbum : AppCompatActivity() {
 
         // PORTADA
         if (requestCode == 100 && resultCode == RESULT_OK) {
-
-            imageUri = data?.data
-            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-
+            val uri = data?.data
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
             btnPortada.setImageBitmap(bitmap)
-            portadaBase64 = convertirABase64(bitmap)
+            portadaBase64 = convertir(bitmap)
         }
 
         // CANCIONES
         if (requestCode == 200 && resultCode == RESULT_OK) {
 
-            cancionesSeleccionadas.clear()
+            canciones.clear()
 
-            if (data?.clipData != null) {
-
-                val count = data.clipData!!.itemCount
-
-                for (i in 0 until count) {
-                    val uri = data.clipData!!.getItemAt(i).uri
-                    cancionesSeleccionadas.add(uri)
+            data?.clipData?.let {
+                for (i in 0 until it.itemCount) {
+                    canciones.add(it.getItemAt(i).uri)
                 }
-
-            } else if (data?.data != null) {
-                cancionesSeleccionadas.add(data.data!!)
+            } ?: data?.data?.let {
+                canciones.add(it)
             }
 
             mostrarCanciones()
         }
     }
 
-    // -------------------------
-    // MOSTRAR CANCIONES EN UI
-    // -------------------------
     private fun mostrarCanciones() {
-
         listaCanciones.removeAllViews()
 
-        for (uri in cancionesSeleccionadas) {
-
-            val textView = TextView(this)
-
-            val nombre = uri.lastPathSegment ?: "Canción"
-
-            textView.text = nombre
-            textView.setPadding(0, 8, 0, 8)
-
-            listaCanciones.addView(textView)
+        canciones.forEach {
+            val tv = TextView(this)
+            tv.text = it.lastPathSegment ?: "canción"
+            tv.setPadding(0, 8, 0, 8)
+            listaCanciones.addView(tv)
         }
     }
 
-    // -------------------------
-    // CONVERTIR IMAGEN
-    // -------------------------
-    private fun convertirABase64(bitmap: Bitmap): String {
-
-        val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
-
-        val byteArray = outputStream.toByteArray()
-
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    private fun convertir(bitmap: Bitmap): String {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream)
+        return Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT)
     }
 
-    // -------------------------
-    // CREAR ÁLBUM
-    // -------------------------
     private fun crearAlbum() {
 
-        val nombre = etNombre.text.toString().trim()
-        val descripcion = etDescripcion.text.toString().trim()
+        val nombre = etNombre.text.toString()
+        val desc = etDescripcion.text.toString()
 
-        if (nombre.isEmpty()) {
-            etNombre.error = "Ingresa nombre"
+        if (nombre.isEmpty() || desc.isEmpty()) {
+            Toast.makeText(this, "Completa los campos", Toast.LENGTH_SHORT).show()
             return
         }
-
-        if (descripcion.isEmpty()) {
-            etDescripcion.error = "Ingresa descripción"
-            return
-        }
-
-        val idArtista = 1
 
         lifecycleScope.launch {
             try {
@@ -177,20 +134,20 @@ class CrearAlbum : AppCompatActivity() {
 
                 val response = api.createAlbum(
                     nombre_album = nombre,
-                    descripcion_album = descripcion,
+                    descripcion_album = desc,
                     portada_album = portadaBase64,
-                    id_artista = idArtista
+                    id_artista = 1
                 )
 
                 if (response.isSuccessful) {
                     Toast.makeText(this@CrearAlbum, "Álbum creado", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-                    Toast.makeText(this@CrearAlbum, "Error al crear álbum", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@CrearAlbum, "Error", Toast.LENGTH_SHORT).show()
                 }
 
             } catch (e: Exception) {
-                Toast.makeText(this@CrearAlbum, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CrearAlbum, e.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

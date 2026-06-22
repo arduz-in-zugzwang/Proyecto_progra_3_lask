@@ -182,7 +182,8 @@
                         android:backgroundTint="#FFFFFF"
                         android:text="+ Insertar canciones"
                         android:textColor="#888888"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        />
 
                 </LinearLayout>
 
