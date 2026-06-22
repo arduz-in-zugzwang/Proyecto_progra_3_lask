@@ -2,10 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/creacion"
+    android:background="#547daf"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CrearAlbum">
+    tools:context=".CrearAlbum"
+    android:fontFamily="@font/schoolbell">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -14,7 +15,7 @@
             android:id="@+id/toolbarLogin"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:background="#CC000000"
+            android:background="#547daf"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -27,10 +28,10 @@
 
                 <ImageView
                     android:id="@+id/imageView"
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
                     android:contentDescription="Logo LASK"
-                    app:srcCompat="@drawable/logolask" />
+                    app:srcCompat="@drawable/logito" />
 
                 <Space
                     android:layout_width="0dp"
@@ -48,19 +49,20 @@
 
             </LinearLayout>
         </com.google.android.material.appbar.MaterialToolbar>
+
         <TextView
             android:id="@+id/tvTitulo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="35dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-medium"
             android:text="Crear álbum"
             android:textColor="#FFFFFF"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:fontFamily="sans-serif-medium"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbarLogin" />
 
@@ -72,7 +74,7 @@
             android:layout_marginEnd="35dp"
             android:layout_marginTop="60dp"
             android:layout_marginBottom="60dp"
-            app:cardBackgroundColor="#000000"
+            app:cardBackgroundColor="#a3c7f4"
             app:cardCornerRadius="14dp"
             app:cardElevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -83,9 +85,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="45dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -100,12 +102,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="16dp"
+                    android:orientation="horizontal">
+
                     <ImageButton
                         android:id="@+id/cambiarPortada"
                         android:layout_width="90dp"
-                        android:layout_height="100dp"/>
+                        android:layout_height="100dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/borde_redondeado" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -130,12 +136,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="55dp"
                             android:background="#FFFFFF"
+                            android:gravity="top"
                             android:hint="Descripción del álbum..."
                             android:inputType="textMultiLine"
-                            android:gravity="top"
                             android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
                             android:paddingTop="8dp"
+                            android:paddingEnd="10dp"
                             android:textColor="#000000"
                             android:textColorHint="#888888"
                             android:textSize="13sp" />
@@ -145,17 +151,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="20dp">
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/listaCanciones"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:background="#333333"
+                        android:background="#FFFFFF"
                         android:orientation="vertical"
-                        android:padding="8dp">
+                        android:padding="8dp"
+                        android:scrollbars="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -163,30 +170,32 @@
                             android:text="Canciones agregadas"
                             android:textColor="#AAAAAA"
                             android:textSize="11sp" />
+
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btnInsertarCanciones"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_gravity="top"
-                        android:backgroundTint="#555555"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
                         android:text="+ Insertar canciones"
-                        android:textColor="#FFFFFF"
+                        android:textColor="#888888"
                         android:textSize="12sp" />
 
                 </LinearLayout>
+
                 <Button
                     android:id="@+id/btnPublicarAlbum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:backgroundTint="#888888"
-                    android:text="Publicar album"
-                    android:textColor="#FFFFFF"
+                    android:backgroundTint="#FFFFFF"
                     android:paddingStart="32dp"
-                    android:paddingEnd="32dp" />
+                    android:paddingEnd="32dp"
+                    android:text="Publicar album"
+                    android:textColor="#888888" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
