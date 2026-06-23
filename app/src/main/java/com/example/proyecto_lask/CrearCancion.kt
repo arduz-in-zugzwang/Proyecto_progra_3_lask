@@ -167,14 +167,24 @@ class CrearCancion : AppCompatActivity() {
             Toast.makeText(this, "Selecciona un archivo de audio", Toast.LENGTH_SHORT).show()
             return
         }
+        val tagsSeleccionados = arrayListOf<Int>()
+
+        for (i in 0 until listaTags.childCount) {
+
+            val cb = listaTags.getChildAt(i) as CheckBox
+
+            if (cb.isChecked) {
+                tagsSeleccionados.add(cb.tag as Int)
+            }
+        }
 
         // Devolver datos a CrearAlbum sin subir a la API todavía
         val result = Intent().apply {
             putExtra("nombre_cancion",  nombre)
             putExtra("portada_cancion", portadaBase64)
             putExtra("path_link",       audioPathLink)
-            putExtra("audio_uri", audioUri?.toString()
-            )
+            putExtra("audio_uri", audioUri?.toString())
+            putIntegerArrayListExtra("tags", tagsSeleccionados)
         }
         setResult(Activity.RESULT_OK, result)
         finish()

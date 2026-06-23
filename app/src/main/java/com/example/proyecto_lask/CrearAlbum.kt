@@ -26,7 +26,8 @@ data class CancionTemporal(
     val nombre: String,
     val portadaBase64: String,
     val pathLink: String,
-    val audioUri: String
+    val audioUri: String,
+    val tags: ArrayList<Int>
 )
 
 class CrearAlbum : AppCompatActivity() {
@@ -114,8 +115,10 @@ class CrearAlbum : AppCompatActivity() {
             val portada  = data.getStringExtra("portada_cancion") ?: ""
             val pathLink = data.getStringExtra("path_link") ?: ""
             val audioUri = data.getStringExtra("audio_uri") ?: ""
+            val tags = data.getIntegerArrayListExtra("tags") ?: arrayListOf()
 
-            canciones.add(CancionTemporal(nombre, portada, pathLink, audioUri))
+
+            canciones.add(CancionTemporal(nombre, portada, pathLink, audioUri,tags))
             mostrarCanciones()
         }
     }

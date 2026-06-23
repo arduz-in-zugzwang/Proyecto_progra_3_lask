@@ -10,6 +10,7 @@ import com.example.proyecto_lask.artistas.respuestaDeleteArtista
 import com.example.proyecto_lask.artistas.respuestaGetArtista
 import com.example.proyecto_lask.artistas.respuestaGetArtistas
 import com.example.proyecto_lask.artistas.respuestaUpdateArtista
+import com.example.proyecto_lask.cancion_tags.respuestaCreateCancionTag
 import com.example.proyecto_lask.canciones.respuestaCreateCancion
 import com.example.proyecto_lask.canciones.respuestaDeleteCancion
 import com.example.proyecto_lask.canciones.respuestaGetCancion
@@ -187,11 +188,18 @@ interface ApiService {
     suspend fun deleteCancion(
         @Path("id") id: Int
     ): Response<respuestaDeleteCancion>
-    // algo con los tags para mi home
+
+    // algo con los tags para mi home Tags-Cancion basicamente
     @GET("api/tags/{id}/canciones")
     suspend fun getCancionesPorTag(
         @Path("id") id: Int
     ): Response<respuestaGetCanciones>
+    @FormUrlEncoded
+    @POST("api/cancion-tags")
+    suspend fun createCancionTag(
+        @Field("id_cancion") idCancion: Int,
+        @Field("id_tag") idTag: Int
+    ): Response<respuestaCreateCancionTag>
     //comentarios
     @FormUrlEncoded
     @POST("api/comentarios-artista")
