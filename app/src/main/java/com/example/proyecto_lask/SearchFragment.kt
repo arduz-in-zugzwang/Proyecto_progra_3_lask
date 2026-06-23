@@ -103,6 +103,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                                     Intent(requireContext(), DetailSong::class.java)
 
                                 intent.putExtra("id_album", cancion.id_album)
+                                intent.putExtra("id_cancion", cancion.id)
 
                                 startActivity(intent)
                             }
@@ -172,6 +173,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                         Intent(requireContext(), DetailSong::class.java)
 
                     intent.putExtra("id_album", cancion.id_album)
+                    intent.putExtra("id_cancion", cancion.id)
 
                     startActivity(intent)
                 }
@@ -213,6 +215,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     Intent(requireContext(), DetailSong::class.java)
 
                 intent.putExtra("id_album", cancion.id_album)
+                intent.putExtra("id_cancion", cancion.id)
 
                 startActivity(intent)
             }
