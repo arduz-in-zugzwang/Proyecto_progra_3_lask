@@ -19,7 +19,6 @@
             android:layout_marginTop="24dp"
             app:cardCornerRadius="45dp"
             app:cardElevation="4dp">
-
             <ImageView
                 android:id="@+id/ivAvatarArtista"
                 android:layout_width="match_parent"
@@ -27,10 +26,8 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/artistadefault"
                 android:contentDescription="Foto artista" />
-
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Nombre artístico (encima del nombre de usuario) -->
         <TextView
             android:id="@+id/tvNombreArtistico"
             android:layout_width="wrap_content"
@@ -42,7 +39,6 @@
             android:textStyle="italic"
             android:visibility="gone" />
 
-        <!-- Nombre -->
         <TextView
             android:id="@+id/tvNombreArtista"
             android:layout_width="wrap_content"
@@ -53,7 +49,6 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <!-- Bio -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +65,6 @@
             app:cardBackgroundColor="#33000000"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp">
-
             <TextView
                 android:id="@+id/tvBioArtista"
                 android:layout_width="match_parent"
@@ -79,10 +73,8 @@
                 android:padding="12dp"
                 android:textColor="#DDDDDD"
                 android:textSize="13sp" />
-
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Canciones -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,7 +91,6 @@
             android:layout_marginTop="8dp"
             android:nestedScrollingEnabled="false" />
 
-        <!-- Álbumes -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,6 +102,51 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvAlbumesArtista"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Muro de comentarios -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Muro"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etComentario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Deja un mensaje..."
+                android:textColor="#FFFFFF"
+                android:textColorHint="#AAAAAA"
+                android:backgroundTint="#FFFFFF"
+                android:padding="8dp" />
+
+            <Button
+                android:id="@+id/btnEnviarComentario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Enviar"
+                android:backgroundTint="#547daf"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvComentarios"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

@@ -18,6 +18,7 @@ import com.example.proyecto_lask.canciones.respuestaGetCanciones
 import com.example.proyecto_lask.canciones.respuestaUpdateCancion
 import com.example.proyecto_lask.comentarios.respuestaCreateComentario
 import com.example.proyecto_lask.comentarios.respuestaDeleteComentario
+import com.example.proyecto_lask.comentarios.respuestaGetComentarios
 import com.example.proyecto_lask.letras.respuestaCreateLetra
 import com.example.proyecto_lask.letras.respuestaGetAllLetras
 import com.example.proyecto_lask.letras.respuestaGetLetras
@@ -201,6 +202,8 @@ interface ApiService {
         @Field("id_tag") idTag: Int
     ): Response<respuestaCreateCancionTag>
     //comentarios
+    @GET("api/comentarios-artista")
+    suspend fun getComentarios(): Response<respuestaGetComentarios>
     @FormUrlEncoded
     @POST("api/comentarios-artista")
     suspend fun createComentario(

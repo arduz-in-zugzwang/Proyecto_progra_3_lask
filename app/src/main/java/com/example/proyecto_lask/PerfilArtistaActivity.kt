@@ -1,8 +1,11 @@
 package com.example.proyecto_lask
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -17,6 +20,10 @@ import kotlinx.coroutines.withContext
 
 class PerfilArtistaActivity : AppCompatActivity() {
 
+    private lateinit var rvComentarios: RecyclerView
+    private lateinit var etComentario: EditText
+    private lateinit var btnEnviarComentario: Button
+    private var idArtistaActual: Int = -1
     private lateinit var ivAvatar: ImageView
     private lateinit var tvNombreArtistico: TextView
     private lateinit var tvNombreUsuario: TextView
@@ -34,10 +41,38 @@ class PerfilArtistaActivity : AppCompatActivity() {
         tvBio            = findViewById(R.id.tvBioArtista)
         rvCanciones      = findViewById(R.id.rvCancionesArtista)
         rvAlbumes        = findViewById(R.id.rvAlbumesArtista)
+        rvComentarios       = findViewById(R.id.rvComentarios)
+        etComentario        = findViewById(R.id.etComentario)
+        btnEnviarComentario = findViewById(R.id.btnEnviarComentario)
 
         val idUsuario = intent.getIntExtra("id_usuario", -1)
         if (idUsuario == -1) { finish(); return }
 
+        val prefs = getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
+        val miUserId = prefs.getInt("user_id", -1)
+
+        btnEnviarComentario.setOnClickListener {
+            val texto = etComentario.text.toString().trim()
+            if (texto.isEmpty() || idArtistaActual == -1 || miUserId == -1) return@setOnClickListener
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val resp = RetrofitClient.create().createComentario(
+                        id_artista = idArtistaActual,
+                        id_usuario = miUserId,
+                        texto      = texto
+                    )
+                    withContext(Dispatchers.Main) {
+                        if (resp.isSuccessful) {
+                            etComentario.setText("")
+                            cargarComentarios(idArtistaActual) // recargar
+                            Toast.makeText(this@PerfilArtistaActivity,
+                                "Mensaje enviado", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (e: Exception) { /* silencioso */ }
+            }
+        }
         cargarTodo(idUsuario)
     }
 
@@ -78,8 +113,10 @@ class PerfilArtistaActivity : AppCompatActivity() {
                         ?.firstOrNull { it.id_usuario == idUsuario }
 
                     if (artista != null) {
+                        idArtistaActual = artista.id  // <- agregar
                         tvNombreArtistico.text    = artista.nombre_artistico
                         tvNombreArtistico.visibility = android.view.View.VISIBLE
+                        cargarComentarios(artista.id) // <- agregar
                     }
 
                     // --- Canciones del artista ---
@@ -120,6 +157,26 @@ class PerfilArtistaActivity : AppCompatActivity() {
                         "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+    private fun cargarComentarios(idArtista: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val respComentarios = RetrofitClient.create().getComentarios()
+                val respUsuarios    = RetrofitClient.create().getUsers()
+
+                withContext(Dispatchers.Main) {
+                    // Mapa id -> nombre
+                    val nombres = respUsuarios.body()?.data
+                        ?.associate { it.id.toString() to it.name } ?: emptyMap()
+
+                    val comentarios = respComentarios.body()?.data
+                        ?.filter { it.id_artista == idArtista.toString() } ?: emptyList()
+
+                    rvComentarios.layoutManager = LinearLayoutManager(this@PerfilArtistaActivity)
+                    rvComentarios.adapter = ComentarioAdapter(comentarios, nombres)
+                }
+            } catch (e: Exception) { /* silencioso */ }
         }
     }
 }
