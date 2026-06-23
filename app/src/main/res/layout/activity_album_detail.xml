@@ -76,11 +76,11 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cardAlbum"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="500dp"
             android:layout_marginStart="35dp"
             android:layout_marginEnd="35dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="20dp"
             app:cardCornerRadius="14dp"
             app:cardElevation="8dp"
             app:cardBackgroundColor="#a3c7f4"
