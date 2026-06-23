@@ -191,7 +191,7 @@ class DetailSong : AppCompatActivity() {
     private fun reproducir() {
         val cancion = listaCanciones[posicionActual]
             // aqui ojo con la IP
-        val url = "http://192.168.1.11/lask_bd/public/" + cancion.path_link
+        val url = "http://172.19.133.49/lask_bd/public/" + cancion.path_link
 
         Toast.makeText(
             this@DetailSong,

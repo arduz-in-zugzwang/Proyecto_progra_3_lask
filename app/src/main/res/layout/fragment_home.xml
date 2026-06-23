@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/portadadefault"
+                    android:src="@drawable/go_kitty_go"
                     android:contentDescription="Album destacado" />
 
             </com.google.android.material.card.MaterialCardView>

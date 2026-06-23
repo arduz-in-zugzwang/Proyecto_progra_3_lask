@@ -5,13 +5,15 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.CoroutineScope
@@ -31,11 +33,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Lista de canciones
+        // --- VISTAS DE CANCIONES ---
         rvCanciones = view.findViewById(R.id.rvCanciones)
         tvNuevos = view.findViewById(R.id.tvNuevos)
         val tvVerMasCanciones = view.findViewById<TextView>(R.id.tvVerMasCanciones)
 
+        // --- ANIMACIÓN DEL VINILO Y CARGA DEL GIF ---
+        val ivVinilo = view.findViewById<ImageView>(R.id.ivVinilo)
+        val ivDestacado = view.findViewById<ImageView>(R.id.ivDestacado)
+
+        // Inicia tu animación lenta sobre el eje
+        val rotarDisco = AnimationUtils.loadAnimation(requireContext(), R.anim.rotation)
+        ivVinilo.startAnimation(rotarDisco)
+
+        // Carga el GIF de portada usando Glide
+        Glide.with(this)
+            .asGif()
+            .load(R.drawable.go_kitty_go)
+            .placeholder(R.drawable.portadadefault)
+            .into(ivDestacado)
+
+        // --- ACCIONES Y CARGAS ---
         tvVerMasCanciones.setOnClickListener {
             tvNuevos.text = "Nuevos Lanzamientos Canciones"
             cargarCanciones()
@@ -43,154 +61,90 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         cargarCanciones()
 
-        // Tags: por ahora son de prueba, luego vendrán de la API
-        // (los tags únicos de las canciones que el usuario escuchó)
+        // --- CARGAR TAGS DESDE LA API ---
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-
-                val respuesta =
-                    RetrofitClient.create().getTags()
-
+                val respuesta = RetrofitClient.create().getTags()
                 if (respuesta.isSuccessful) {
-
-                    val tags =
-                        respuesta.body()?.data ?: emptyList()
-
+                    val tags = respuesta.body()?.data ?: emptyList()
                     withContext(Dispatchers.Main) {
-
-                        mostrarTags(
-                            view,
-                            tags
-                        )
+                        mostrarTags(view, tags)
                     }
                 }
-
             } catch (e: Exception) {
-
                 withContext(Dispatchers.Main) {
-
-                    Toast.makeText(
-                        requireContext(),
-                        e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
 
-        // Lista de artistas favoritos
+        // --- CARGAR ARTISTAS ---
         rvArtistas = view.findViewById(R.id.rvArtistas)
         val tvVerMasArtistas = view.findViewById<TextView>(R.id.tvVerMasArtistas)
 
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-
-                val respuesta =
-                    RetrofitClient.create().getArtistas()
-
+                val respuesta = RetrofitClient.create().getArtistas()
                 if (respuesta.isSuccessful) {
-
-                    val artistas =
-                        respuesta.body()?.data ?: emptyList()
+                    val artistas = respuesta.body()?.data ?: emptyList()
 
                     withContext(Dispatchers.Main) {
-                        if (artistas.isEmpty()) {
-                            // Opcional: mostrar un mensaje si no hay artistas
-                            // Toast.makeText(requireContext(), "No hay artistas nuevos", Toast.LENGTH_SHORT).show()
-                        }
+                        rvArtistas.layoutManager = LinearLayoutManager(requireContext())
 
-                        rvArtistas.layoutManager =
-                            LinearLayoutManager(requireContext())
-
-                        // Obtener el ID del usuario logueado para comparar
                         val prefs = requireContext().getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
                         val loggedUserId = prefs.getInt("user_id", -1)
 
-                        // Mostramos inicialmente solo 3
                         rvArtistas.adapter = ArtistAdapter(artistas.take(3)) { artista ->
                             if (artista.id_usuario == loggedUserId) {
-                                // Si es mi propio perfil, ir al fragmento de perfil
                                 findNavController().navigate(R.id.profileFragment)
                             } else {
-                                // Si es otro artista, ir a su actividad de perfil
                                 val intent = Intent(requireContext(), PerfilArtistaActivity::class.java)
                                 intent.putExtra("id_usuario", artista.id_usuario)
                                 startActivity(intent)
                             }
                         }
 
-                        // Al darle a "Ver más", abrimos la nueva pantalla con todos los artistas
                         tvVerMasArtistas.setOnClickListener {
                             val intent = Intent(requireContext(), VerTodosArtistasActivity::class.java)
                             startActivity(intent)
                         }
                     }
                 }
-
             } catch (e: Exception) {
-
                 withContext(Dispatchers.Main) {
-
-                    Toast.makeText(
-                        requireContext(),
-                        e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
+
+        // --- CARGAR ÁLBUMES ---
         rvAlbumes = view.findViewById(R.id.rvAlbumes)
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-
-                val respuesta =
-                    RetrofitClient.create().getAlbumes()
-
+                val respuesta = RetrofitClient.create().getAlbumes()
                 if (respuesta.isSuccessful) {
-
-                    val albumes =
-                        respuesta.body()?.data ?: emptyList()
+                    val albumes = respuesta.body()?.data ?: emptyList()
 
                     withContext(Dispatchers.Main) {
+                        rvAlbumes.layoutManager = LinearLayoutManager(
+                            requireContext(),
+                            LinearLayoutManager.HORIZONTAL,
+                            false
+                        )
 
-                        rvAlbumes.layoutManager =
-                            LinearLayoutManager(
-                                requireContext(),
-                                LinearLayoutManager.HORIZONTAL,
-                                false
-                            )
-
-                        rvAlbumes.adapter =
-                            AlbumAdapter(albumes.take(5)){ album ->
-
-                                val intent = Intent(
-                                    requireContext(),
-                                    AlbumDetail::class.java
-                                )
-
-                                intent.putExtra("id_album", album.id)
-
-                                startActivity(intent)
-                            }
+                        rvAlbumes.adapter = AlbumAdapter(albumes.take(5)) { album ->
+                            val intent = Intent(requireContext(), AlbumDetail::class.java)
+                            intent.putExtra("id_album", album.id)
+                            startActivity(intent)
+                        }
                     }
                 }
-
             } catch (e: Exception) {
-
                 withContext(Dispatchers.Main) {
-
-                    Toast.makeText(
-                        requireContext(),
-                        e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
                 }
             }
         }
-
     }
 
     private fun cargarCanciones(idTag: Int? = null) {
@@ -208,7 +162,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             val intent = Intent(requireContext(), DetailSong::class.java)
                             intent.putExtra("id_album", cancion.id_album)
                             intent.putExtra("id_cancion", cancion.id)
-                            // Si estamos filtrando por tag, pasamos el ID del tag para que DetailSong sepa
                             if (idTag != null) {
                                 intent.putExtra("id_tag_origen", idTag)
                             }
@@ -234,28 +187,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             chip.isCheckable = false
             chip.setTextColor(Color.BLACK)
 
-            // Color aleatorio claro para asegurar legibilidad del texto negro
+            // Fondo aleatorio claro
             val r = Random.nextInt(150, 256)
             val g = Random.nextInt(150, 256)
             val b = Random.nextInt(150, 256)
             chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(Color.rgb(r, g, b))
 
+            // Evento de clic: Abre TagDetail con los datos del tag
             chip.setOnClickListener {
-                val intent = Intent(
-                    requireContext(),
-                    TagDetail::class.java
-                )
-
-                intent.putExtra(
-                    "id_tag",
-                    tag.id
-                )
-
-                intent.putExtra(
-                    "nombre_tag",
-                    tag.nombre_tag
-                )
-
+                val intent = Intent(requireContext(), TagDetail::class.java)
+                intent.putExtra("id_tag", tag.id)
+                intent.putExtra("nombre_tag", tag.nombre_tag)
                 startActivity(intent)
             }
             chipGroupTags.addView(chip)
