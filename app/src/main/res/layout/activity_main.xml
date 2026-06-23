@@ -10,7 +10,11 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/celeste"
+        app:cardBackgroundColor="#547daf"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        app:contentPadding="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -18,7 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="55dp"
             android:layout_gravity="center"
-            android:src="@drawable/logolask"
+            android:src="@drawable/logito"
+            android:background="@android:color/transparent"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"

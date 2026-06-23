@@ -34,7 +34,7 @@
                 android:id="@+id/ivVinilo"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/bg_vinyl" />
+                android:src="@drawable/disk" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardDestacado"
@@ -116,12 +116,12 @@
                 android:layout_weight="1"
                 android:layout_height="1dp"/>
 
-<!--            <TextView-->
-<!--                android:id="@+id/tvVerMasTags"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:text="Ver más >"/>-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/tvVerMasTags"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="20dp"-->
+            <!--                android:text="Ver más >"/>-->
         </LinearLayout>
 
         <!-- Chips de tags: se generan dinámicamente en HomeFragment.kt -->

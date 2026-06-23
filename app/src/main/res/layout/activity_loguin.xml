@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loguin"
-    android:background="@drawable/login"
+    android:background="@drawable/casetsfondo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -17,7 +17,7 @@
             android:id="@+id/toolbarLogin"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:background="#CC000000"
+            android:background="#547daf"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -30,10 +30,10 @@
 
                 <ImageView
                     android:id="@+id/logo"
-                    android:layout_width="70dp"
-                    android:layout_height="50dp"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
                     android:contentDescription="Logo LASK"
-                    app:srcCompat="@drawable/logolask" />
+                    app:srcCompat="@drawable/logito" />
 
                 <Space
                     android:layout_width="0dp"
@@ -47,8 +47,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:text="Regístrate"
-                    android:textColor="#FFFFFF"
-                    app:strokeColor="#FFFFFF" />
+                    android:textSize="18sp"
+                    android:backgroundTint="#2D2D2D"
+                    android:textColor="#FFFFFF" />
 
             </LinearLayout>
         </com.google.android.material.appbar.MaterialToolbar>
@@ -61,7 +62,7 @@
             android:layout_marginEnd="35dp"
             android:layout_marginTop="60dp"
             android:layout_marginBottom="60dp"
-            app:cardBackgroundColor="#000000"
+            app:cardBackgroundColor="#547daf"
             app:cardCornerRadius="14dp"
             app:cardElevation="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -83,7 +84,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:text="Iniciar sesión"
                     android:textColor="#FFFFFF"
-                    android:textSize="26sp"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -92,7 +93,7 @@
                     android:layout_marginBottom="4dp"
                     android:text="Nombre de usuario"
                     android:textColor="#DDDDDD"
-                    android:textSize="14sp" />
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/etUsuario"
@@ -101,11 +102,12 @@
                     android:layout_marginBottom="16dp"
                     android:background="#FFFFFF"
                     android:inputType="text"
+                    android:textSize="20sp"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:textColor="#000000"
                     android:textColorHint="#888888"
-                    android:hint="Escriba el nombre de su usuario" />
+                    android:hint="Ingrese su nombre de usuario" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -113,7 +115,7 @@
                     android:layout_marginBottom="4dp"
                     android:text="Contraseña"
                     android:textColor="#DDDDDD"
-                    android:textSize="14sp" />
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/etContra"
@@ -124,9 +126,10 @@
                     android:inputType="textPassword"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
+                    android:textSize="20sp"
                     android:textColor="#000000"
                     android:textColorHint="#888888"
-                    android:hint="Escriba su contraseña" />
+                    android:hint="Ingrese su contraseña" />
 
 
                 <TextView
@@ -134,9 +137,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:text="¿No tienes una cuenta? Prueba registrarte."
+                    android:text="¿Aún no tienes una cuenta? Registrate!"
                     android:textColor="#CCCCCC"
-                    android:textSize="13sp" />
+                    android:textSize="17sp" />
 
                 <!-- Botón iniciar sesión -->
                 <Button
@@ -144,9 +147,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:backgroundTint="#888888"
+                    android:backgroundTint="#2D2D2D"
                     android:text="Iniciar sesión"
                     android:textColor="#FFFFFF"
+                    android:textSize="18sp"
                     android:paddingStart="32dp"
                     android:paddingEnd="32dp" />
             </LinearLayout>
