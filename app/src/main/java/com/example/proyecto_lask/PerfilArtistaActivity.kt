@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PerfilArtistaActivity : AppCompatActivity() {
+    private lateinit var loguito: ImageView
     private lateinit var rvPlaylistsArtista: RecyclerView
 
     private lateinit var rvComentarios: RecyclerView
@@ -46,6 +47,12 @@ class PerfilArtistaActivity : AppCompatActivity() {
         rvComentarios       = findViewById(R.id.rvComentarios)
         etComentario        = findViewById(R.id.etComentario)
         btnEnviarComentario = findViewById(R.id.btnEnviarComentario)
+        loguito= findViewById(R.id.loguito)
+
+        loguito.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
 
         val idUsuario = intent.getIntExtra("id_usuario", -1)
         if (idUsuario == -1) { finish(); return }
