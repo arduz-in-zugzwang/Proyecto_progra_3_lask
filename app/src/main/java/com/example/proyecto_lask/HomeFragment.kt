@@ -43,7 +43,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val ivDestacado = view.findViewById<ImageView>(R.id.ivDestacado)
 
         // Inicia tu animación lenta sobre el eje
-        val rotarDisco = AnimationUtils.loadAnimation(requireContext(), R.anim.rotation)
+        val rotarDisco = AnimationUtils.loadAnimation(requireContext(), R.anim.rotacion_lenta)
         ivVinilo.startAnimation(rotarDisco)
 
         // Carga el GIF de portada usando Glide
