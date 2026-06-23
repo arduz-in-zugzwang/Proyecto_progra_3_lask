@@ -27,6 +27,7 @@ import com.example.proyecto_lask.paises.respuestaGetPaises
 import com.example.proyecto_lask.playlistcanciones.respuestaCreatePlaylistCancion
 import com.example.proyecto_lask.playlists.respuestaCreatePlaylist
 import com.example.proyecto_lask.playlists.respuestaDeletePlaylist
+import com.example.proyecto_lask.playlists.respuestaGetPlaylists
 import com.example.proyecto_lask.playlists.respuestaUpdatePlaylist
 import com.example.proyecto_lask.roles.respuestagetRoles
 import com.example.proyecto_lask.tags.respuestaCreateTag
@@ -267,6 +268,9 @@ interface ApiService {
         @Field("nombre_playlist") nombre: String?,
         @Field("privacidad_playlist") privacidad: Boolean?
     ): Response<respuestaUpdatePlaylist>
+    @GET("api/playlists")
+    suspend fun getPlaylists():
+            Response<respuestaGetPlaylists>
 
     //PlaylistCancion
     @FormUrlEncoded

@@ -2,6 +2,7 @@ package com.example.proyecto_lask
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -17,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -24,78 +26,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var rvArtistas: RecyclerView
     private lateinit var rvAlbumes: RecyclerView
     private lateinit var chipGroupTags: ChipGroup
-    private val coloresTags = listOf(
-        R.color.tag_amarillo_claro,
-        R.color.tag_amarillo,
-        R.color.tag_verde,
-        R.color.tag_morado,
-        R.color.tag_celeste,
-        R.color.tag_rosado,
-        R.color.tag_naranja,
-        R.color.tag_turquesa
-    )
+    private lateinit var tvNuevos: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // Lista de canciones
         rvCanciones = view.findViewById(R.id.rvCanciones)
-        CoroutineScope(Dispatchers.IO).launch {
+        tvNuevos = view.findViewById(R.id.tvNuevos)
+        val tvVerMasCanciones = view.findViewById<TextView>(R.id.tvVerMasCanciones)
 
-            try {
-
-                val respuesta =
-                    RetrofitClient.create().getCanciones()
-
-                if (respuesta.isSuccessful) {
-
-                    val canciones =
-                        respuesta.body()?.data ?: emptyList()
-
-                    withContext(Dispatchers.Main) {
-                        rvCanciones.layoutManager =
-                            LinearLayoutManager(requireContext())
-
-                        val cancionesHome = canciones.take(5)
-
-                        rvCanciones.adapter =
-                            SongAdapter(cancionesHome) { cancion ->
-
-                                val posicion =
-                                    cancionesHome.indexOf(cancion)
-
-                                val intent = Intent(
-                                    requireContext(),
-                                    DetailSong::class.java
-                                )
-
-                                intent.putExtra(
-                                    "id_album",
-                                    cancion.id_album
-                                )
-
-                                intent.putExtra(
-                                    "id_cancion",
-                                    cancion.id
-                                )
-
-                                startActivity(intent)
-                            }
-                    }
-                }
-
-            } catch (e: Exception) {
-
-                withContext(Dispatchers.Main) {
-
-                    Toast.makeText(
-                        requireContext(),
-                        e.message,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
+        tvVerMasCanciones.setOnClickListener {
+            tvNuevos.text = "Nuevos Lanzamientos Canciones"
+            cargarCanciones()
         }
+
+        cargarCanciones()
 
         // Tags: por ahora son de prueba, luego vendrán de la API
         // (los tags únicos de las canciones que el usuario escuchó)
@@ -247,29 +193,56 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     }
 
-    private fun mostrarTags(view: View, tags: List<com.example.proyecto_lask.tags.Data>
-    ) {
+    private fun cargarCanciones(idTag: Int? = null) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val api = RetrofitClient.create()
+                val respuesta = if (idTag == null) api.getCanciones() else api.getCancionesPorTag(idTag)
+
+                if (respuesta.isSuccessful) {
+                    val canciones = respuesta.body()?.data ?: emptyList()
+                    withContext(Dispatchers.Main) {
+                        rvCanciones.layoutManager = LinearLayoutManager(requireContext())
+                        val listaAMostrar = if (idTag == null) canciones.take(5) else canciones
+                        rvCanciones.adapter = SongAdapter(listaAMostrar) { cancion ->
+                            val intent = Intent(requireContext(), DetailSong::class.java)
+                            intent.putExtra("id_album", cancion.id_album)
+                            intent.putExtra("id_cancion", cancion.id)
+                            // Si estamos filtrando por tag, pasamos el ID del tag para que DetailSong sepa
+                            if (idTag != null) {
+                                intent.putExtra("id_tag_origen", idTag)
+                            }
+                            startActivity(intent)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun mostrarTags(view: View, tags: List<com.example.proyecto_lask.tags.Data>) {
         chipGroupTags = view.findViewById(R.id.chipGroupTags)
         chipGroupTags.removeAllViews()
 
-        tags.forEachIndexed { index, tag ->
+        tags.forEach { tag ->
             val chip = Chip(requireContext())
             chip.text = tag.nombre_tag
             chip.isCheckable = false
-            chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), coloresTags[index % coloresTags.size])
-            )
+            chip.setTextColor(Color.BLACK)
+
+            // Color aleatorio claro para asegurar legibilidad del texto negro
+            val r = Random.nextInt(150, 256)
+            val g = Random.nextInt(150, 256)
+            val b = Random.nextInt(150, 256)
+            chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(Color.rgb(r, g, b))
+
             chip.setOnClickListener {
-
-                val intent = Intent(
-                    requireContext(),
-                    TagDetail::class.java
-                )
-
-                intent.putExtra("id_tag", tag.id)
-                intent.putExtra("nombre_tag", tag.nombre_tag)
-
-                startActivity(intent)
+                tvNuevos.text = "Canciones: ${tag.nombre_tag}"
+                cargarCanciones(tag.id)
             }
             chipGroupTags.addView(chip)
         }
