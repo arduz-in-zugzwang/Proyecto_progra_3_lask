@@ -305,8 +305,14 @@ class ProfileFragment : Fragment() {
 
                 withContext(Dispatchers.Main) {
                     if (respCanciones.isSuccessful) {
-                        val canciones = respCanciones.body()?.data
-                            ?.filter { it.id_artista == idArtista } ?: emptyList()
+                        val todas = respCanciones.body()?.data ?: emptyList()
+                        // LOG TEMPORAL
+                        android.util.Log.d("PERFIL", "idArtista buscado: $idArtista")
+                        android.util.Log.d("PERFIL", "Canciones totales: ${todas.size}")
+                        todas.forEach { android.util.Log.d("PERFIL", "  cancion id_artista: ${it.id_artista}") }
+
+                        val canciones = todas.filter { it.id_artista == idArtista }
+                        android.util.Log.d("PERFIL", "Canciones filtradas: ${canciones.size}")
 
                         rvMisCanciones.layoutManager = LinearLayoutManager(requireContext())
                         rvMisCanciones.adapter = SongAdapter(canciones) { cancion ->
@@ -318,12 +324,13 @@ class ProfileFragment : Fragment() {
                     }
 
                     if (respAlbumes.isSuccessful) {
-                        val albumes = respAlbumes.body()?.data
-                            ?.filter { it.id_artista == idArtista } ?: emptyList()
+                        val todos = respAlbumes.body()?.data ?: emptyList()
+                        android.util.Log.d("PERFIL", "Albumes totales: ${todos.size}")
+                        // necesito ver el data class de albumes para confirmar el campo
 
                         rvMisAlbumes.layoutManager = LinearLayoutManager(
                             requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                        rvMisAlbumes.adapter = AlbumAdapter(albumes) { album ->
+                        rvMisAlbumes.adapter = AlbumAdapter(todos) { album ->
                             val intent = Intent(requireContext(), AlbumDetail::class.java)
                             intent.putExtra("id_album", album.id)
                             startActivity(intent)
@@ -331,7 +338,9 @@ class ProfileFragment : Fragment() {
                     }
                 }
             } catch (e: Exception) {
-                // silencioso
+                withContext(Dispatchers.Main) {
+                    android.util.Log.e("PERFIL", "Error: ${e.message}")
+                }
             }
         }
     }
