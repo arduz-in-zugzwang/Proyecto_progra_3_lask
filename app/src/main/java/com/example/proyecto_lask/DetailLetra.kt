@@ -1,7 +1,9 @@
 package com.example.proyecto_lask
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,7 @@ import kotlinx.coroutines.launch
 class DetailLetra : AppCompatActivity() {
 
     private lateinit var btnBack: ImageButton
+    private lateinit var loguito: ImageView
 
     private lateinit var tvNombreCancion: TextView
     private lateinit var tvLetraNormal: TextView
@@ -27,6 +30,12 @@ class DetailLetra : AppCompatActivity() {
         tvLetraFonetica = findViewById(R.id.tvLetraFonetica)
 
         btnBack.setOnClickListener {
+            finish()
+        }
+        loguito=findViewById(R.id.loguito)
+
+        loguito.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
 
