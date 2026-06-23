@@ -147,7 +147,7 @@
 
                     <!-- Lista canciones -->
                     <ScrollView
-                        android:layout_width="220dp"
+                        android:layout_width="100dp"
                         android:layout_height="120dp"
                         android:background="#FFFFFF">
 
@@ -177,56 +177,55 @@
                         android:gravity="center_horizontal"
                         android:orientation="vertical">
 
-<!--                        <Button-->
-<!--                            android:id="@+id/btnInsertarCanciones"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginBottom="10dp"-->
-<!--                            android:backgroundTint="#FFFFFF"-->
-<!--                            android:text="+ Canciones"-->
-<!--                            android:textColor="#888888"-->
-<!--                            android:textSize="11sp" />-->
+                        <Button
+                            android:id="@+id/btnInsertarCanciones"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:backgroundTint="#FFFFFF"
+                            android:text="+ Canciones"
+                            android:textColor="#888888"
+                            android:textSize="11sp" />
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="6dp"
+                            android:text="Visibilidad"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/btnPublica"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:layout_marginEnd="6dp"
+                                android:backgroundTint="#FFFFFF"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
+                                android:text="Pública"
+                                android:textColor="#888888"
+                                android:textSize="11sp" />
+
+                            <Button
+                                android:id="@+id/btnPrivada"
+                                android:layout_width="wrap_content"
+                                android:layout_height="36dp"
+                                android:backgroundTint="#FFFFFF"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="10dp"
+                                android:text="Privada"
+                                android:textColor="#888888"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:text="Visibilidad"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btnPublica"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:layout_marginEnd="6dp"
-                        android:backgroundTint="#FFFFFF"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:text="Pública"
-                        android:textColor="#888888"
-                        android:textSize="11sp" />
-
-                    <Button
-                        android:id="@+id/btnPrivada"
-                        android:layout_width="wrap_content"
-                        android:layout_height="36dp"
-                        android:backgroundTint="#FFFFFF"
-                        android:paddingStart="10dp"
-                        android:paddingEnd="10dp"
-                        android:text="Privada"
-                        android:textColor="#888888"
-                        android:textSize="11sp" />
-
                 </LinearLayout>
 
                 <!-- BOTON CREAR -->
