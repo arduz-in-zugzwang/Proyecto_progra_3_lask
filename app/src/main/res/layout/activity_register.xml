@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/fondoregister1"
     android:layout_height="match_parent"
     android:id="@+id/activityregister"
     >
@@ -11,10 +12,10 @@
     <!-- logito -->
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="180dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/logolask"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/logito"
         android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,24 +25,33 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardRegister"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="36dp"
-        android:layout_marginTop="12dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+
         app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="#767888"
+        app:cardBackgroundColor="#547daf"
+
         app:layout_constraintTop_toBottomOf="@id/imgLogo"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -55,7 +65,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
+                    android:textSize="16sp"
                     android:text="Nombre de usuario"
                     android:fontFamily="@font/schoolbell"
                     android:textColor="#FFFFFF"
@@ -72,6 +83,7 @@
                         android:layout_width="match_parent"
                         android:background="@android:drawable/editbox_background"
                         android:layout_height="wrap_content"
+                        android:textSize="16sp"
                         android:fontFamily="@font/schoolbell"
                         android:padding="8dp"/>
                 </com.google.android.material.textfield.TextInputLayout>
@@ -79,8 +91,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="Contraseña"
+                    android:textSize="16sp"
                     android:fontFamily="@font/schoolbell"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"/>
@@ -99,6 +112,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:drawable/editbox_background"
                         android:fontFamily="@font/schoolbell"
+                        android:textSize="16sp"
                         android:inputType="textPassword"
                         android:padding="8dp" />
 
@@ -106,8 +120,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="País"
+                    android:textSize="16sp"
                     android:fontFamily="@font/schoolbell"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"/>
@@ -119,8 +134,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:text="Selecciona tu rol"
+                    android:textSize="16sp"
                     android:fontFamily="@font/schoolbell"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold"/>
@@ -136,6 +152,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Listener"
+                        android:textSize="16sp"
                         android:fontFamily="@font/schoolbell"
                         />
                     <RadioButton
@@ -144,18 +161,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
                         android:text="Artista"
+                        android:textSize="16sp"
                         android:fontFamily="@font/schoolbell"
                         />
                 </RadioGroup>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:text="Al ser artista, debes escribir tu nombre artístico, ya sea individual o un grupo: "
                     android:textColor="#DDDDDD"
                     android:fontFamily="@font/schoolbell"
-                    android:textSize="13sp"/>
+                    android:textSize="14sp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -170,6 +188,7 @@
                         android:layout_height="wrap_content"
                         android:background="@android:drawable/editbox_background"
                         android:fontFamily="@font/schoolbell"
+                        android:textSize="16sp"
                         android:padding="8dp"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -181,8 +200,9 @@
                     android:layout_marginTop="4dp"
                     android:text="Acepto los Términos y condiciones para el uso de LASK."
                     android:fontFamily="@font/schoolbell"
+
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"/>
+                    android:textSize="14sp"/>
                 <Button
                     android:id="@+id/btnRegister"
                     android:layout_width="140dp"
@@ -191,7 +211,8 @@
                     android:layout_marginTop="10dp"
                     android:text="Crear cuenta"
                     android:fontFamily="@font/schoolbell"
-                    android:backgroundTint="#3171C6"
+                    android:backgroundTint="#2D2D2D"
+                    android:textSize="16sp"
                     />
 
             </LinearLayout>

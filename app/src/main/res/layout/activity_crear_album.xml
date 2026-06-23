@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#547daf"
+    android:background="#f4f3f1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CrearAlbum"
@@ -15,7 +15,7 @@
             android:id="@+id/toolbarLogin"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:background="#547daf"
+            android:background="#2D2D22"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -54,9 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-medium"
             android:text="Crear álbum"
-            android:textColor="#FFFFFF"
+            android:textColor="#2D2D2D"
             android:textSize="32sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -67,14 +66,14 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cardCrearAlbum"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="450dp"
             android:layout_marginStart="35dp"
             android:layout_marginEnd="35dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="30dp"
             app:cardBackgroundColor="#a3c7f4"
             app:cardCornerRadius="14dp"
-            app:cardElevation="8dp"
+            app:cardElevation="9dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -85,14 +84,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="45dp">
+                android:padding="30dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="+ Insertar portada"
+                    android:text="Insertar portada"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -104,26 +102,20 @@
                     android:orientation="horizontal">
 
                     <!-- ImageButton reemplazado por FrameLayout+ImageView para que la imagen llene sin distorsión -->
-                    <FrameLayout
-                        android:layout_width="90dp"
+
+                    <ImageButton
+                        android:id="@+id/cambiarPortada"
+                        android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@drawable/borde_redondeado"
-                        android:clipToOutline="true">
+                        android:adjustViewBounds="false"
+                        android:background="@drawable/bg_vinyl"
+                        android:scaleType="centerCrop" />
 
-                        <ImageButton
-                            android:id="@+id/cambiarPortada"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@null"
-                            android:scaleType="centerCrop"
-                            android:adjustViewBounds="false" />
-
-                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:orientation="vertical">
 
                         <EditText
@@ -131,10 +123,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="30dp"
                             android:layout_marginBottom="10dp"
-                            android:background="#FFFFFF"
+                            android:background="@drawable/borde_redondeado"
                             android:hint="Nombre del álbum"
                             android:inputType="text"
-                            android:paddingStart="10dp"
+                            android:paddingStart="12dp"
                             android:paddingEnd="10dp"
                             android:textColor="#000000"
                             android:textColorHint="#888888"
@@ -144,11 +136,11 @@
                             android:id="@+id/etDescripcionAlbum"
                             android:layout_width="match_parent"
                             android:layout_height="55dp"
-                            android:background="#FFFFFF"
+                            android:background="@drawable/borde_redondeado"
                             android:gravity="top"
                             android:hint="Descripción del álbum..."
                             android:inputType="textMultiLine"
-                            android:paddingStart="10dp"
+                            android:paddingStart="12dp"
                             android:paddingTop="8dp"
                             android:paddingEnd="10dp"
                             android:textColor="#000000"
@@ -166,30 +158,28 @@
                     <LinearLayout
                         android:id="@+id/listaCanciones"
                         android:layout_width="0dp"
-                        android:layout_height="100dp"
+                        android:layout_height="150dp"
                         android:layout_weight="1"
-                        android:background="#FFFFFF"
+                        android:background="@drawable/borde_redondeado"
                         android:orientation="vertical"
-                        android:padding="8dp"
+                        android:padding="9dp"
                         android:scrollbars="vertical">
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Canciones agregadas"
+                            android:text="Agrega tus canciones"
                             android:textColor="#AAAAAA"
                             android:textSize="11sp" />
-
                     </LinearLayout>
 
                     <ImageButton
                         android:id="@+id/btnInsertarCanciones"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/round_library_music_24"
-                        android:scaleType="fitCenter"
                         android:background="@android:color/transparent"
-                        />
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/round_library_music_24" />
 
                 </LinearLayout>
 
@@ -199,22 +189,24 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="8dp"
-                    android:visibility="gone"
-                    android:indeterminateTint="#547daf" />
+                    android:indeterminateTint="#547daf"
+                    android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/btnPublicarAlbum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:backgroundTint="#FFFFFF"
-                    android:paddingStart="32dp"
-                    android:paddingEnd="32dp"
-                    android:text="Publicar album"
-                    android:textColor="#888888" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
+        <Button
+            android:id="@+id/btnPublicarAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#547daf"
+            android:text="Publicar álbum"
+            android:textColor="#000000"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            app:layout_constraintTop_toBottomOf="@id/cardCrearAlbum"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

@@ -5,52 +5,69 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/discocelestee"
+    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".Bienvenido">
 
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:gravity="center_vertical"
         android:layout_marginTop="16dp"
         android:contentDescription="Logo de Lask"
-        android:src="@drawable/logolask" />
+        android:src="@drawable/logito" />
 
     <TextView
+        android:id="@+id/tvBienvenido"
         android:layout_width="wrap_content"
-        android:layout_height="329dp"
-        android:layout_weight="1"
-        android:fontFamily="@font/schoolbell"
-        android:gravity="bottom|center_horizontal"
-        android:text="Bienvenido a Lask"
-        android:textColor="@color/white"
-        android:textSize="60dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top|center_horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_weight="4"
-        android:orientation="horizontal">
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/schoolbell"
+        android:text="Bienvenida a"
+        android:textColor="@color/white"
+        android:textSize="70sp" />
+
+    <TextView
+        android:id="@+id/tvLask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/schoolbell"
+        android:text="LASK"
+        android:textColor="@color/white"
+        android:textSize="80sp"
+        android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
         <Button
             android:id="@+id/btnInciar"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/tag_celeste"
-            android:textColor="@color/black"
+            android:backgroundTint="#547daf"
+            android:textStyle="bold"
             android:fontFamily="@font/schoolbell"
-            android:text="Iniciar Sesion"/>
+            android:text="Iniciar Sesión"
+            android:textSize="20dp"
+            android:textColor="@color/white" />
+
         <Button
             android:id="@+id/btnCrearCuenta"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/tag_celeste"
-            android:textColor="@color/black"
+            android:layout_marginTop="12dp"
+            android:textStyle="bold"
+            android:backgroundTint="#547daf"
+            android:textSize="20dp"
             android:fontFamily="@font/schoolbell"
-            android:text="Crear Cuenta"/>
+            android:text="Crear Cuenta"
+            android:textColor="@color/white" />
+
     </LinearLayout>
 
 </LinearLayout>
