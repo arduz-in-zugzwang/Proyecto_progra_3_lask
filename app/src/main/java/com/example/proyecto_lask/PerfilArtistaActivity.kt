@@ -1,6 +1,7 @@
 package com.example.proyecto_lask
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PerfilArtistaActivity : AppCompatActivity() {
+    private lateinit var rvPlaylistsArtista: RecyclerView
 
     private lateinit var rvComentarios: RecyclerView
     private lateinit var etComentario: EditText
@@ -50,6 +52,8 @@ class PerfilArtistaActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
         val miUserId = prefs.getInt("user_id", -1)
+
+        rvPlaylistsArtista = findViewById(R.id.rvPlaylistsArtista)
 
         btnEnviarComentario.setOnClickListener {
             val texto = etComentario.text.toString().trim()
@@ -117,6 +121,8 @@ class PerfilArtistaActivity : AppCompatActivity() {
                         tvNombreArtistico.text    = artista.nombre_artistico
                         tvNombreArtistico.visibility = android.view.View.VISIBLE
                         cargarComentarios(artista.id) // <- agregar
+                        cargarPlaylistsPublicas(idUsuario)
+
                     }
 
                     // --- Canciones del artista ---
@@ -178,6 +184,46 @@ class PerfilArtistaActivity : AppCompatActivity() {
                     rvComentarios.adapter = ComentarioAdapter(comentarios, nombres)
                 }
             } catch (e: Exception) { /* silencioso */ }
+        }
+    }
+
+    private fun cargarPlaylistsPublicas(idUsuario: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response =
+                    RetrofitClient.create().getPlaylists()
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        val playlists = response.body()?.data ?: emptyList()
+                        val publicas =
+                            playlists.filter {
+                                it.id_usuario == idUsuario && it.privacidad_playlist == 0 }
+                        rvPlaylistsArtista.layoutManager =
+                            LinearLayoutManager(
+                                this@PerfilArtistaActivity,
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+
+                        rvPlaylistsArtista.adapter =
+                            PlaylistAdapter(publicas) { playlist ->
+                                val intent = Intent(
+                                    this@PerfilArtistaActivity,
+                                    PlaylistDetalle::class.java
+                                )
+                                intent.putExtra("id_playlist", playlist.id)
+                                intent.putExtra("nombre_playlist", playlist.nombre_playlist)
+                                startActivity(intent)
+                            }
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@PerfilArtistaActivity,
+                    e.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 }

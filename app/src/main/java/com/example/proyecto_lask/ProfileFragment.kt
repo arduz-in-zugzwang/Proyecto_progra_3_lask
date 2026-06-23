@@ -329,10 +329,46 @@ class ProfileFragment : Fragment() {
                             )
 
                         rvPlaylistsPublicas.adapter =
-                            PlaylistAdapter(publicas)
+                            PlaylistAdapter(publicas) { playlist ->
+
+                                val intent = Intent(
+                                    requireContext(),
+                                    PlaylistDetalle::class.java
+                                )
+
+                                intent.putExtra(
+                                    "id_playlist",
+                                    playlist.id
+                                )
+
+                                intent.putExtra(
+                                    "nombre_playlist",
+                                    playlist.nombre_playlist
+                                )
+
+                                startActivity(intent)
+                            }
 
                         rvPlaylistsPrivadas.adapter =
-                            PlaylistAdapter(privadas)
+                            PlaylistAdapter(privadas) { playlist ->
+
+                                val intent = Intent(
+                                    requireContext(),
+                                    PlaylistDetalle::class.java
+                                )
+
+                                intent.putExtra(
+                                    "id_playlist",
+                                    playlist.id
+                                )
+
+                                intent.putExtra(
+                                    "nombre_playlist",
+                                    playlist.nombre_playlist
+                                )
+
+                                startActivity(intent)
+                            }
                     }
                 }
 

@@ -37,10 +37,8 @@ class Tarea : AppCompatActivity() {
         val btnEliminarTag =findViewById<Button>(R.id.btnEliminarTag)
 
         btnInsertarTag.setOnClickListener {
-
             val nombre = etNombreTag.text.toString()
             val descripcion = etDescripcionTag.text.toString()
-
             createTag(nombre, descripcion)
         }
 
@@ -61,7 +59,6 @@ class Tarea : AppCompatActivity() {
             val id = etIdBuscar.text.toString().toInt()
             val nombre = etNombreTag.text.toString()
             val descripcion =etDescripcionTag.text.toString()
-
             modificarTag(id, nombre, descripcion)
         }
 
@@ -90,20 +87,19 @@ class Tarea : AppCompatActivity() {
                                 )
                                 setPadding(0, 8, 0, 8) // Un poco de espacio entre filas
                             }
-                            // Celda ID (Peso: 1)
+                            // ID
                             val tvId = TextView(this@Tarea).apply {
                                 layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
                                 text = tag.id.toString()
                             }
-                            // Celda Nombre (Peso: 2)
+                            // Nombre
                             val tvNombre = TextView(this@Tarea).apply {
                                 layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2f)
                                 text = tag.nombre_tag
                             }
-                            // Celda Descripción (Peso: 3)
+                            // Descripción
                             val tvDescripcion = TextView(this@Tarea).apply {
                                 layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 3f)
-                                // Controlamos los nulos de tu base de datos para que no muestre la palabra "null"
                                 text = tag.descripcion_tag?.toString() ?: ""
                             }
                             row.addView(tvId)
@@ -119,7 +115,6 @@ class Tarea : AppCompatActivity() {
             }
         }
     }
-
     private fun createTag(
         nombre: String,
         descripcion: String
@@ -158,7 +153,6 @@ class Tarea : AppCompatActivity() {
             }
         }
     }
-
     private fun buscarTag(id: Int){
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -167,21 +161,16 @@ class Tarea : AppCompatActivity() {
                 withContext(Dispatchers.Main){
 
                     if(call.isSuccessful && response != null){
-
 //                        findViewById<TextView>(R.id.tvResultadoNombre)
 //                            .text = "Nombre: ${response.nombre_tag}"
 //
 //                        findViewById<TextView>(R.id.tvResultadoDescripcion)
 //                            .text = "Descripción: ${response.descripcion_tag}"
 
-                        findViewById<EditText>(R.id.etNombreTag)
-                            .setText(response.nombre_tag)
-
-                        findViewById<EditText>(R.id.etDescripcionTag)
-                            .setText(response.descripcion_tag.toString())
+                        findViewById<EditText>(R.id.etNombreTag).setText(response.nombre_tag)
+                        findViewById<EditText>(R.id.etDescripcionTag).setText(response.descripcion_tag.toString())
 
                     }else{
-
                         Toast.makeText(
                             this@Tarea,
                             "Tag no encontrado",
@@ -189,11 +178,9 @@ class Tarea : AppCompatActivity() {
                         ).show()
                     }
                 }
-
             }catch(e:Exception){
 
                 withContext(Dispatchers.Main){
-
                     Toast.makeText(
                         this@Tarea,
                         e.message,
@@ -203,38 +190,18 @@ class Tarea : AppCompatActivity() {
             }
         }
     }
-    private fun modificarTag(
-        id:Int,
-        nombre:String,
-        descripcion:String
-    ){
-
+    private fun modificarTag(id:Int, nombre:String, descripcion:String){
         CoroutineScope(Dispatchers.IO).launch {
-
-            try {
-
-                val call =
-                    RetrofitClient.create()
-                        .actualizarTag(
-                            id,
-                            nombre,
-                            descripcion
-                        )
-
+            try {val call = RetrofitClient.create().actualizarTag(id, nombre, descripcion)
                 withContext(Dispatchers.Main){
-
                     if(call.isSuccessful){
-
                         Toast.makeText(
                             this@Tarea,
                             "Tag actualizado",
                             Toast.LENGTH_LONG
                         ).show()
-
                         getTags()
-
                     }else{
-
                         Toast.makeText(
                             this@Tarea,
                             "Error al actualizar",
@@ -242,11 +209,8 @@ class Tarea : AppCompatActivity() {
                         ).show()
                     }
                 }
-
             }catch(e:Exception){
-
                 withContext(Dispatchers.Main){
-
                     Toast.makeText(
                         this@Tarea,
                         e.message,
@@ -257,29 +221,18 @@ class Tarea : AppCompatActivity() {
         }
     }
     private fun eliminarTag(id:Int){
-
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-
-                val call =
-                    RetrofitClient.create()
-                        .deleteTag(id)
-
+                val call = RetrofitClient.create().deleteTag(id)
                 withContext(Dispatchers.Main){
-
                     if(call.isSuccessful){
-
                         Toast.makeText(
                             this@Tarea,
                             "Tag eliminado",
                             Toast.LENGTH_LONG
                         ).show()
-
                         getTags()
-
                     }else{
-
                         Toast.makeText(
                             this@Tarea,
                             "Error al eliminar",
@@ -287,11 +240,8 @@ class Tarea : AppCompatActivity() {
                         ).show()
                     }
                 }
-
             }catch(e:Exception){
-
                 withContext(Dispatchers.Main){
-
                     Toast.makeText(
                         this@Tarea,
                         e.message,

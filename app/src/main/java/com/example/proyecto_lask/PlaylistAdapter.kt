@@ -7,7 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class PlaylistAdapter(
-    private val playlists: List<com.example.proyecto_lask.playlists.Data>
+    private val playlists: List<com.example.proyecto_lask.playlists.Data>,
+    private val onClick: (com.example.proyecto_lask.playlists.Data) -> Unit
 ) : RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
     class PlaylistViewHolder(view: View)
@@ -37,8 +38,15 @@ class PlaylistAdapter(
         holder: PlaylistViewHolder,
         position: Int
     ) {
+
+        val playlist = playlists[position]
+
         holder.tvNombre.text =
-            playlists[position].nombre_playlist
+            playlist.nombre_playlist
+
+        holder.itemView.setOnClickListener {
+            onClick(playlist)
+        }
     }
 
     override fun getItemCount() =
