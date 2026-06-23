@@ -241,8 +241,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             chip.chipBackgroundColor = android.content.res.ColorStateList.valueOf(Color.rgb(r, g, b))
 
             chip.setOnClickListener {
-                tvNuevos.text = "Canciones: ${tag.nombre_tag}"
-                cargarCanciones(tag.id)
+                val intent = Intent(
+                    requireContext(),
+                    TagDetail::class.java
+                )
+
+                intent.putExtra(
+                    "id_tag",
+                    tag.id
+                )
+
+                intent.putExtra(
+                    "nombre_tag",
+                    tag.nombre_tag
+                )
+
+                startActivity(intent)
             }
             chipGroupTags.addView(chip)
         }

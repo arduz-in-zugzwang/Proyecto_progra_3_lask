@@ -22,9 +22,6 @@
             android:name=".PlaylistDetalle"
             android:exported="false" />
         <activity
-            android:name=".ComentarioAdapter"
-            android:exported="false" />
-        <activity
             android:name=".VerTodosArtistasActivity"
             android:exported="false" />
         <activity
