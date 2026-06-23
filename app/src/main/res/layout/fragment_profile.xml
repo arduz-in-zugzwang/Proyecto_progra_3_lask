@@ -65,6 +65,7 @@
                         android:textSize="20sp"
                         android:textStyle="italic"
                         android:visibility="gone" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -181,6 +182,56 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Muro de comentarios (solo para artistas) -->
+            <TextView
+                android:id="@+id/tvMuroLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Muro"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvComentarios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/llComentarioInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/etComentario"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Deja un mensaje..."
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#AAAAAA"
+                    android:backgroundTint="#FFFFFF"
+                    android:padding="8dp" />
+
+                <Button
+                    android:id="@+id/btnEnviarComentario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Enviar"
+                    android:backgroundTint="#547daf"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
             <!-- Playlists públicas -->
             <TextView
                 android:layout_width="match_parent"
@@ -215,7 +266,46 @@
                 android:layout_marginTop="8dp"
                 android:clipToPadding="false" />
 
-            <!-- Botones según rol -->
+            <!-- Solo artistas -->
+            <TextView
+                android:id="@+id/tvMisCanciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Mis canciones"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMisCanciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvMisAlbumes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Mis álbumes"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMisAlbumes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
+
+            <!-- Botones según rol — al final -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -224,7 +314,6 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!-- Siempre visible -->
                 <Button
                     android:id="@+id/btnCrearPlaylist"
                     android:layout_width="wrap_content"
@@ -236,7 +325,6 @@
                     android:text="Crear playlist"
                     android:textColor="@color/white" />
 
-                <!-- Solo artistas, empieza oculto -->
                 <Button
                     android:id="@+id/btnCrearAlbum"
                     android:layout_width="wrap_content"

@@ -10,6 +10,7 @@ import com.example.proyecto_lask.artistas.respuestaDeleteArtista
 import com.example.proyecto_lask.artistas.respuestaGetArtista
 import com.example.proyecto_lask.artistas.respuestaGetArtistas
 import com.example.proyecto_lask.artistas.respuestaUpdateArtista
+import com.example.proyecto_lask.cancion_tags.respuestaCreateCancionTag
 import com.example.proyecto_lask.canciones.respuestaCreateCancion
 import com.example.proyecto_lask.canciones.respuestaDeleteCancion
 import com.example.proyecto_lask.canciones.respuestaGetCancion
@@ -17,11 +18,13 @@ import com.example.proyecto_lask.canciones.respuestaGetCanciones
 import com.example.proyecto_lask.canciones.respuestaUpdateCancion
 import com.example.proyecto_lask.comentarios.respuestaCreateComentario
 import com.example.proyecto_lask.comentarios.respuestaDeleteComentario
+import com.example.proyecto_lask.comentarios.respuestaGetComentarios
 import com.example.proyecto_lask.letras.respuestaCreateLetra
 import com.example.proyecto_lask.letras.respuestaGetAllLetras
 import com.example.proyecto_lask.letras.respuestaGetLetras
 import com.example.proyecto_lask.letras.respuestaUpdateLetra
 import com.example.proyecto_lask.paises.respuestaGetPaises
+import com.example.proyecto_lask.playlistcanciones.respuestaCreatePlaylistCancion
 import com.example.proyecto_lask.playlists.respuestaCreatePlaylist
 import com.example.proyecto_lask.playlists.respuestaDeletePlaylist
 import com.example.proyecto_lask.playlists.respuestaUpdatePlaylist
@@ -46,6 +49,12 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.RequestBody
+import retrofit2.http.Multipart
+import retrofit2.http.Part
+import java.util.concurrent.TimeUnit
 
 interface ApiService {
 
@@ -159,14 +168,14 @@ interface ApiService {
     suspend fun getCanciones(): Response<respuestaGetCanciones>
     @GET(value="api/canciones/{id}")
     suspend fun getCancion(@Path("id") id: Int): Response<respuestaGetCancion>
-    @FormUrlEncoded
+    @Multipart
     @POST("api/canciones")
     suspend fun createCancion(
-        @Field("id_album") id_album: Int,
-        @Field("id_artista") id_artista: Int,
-        @Field("nombre_cancion") nombre_cancion: String,
-        @Field("portada_cancion") portada_cancion: String,
-        @Field("path_link") path_link: String
+        @Part("id_album") id_album: RequestBody,
+        @Part("id_artista") id_artista: RequestBody,
+        @Part("nombre_cancion") nombre_cancion: RequestBody,
+        @Part("portada_cancion") portada_cancion: RequestBody,
+        @Part audio: MultipartBody.Part
     ): Response<respuestaCreateCancion>
     @FormUrlEncoded
     @PATCH("api/canciones/{id}")
@@ -181,12 +190,21 @@ interface ApiService {
     suspend fun deleteCancion(
         @Path("id") id: Int
     ): Response<respuestaDeleteCancion>
-    // algo con los tags para mi home
+
+    // algo con los tags para mi home Tags-Cancion basicamente
     @GET("api/tags/{id}/canciones")
     suspend fun getCancionesPorTag(
         @Path("id") id: Int
     ): Response<respuestaGetCanciones>
+    @FormUrlEncoded
+    @POST("api/cancion-tags")
+    suspend fun createCancionTag(
+        @Field("id_cancion") idCancion: Int,
+        @Field("id_tag") idTag: Int
+    ): Response<respuestaCreateCancionTag>
     //comentarios
+    @GET("api/comentarios-artista")
+    suspend fun getComentarios(): Response<respuestaGetComentarios>
     @FormUrlEncoded
     @POST("api/comentarios-artista")
     suspend fun createComentario(
@@ -236,7 +254,7 @@ interface ApiService {
     suspend fun createPlaylist(
         @Field("nombre_playlist") nombre_playlist: String,
         @Field("id_usuario") id_usuario: Int,
-        @Field("privacidad_playlist") privacidad_playlist: Boolean
+        @Field("privacidad_playlist") privacidad_playlist: Int
     ): Response<respuestaCreatePlaylist>
     @DELETE("api/playlists/{id}")
     suspend fun deletePlaylist(
@@ -250,6 +268,14 @@ interface ApiService {
         @Field("privacidad_playlist") privacidad: Boolean?
     ): Response<respuestaUpdatePlaylist>
 
+    //PlaylistCancion
+    @FormUrlEncoded
+    @POST("api/playlist-canciones")
+    suspend fun createPlaylistCancion(
+        @Field("id_playlist") idPlaylist: Int,
+        @Field("id_cancion") idCancion: Int
+    ): Response<respuestaCreatePlaylistCancion>
+
     //para loguin
     @FormUrlEncoded
     @POST("api/login")
@@ -257,12 +283,19 @@ interface ApiService {
         @Field("name") name: String,
         @Field("password") password: String
     ): Response<respuestaLogin>
+
 }
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
+        val client = OkHttpClient.Builder()
+            .connectTimeout(120, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .writeTimeout(120, TimeUnit.SECONDS)
+            .build()
         val retrofit= Retrofit.Builder()
             //AQUI CAMBIAR EL IP ASAP
             .baseUrl("http://192.168.1.11/lask_bd/public/")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

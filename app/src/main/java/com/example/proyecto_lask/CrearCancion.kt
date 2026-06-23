@@ -64,8 +64,11 @@ class CrearCancion : AppCompatActivity() {
     }
 
     private fun abrirAudio() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply { type = "audio/*" }
-        startActivityForResult(Intent.createChooser(intent, "Selecciona un archivo de audio"), 200)
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type = "audio/*"
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+        startActivityForResult(intent, 200)
     }
 
     @Suppress("DEPRECATION")
@@ -87,6 +90,10 @@ class CrearCancion : AppCompatActivity() {
         if (requestCode == 200 && resultCode == RESULT_OK) {
             val uri = data?.data ?: return
             audioUri = uri
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
             audioPathLink = obtenerNombreArchivo(uri)
             btnAudio.text = audioPathLink
         }
@@ -160,12 +167,24 @@ class CrearCancion : AppCompatActivity() {
             Toast.makeText(this, "Selecciona un archivo de audio", Toast.LENGTH_SHORT).show()
             return
         }
+        val tagsSeleccionados = arrayListOf<Int>()
+
+        for (i in 0 until listaTags.childCount) {
+
+            val cb = listaTags.getChildAt(i) as CheckBox
+
+            if (cb.isChecked) {
+                tagsSeleccionados.add(cb.tag as Int)
+            }
+        }
 
         // Devolver datos a CrearAlbum sin subir a la API todavía
         val result = Intent().apply {
             putExtra("nombre_cancion",  nombre)
             putExtra("portada_cancion", portadaBase64)
             putExtra("path_link",       audioPathLink)
+            putExtra("audio_uri", audioUri?.toString())
+            putIntegerArrayListExtra("tags", tagsSeleccionados)
         }
         setResult(Activity.RESULT_OK, result)
         finish()

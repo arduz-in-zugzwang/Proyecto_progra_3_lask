@@ -157,7 +157,15 @@ class DetailSong : AppCompatActivity() {
 
     private fun reproducir() {
         val cancion = listaCanciones[posicionActual]
-        val url = cancion.path_link
+            // aqui ojo con la IP
+        val url = "http://192.168.1.11/lask_bd/public/" + cancion.path_link
+
+        Toast.makeText(
+            this@DetailSong,
+            url,
+            Toast.LENGTH_LONG
+        ).show()
+
 
         if (url.isEmpty()) {
             Toast.makeText(this, "Esta canción no tiene archivo de audio", Toast.LENGTH_SHORT).show()
@@ -169,6 +177,9 @@ class DetailSong : AppCompatActivity() {
 
         try {
             mediaPlayer = MediaPlayer().apply {
+
+
+
                 setDataSource(url)
                 prepareAsync()
                 setOnPreparedListener { mp ->
@@ -184,13 +195,24 @@ class DetailSong : AppCompatActivity() {
                         siguienteCancion()
                     }
                 }
-                setOnErrorListener { _, _, _ ->
-                    Toast.makeText(this@DetailSong, "Error al reproducir", Toast.LENGTH_SHORT).show()
+                setOnErrorListener { _, what, extra ->
+
+                    Toast.makeText(
+                        this@DetailSong,
+                        "Error MediaPlayer what=$what extra=$extra",
+                        Toast.LENGTH_LONG
+                    ).show()
                     true
                 }
             }
         } catch (e: Exception) {
-            Toast.makeText(this, "No se pudo cargar: ${e.message}", Toast.LENGTH_SHORT).show()
+            e.printStackTrace()
+
+            Toast.makeText(
+                this,
+                e.toString(),
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
