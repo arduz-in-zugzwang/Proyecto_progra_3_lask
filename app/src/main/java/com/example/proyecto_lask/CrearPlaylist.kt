@@ -24,7 +24,7 @@ class CrearPlaylist : AppCompatActivity() {
 
     // true = pública, false = privada (por defecto pública)
     private var esPrivada: Boolean = false
-    private val canciones = mutableListOf<Uri>()
+    private val cancionesSeleccionadas = mutableListOf<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,8 @@ class CrearPlaylist : AppCompatActivity() {
 
     private fun setupListeners() {
         btnPortada.setOnClickListener { abrirGaleria() }
-        btnInsertarCanciones.setOnClickListener { abrirMusica() }
+        btnInsertarCanciones.setOnClickListener {
+            cargarCancionesServidor() }
 
         btnPublica.setOnClickListener {
             esPrivada = false
@@ -78,77 +79,43 @@ class CrearPlaylist : AppCompatActivity() {
         }
     }
 
+    private fun cargarCancionesServidor() {
+
+        lifecycleScope.launch {
+            try {
+                val response =
+                    RetrofitClient.create().getCanciones()
+                if (response.isSuccessful) {
+                    val canciones =
+                        response.body()?.data ?: emptyList()
+                    listaCanciones.removeAllViews()
+                    canciones.forEach { cancion ->
+                        val cb = CheckBox(this@CrearPlaylist)
+                        cb.text = "${cancion.nombre_cancion} - ${cancion.nombre_artistico}"
+                        cb.setOnCheckedChangeListener { _, checked ->
+                            if (checked) {
+                                cancionesSeleccionadas.add(cancion.id)
+                            } else {
+                                cancionesSeleccionadas.remove(cancion.id)
+                            }
+                        }
+                        listaCanciones.addView(cb)
+                    }
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@CrearPlaylist,
+                    e.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
     private fun abrirGaleria() {
         val intent = Intent(Intent.ACTION_PICK).apply { type = "image/*" }
         startActivityForResult(intent, 100)
     }
-
-    private fun abrirMusica() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "audio/*"
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        }
-        startActivityForResult(Intent.createChooser(intent, "Selecciona canciones"), 200)
-    }
-
-    @Suppress("DEPRECATION")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 100 && resultCode == RESULT_OK) {
-            val uri = data?.data ?: return
-            try {
-                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
-                btnPortada.setImageBitmap(bitmap)
-                btnPortada.scaleType = ImageView.ScaleType.CENTER_CROP
-            } catch (e: Exception) {
-                Toast.makeText(this, "Error al cargar imagen", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        if (requestCode == 200 && resultCode == RESULT_OK) {
-            canciones.clear()
-            data?.clipData?.let { clip ->
-                for (i in 0 until clip.itemCount) canciones.add(clip.getItemAt(i).uri)
-            } ?: data?.data?.let { canciones.add(it) }
-            mostrarCanciones()
-        }
-    }
-
-    private fun mostrarCanciones() {
-        listaCanciones.removeAllViews()
-
-        val label = TextView(this).apply {
-            text = "Canciones agregadas"
-            setTextColor(0xFFAAAAAA.toInt())
-            textSize = 11f
-        }
-        listaCanciones.addView(label)
-
-        canciones.forEach { uri ->
-            val nombre = obtenerNombre(uri)
-            val tv = TextView(this).apply {
-                text = nombre
-                setTextColor(0xFF333333.toInt())
-                textSize = 12f
-                setPadding(0, 6, 0, 6)
-            }
-            listaCanciones.addView(tv)
-        }
-    }
-
-    private fun obtenerNombre(uri: Uri): String {
-        return try {
-            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                val idx = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
-                cursor.moveToFirst()
-                if (idx >= 0) cursor.getString(idx) else uri.lastPathSegment ?: "canción"
-            } ?: uri.lastPathSegment ?: "canción"
-        } catch (e: Exception) {
-            uri.lastPathSegment ?: "canción"
-        }
-    }
-
     private fun crearPlaylist() {
         val nombre = etNombre.text.toString().trim()
 
@@ -177,7 +144,32 @@ class CrearPlaylist : AppCompatActivity() {
                 )
 
                 if (response.isSuccessful) {
-                    Toast.makeText(this@CrearPlaylist, "¡Playlist creada!", Toast.LENGTH_SHORT).show()
+
+                    val idPlaylist = response.body()?.id ?: run {
+
+                        Toast.makeText(
+                            this@CrearPlaylist,
+                            "No se obtuvo el ID de la playlist",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        return@launch
+                    }
+
+                    for (idCancion in cancionesSeleccionadas) {
+
+                        api.createPlaylistCancion(
+                            idPlaylist,
+                            idCancion
+                        )
+                    }
+
+                    Toast.makeText(
+                        this@CrearPlaylist,
+                        "¡Playlist creada con ${cancionesSeleccionadas.size} canciones!",
+                        Toast.LENGTH_LONG
+                    ).show()
+
                     finish()
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "sin detalle"
