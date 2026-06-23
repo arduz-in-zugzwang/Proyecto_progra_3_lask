@@ -171,7 +171,8 @@ class PerfilArtistaActivity : AppCompatActivity() {
                         ?.associate { it.id.toString() to it.name } ?: emptyMap()
 
                     val comentarios = respComentarios.body()?.data
-                        ?.filter { it.id_artista == idArtista.toString() } ?: emptyList()
+                        ?.filter { it.id_artista == idArtista.toString() }
+                        ?.reversed() ?: emptyList()
 
                     rvComentarios.layoutManager = LinearLayoutManager(this@PerfilArtistaActivity)
                     rvComentarios.adapter = ComentarioAdapter(comentarios, nombres)

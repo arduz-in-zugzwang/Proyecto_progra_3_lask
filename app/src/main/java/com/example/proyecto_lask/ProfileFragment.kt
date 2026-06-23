@@ -35,6 +35,11 @@ class ProfileFragment : Fragment() {
     private lateinit var ivEditarPerfil: ImageView
     private lateinit var ivAvatar: ImageView
     private lateinit var tvNombreArtistico: EditText
+    private lateinit var rvComentarios: RecyclerView
+    private lateinit var tvMuroLabel: TextView
+    private lateinit var llComentarioInput: LinearLayout
+    private lateinit var etComentario: EditText
+    private lateinit var btnEnviarComentario: Button
 
     private var userId: Int = -1
     private var modoEdicion = false
@@ -77,12 +82,16 @@ class ProfileFragment : Fragment() {
         rvMisAlbumes   = view.findViewById(R.id.rvMisAlbumes)
         tvMisCanciones = view.findViewById(R.id.tvMisCanciones)
         tvMisAlbumes   = view.findViewById(R.id.tvMisAlbumes)
+        tvMuroLabel    = view.findViewById(R.id.tvMuroLabel)
+        rvComentarios  = view.findViewById(R.id.rvComentarios)
+        llComentarioInput   = view.findViewById(R.id.llComentarioInput)
+        etComentario        = view.findViewById(R.id.etComentario)
+        btnEnviarComentario = view.findViewById(R.id.btnEnviarComentario)
 
         tvNombreArtistico = view.findViewById(R.id.tvNombreArtistico)
         tvNombreArtistico.isEnabled = false
         tvNombre.isEnabled      = false
         tvDescripcion.isEnabled = false
-        tvNombreArtistico = view.findViewById(R.id.tvNombreArtistico)
         val prefs  = requireContext().getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
         userId     = prefs.getInt("user_id", -1)
 
@@ -297,6 +306,33 @@ class ProfileFragment : Fragment() {
         rvMisCanciones.visibility = View.VISIBLE
         tvMisAlbumes.visibility   = View.VISIBLE
         rvMisAlbumes.visibility   = View.VISIBLE
+        tvMuroLabel.visibility    = View.VISIBLE
+        rvComentarios.visibility  = View.VISIBLE
+        llComentarioInput.visibility = View.VISIBLE
+
+        cargarComentarios(idArtista)
+
+        btnEnviarComentario.setOnClickListener {
+            val texto = etComentario.text.toString().trim()
+            if (texto.isEmpty()) return@setOnClickListener
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val resp = RetrofitClient.create().createComentario(
+                        id_artista = idArtista,
+                        id_usuario = userId,
+                        texto      = texto
+                    )
+                    withContext(Dispatchers.Main) {
+                        if (resp.isSuccessful) {
+                            etComentario.setText("")
+                            cargarComentarios(idArtista)
+                            Toast.makeText(requireContext(), "Mensaje publicado", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (e: Exception) { }
+            }
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -410,6 +446,29 @@ class ProfileFragment : Fragment() {
                     Toast.makeText(requireContext(),
                         "Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
+            }
+        }
+    }
+
+    private fun cargarComentarios(idArtista: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val respComentarios = RetrofitClient.create().getComentarios()
+                val respUsuarios    = RetrofitClient.create().getUsers()
+
+                withContext(Dispatchers.Main) {
+                    val nombres = respUsuarios.body()?.data
+                        ?.associate { it.id.toString() to it.name } ?: emptyMap()
+
+                    val comentarios = respComentarios.body()?.data
+                        ?.filter { it.id_artista == idArtista.toString() }
+                        ?.reversed() ?: emptyList()
+
+                    rvComentarios.layoutManager = LinearLayoutManager(requireContext())
+                    rvComentarios.adapter = ComentarioAdapter(comentarios, nombres)
+                }
+            } catch (e: Exception) {
+                // silencioso
             }
         }
     }
