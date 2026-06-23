@@ -138,9 +138,9 @@ class CrearPlaylist : AppCompatActivity() {
             try {
                 val api      = RetrofitClient.create()
                 val response = api.createPlaylist(
-                    nombre_playlist      = nombre,
-                    id_usuario           = idUsuario,
-                    privacidad_playlist  = esPrivada
+                    nombre_playlist = nombre,
+                    id_usuario = idUsuario,
+                    privacidad_playlist = if (esPrivada) 1 else 0
                 )
 
                 if (response.isSuccessful) {
