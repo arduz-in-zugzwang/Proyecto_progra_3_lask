@@ -16,6 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +26,10 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 class ProfileFragment : Fragment() {
-
+    private lateinit var rvMisCanciones: RecyclerView
+    private lateinit var rvMisAlbumes: RecyclerView
+    private lateinit var tvMisCanciones: TextView
+    private lateinit var tvMisAlbumes: TextView
     private lateinit var tvNombre: EditText
     private lateinit var tvDescripcion: EditText
     private lateinit var ivEditarPerfil: ImageView
@@ -67,6 +72,11 @@ class ProfileFragment : Fragment() {
         tvDescripcion  = view.findViewById(R.id.tvDescripcion)
         ivEditarPerfil = view.findViewById(R.id.ivEditarPerfil)
         ivAvatar       = view.findViewById(R.id.ivAvatar)
+
+        rvMisCanciones = view.findViewById(R.id.rvMisCanciones)
+        rvMisAlbumes   = view.findViewById(R.id.rvMisAlbumes)
+        tvMisCanciones = view.findViewById(R.id.tvMisCanciones)
+        tvMisAlbumes   = view.findViewById(R.id.tvMisAlbumes)
 
         tvNombreArtistico = view.findViewById(R.id.tvNombreArtistico)
         tvNombreArtistico.isEnabled = false
@@ -269,14 +279,68 @@ class ProfileFragment : Fragment() {
                         val artista = respuesta.body()?.data
                             ?.firstOrNull { it.id_usuario == userId }
                         if (artista != null) {
-                            artistaId = artista.id  // <- agregar esta línea
+                            artistaId = artista.id
                             tvNombreArtistico.setText(artista.nombre_artistico)
                             tvNombreArtistico.visibility = View.VISIBLE
+                            cargarContenidoArtista(artista.id) // <- agregar esta línea
                         }
                     }
                 }
             } catch (e: Exception) {
                 // silencioso
+            }
+        }
+    }
+
+    private fun cargarContenidoArtista(idArtista: Int) {
+        tvMisCanciones.visibility = View.VISIBLE
+        rvMisCanciones.visibility = View.VISIBLE
+        tvMisAlbumes.visibility   = View.VISIBLE
+        rvMisAlbumes.visibility   = View.VISIBLE
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val respCanciones = RetrofitClient.create().getCanciones()
+                val respAlbumes   = RetrofitClient.create().getAlbumes()
+
+                withContext(Dispatchers.Main) {
+                    if (respCanciones.isSuccessful) {
+                        val todas = respCanciones.body()?.data ?: emptyList()
+                        // LOG TEMPORAL
+                        android.util.Log.d("PERFIL", "idArtista buscado: $idArtista")
+                        android.util.Log.d("PERFIL", "Canciones totales: ${todas.size}")
+                        todas.forEach { android.util.Log.d("PERFIL", "  cancion id_artista: ${it.id_artista}") }
+
+                        val canciones = todas.filter { it.id_artista == idArtista }
+                        android.util.Log.d("PERFIL", "Canciones filtradas: ${canciones.size}")
+
+                        rvMisCanciones.layoutManager = LinearLayoutManager(requireContext())
+                        rvMisCanciones.adapter = SongAdapter(canciones) { cancion ->
+                            val intent = Intent(requireContext(), DetailSong::class.java)
+                            intent.putExtra("id_album", cancion.id_album)
+                            intent.putExtra("id_cancion", cancion.id)
+                            startActivity(intent)
+                        }
+                    }
+
+                    if (respAlbumes.isSuccessful) {
+                        val todos = respAlbumes.body()?.data ?: emptyList()
+                        android.util.Log.d("PERFIL", "Albumes totales: ${todos.size}")
+                        // necesito ver el data class de albumes para confirmar el campo
+
+                        rvMisAlbumes.layoutManager = LinearLayoutManager(
+                            requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                        rvMisAlbumes.adapter = AlbumAdapter(todos) { album ->
+                            val intent = Intent(requireContext(), AlbumDetail::class.java)
+                            intent.putExtra("id_album", album.id)
+                            startActivity(intent)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    android.util.Log.e("PERFIL", "Error: ${e.message}")
+                }
             }
         }
     }
