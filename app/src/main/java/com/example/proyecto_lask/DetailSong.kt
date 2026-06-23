@@ -24,6 +24,7 @@ class DetailSong : AppCompatActivity() {
     private lateinit var tvArtista: TextView
     private lateinit var songName: TextView
     private lateinit var tvNombreAlbum: TextView
+    private lateinit var tvTagSong: TextView
     private lateinit var seekBar: SeekBar
     private lateinit var tvTiempoActual: TextView
     private lateinit var tvDuracion: TextView
@@ -67,6 +68,7 @@ class DetailSong : AppCompatActivity() {
         tvArtista      = findViewById(R.id.tvArtista)
         songName       = findViewById(R.id.songName)
         tvNombreAlbum  = findViewById(R.id.tvNombreAlbum)
+        tvTagSong      = findViewById(R.id.tvTagSong)
         seekBar        = findViewById(R.id.seekBar)
         tvTiempoActual = findViewById(R.id.tvTiempoActual)
         tvDuracion     = findViewById(R.id.tvDuracion)
@@ -135,6 +137,20 @@ class DetailSong : AppCompatActivity() {
         val cancion = listaCanciones[pos]
         songName.text = cancion.nombre_cancion
 
+        // Mostrar tag si existe
+        if (!cancion.nombre_tag.isNullOrEmpty()) {
+            tvTagSong.text = cancion.nombre_tag
+            tvTagSong.visibility = android.view.View.VISIBLE
+        } else {
+            // Intentar obtener del intent si vinimos de un tag específico
+            val idTagOrigen = intent.getIntExtra("id_tag_origen", -1)
+            if (idTagOrigen != -1) {
+                obtenerNombreTag(idTagOrigen)
+            } else {
+                tvTagSong.visibility = android.view.View.GONE
+            }
+        }
+
         // Portada en Base64
         if (cancion.portada_cancion.isNotEmpty()) {
             try {
@@ -151,6 +167,23 @@ class DetailSong : AppCompatActivity() {
         // Artista (si lo tienes guardado en sesión)
         val prefs = getSharedPreferences("sesion_lask", MODE_PRIVATE)
         tvArtista.text = prefs.getString("user_name", "") ?: ""
+    }
+
+    private fun obtenerNombreTag(idTag: Int) {
+        lifecycleScope.launch {
+            try {
+                val resp = RetrofitClient.create().getTag(idTag)
+                if (resp.isSuccessful) {
+                    val tag = resp.body()
+                    if (tag != null) {
+                        tvTagSong.text = tag.nombre_tag
+                        tvTagSong.visibility = android.view.View.VISIBLE
+                    }
+                }
+            } catch (e: Exception) {
+                // silencioso
+            }
+        }
     }
 
     // ---------------- REPRODUCTOR ----------------

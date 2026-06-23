@@ -79,6 +79,7 @@ class TagDetail : AppCompatActivity() {
                                     "id_cancion",
                                     cancion.id
                                 )
+                                intent.putExtra("id_tag_origen", idTag)
 
                                 startActivity(intent)
                             }

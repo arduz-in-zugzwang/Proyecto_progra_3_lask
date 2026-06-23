@@ -208,6 +208,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             val intent = Intent(requireContext(), DetailSong::class.java)
                             intent.putExtra("id_album", cancion.id_album)
                             intent.putExtra("id_cancion", cancion.id)
+                            // Si estamos filtrando por tag, pasamos el ID del tag para que DetailSong sepa
+                            if (idTag != null) {
+                                intent.putExtra("id_tag_origen", idTag)
+                            }
                             startActivity(intent)
                         }
                     }

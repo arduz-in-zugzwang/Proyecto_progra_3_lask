@@ -7,5 +7,6 @@ data class DataX(
     val nombre_artistico: String,
     val nombre_cancion: String,
     val path_link: String,
-    val portada_cancion: String
+    val portada_cancion: String,
+    val nombre_tag: String? = null
 )

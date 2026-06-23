@@ -118,11 +118,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:layout_marginBottom="20dp"
                     android:gravity="center"
                     android:text="Álbum"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp" />
+
+                <!-- TAG -->
+                <TextView
+                    android:id="@+id/tvTagSong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/borde_redondeado"
+                    android:backgroundTint="#80FFFFFF"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="4dp"
+                    android:text="Tag"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
 
                 <!-- SEEKBAR -->
                 <SeekBar
