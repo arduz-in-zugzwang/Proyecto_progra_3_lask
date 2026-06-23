@@ -65,6 +65,7 @@
                         android:textSize="20sp"
                         android:textStyle="italic"
                         android:visibility="gone" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -215,41 +216,6 @@
                 android:layout_marginTop="8dp"
                 android:clipToPadding="false" />
 
-            <!-- Botones según rol -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <!-- Siempre visible -->
-                <Button
-                    android:id="@+id/btnCrearPlaylist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:backgroundTint="#666666"
-                    android:paddingStart="32dp"
-                    android:paddingEnd="32dp"
-                    android:text="Crear playlist"
-                    android:textColor="@color/white" />
-
-                <!-- Solo artistas, empieza oculto -->
-                <Button
-                    android:id="@+id/btnCrearAlbum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#547daf"
-                    android:paddingStart="32dp"
-                    android:paddingEnd="32dp"
-                    android:text="Crear álbum"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
             <!-- Solo artistas -->
             <TextView
                 android:id="@+id/tvMisCanciones"
@@ -286,9 +252,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:nestedScrollingEnabled="false"
                 android:visibility="gone" />
+
+            <!-- Botones según rol — al final -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnCrearPlaylist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#666666"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="Crear playlist"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/btnCrearAlbum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#547daf"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="Crear álbum"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
