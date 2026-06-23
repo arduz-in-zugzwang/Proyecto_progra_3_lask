@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.proyecto_lask.artistas.Data
+import android.graphics.BitmapFactory
+import android.util.Base64
 
 
 class ArtistAdapter(
@@ -28,13 +30,20 @@ class ArtistAdapter(
     override fun onBindViewHolder(holder: ArtistViewHolder, position: Int) {
         val artista = artistas[position]
         holder.tvNombre.text = artista.nombre_artistico
-        // Por ahora usamos la imagen default del XML (R.drawable.artistadefault)
-        // pero podríamos cargar una real si la API la diera
+        if (!artista.pfp.isNullOrEmpty()) {
 
-        // Click en el item → llama al lambda
-        holder.itemView.setOnClickListener {
-            onClick(artista)
+            try {
+                val bytes = Base64.decode(artista.pfp, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                holder.ivAvatar.setImageBitmap(bitmap)
+
+            } catch (e: Exception) { holder.ivAvatar.setImageResource(R.drawable.artistadefault)
+            }
+
+        } else {
+            holder.ivAvatar.setImageResource(R.drawable.artistadefault)
         }
+        holder.itemView.setOnClickListener { onClick(artista) }
     }
 
     override fun getItemCount(): Int = artistas.size
