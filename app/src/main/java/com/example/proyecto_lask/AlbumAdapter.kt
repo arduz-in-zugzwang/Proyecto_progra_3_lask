@@ -20,7 +20,7 @@ class AlbumAdapter(
 
     class AlbumViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvNombre: TextView = view.findViewById(R.id.tvNombreAlbum)
-        val tvArtista: TextView = view.findViewById(R.id.tvArtistaAlbum)
+
         val ivPortadaAlbum: ImageView = view.findViewById(R.id.ivPortadaAlbum)
     }
 
@@ -40,7 +40,6 @@ class AlbumAdapter(
         val album = albumes[position]
 
         holder.tvNombre.text = album.nombre_album
-        holder.tvArtista.text = "Artista ID: ${album.id_artista}"
         if (album.portada_album.isNotEmpty()) {
 
             try {

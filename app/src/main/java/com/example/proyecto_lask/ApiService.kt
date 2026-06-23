@@ -303,7 +303,7 @@ object RetrofitClient{
             .build()
         val retrofit= Retrofit.Builder()
             //AQUI CAMBIAR EL IP ASAP
-            .baseUrl("http://192.168.1.11/lask_bd/public/")
+            .baseUrl("http://10.26.170.49/lask_bd/public/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
