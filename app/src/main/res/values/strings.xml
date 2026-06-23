@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Proyecto_LASK</string>
+    <string name="app_name">LASK</string>
     <string-array name="countries_array">
         <item>Selecciona un país</item>
         <item>Bolivia</item>
