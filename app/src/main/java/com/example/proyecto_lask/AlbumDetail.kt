@@ -18,17 +18,23 @@ class AlbumDetail : AppCompatActivity() {
     private lateinit var tvDescripcion: TextView
     private lateinit var listaCanciones: LinearLayout
     private lateinit var progressBar: ProgressBar
+    private lateinit var loguito: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_album_detail)
         initViews()
+        loguito=findViewById(R.id.loguito)
 
         val idAlbum = intent.getIntExtra("id_album", -1)
         if (idAlbum == -1) {
             Toast.makeText(this, "Álbum no encontrado", Toast.LENGTH_SHORT).show()
             finish()
             return
+        }
+        loguito.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
 
         cargarAlbum(idAlbum)

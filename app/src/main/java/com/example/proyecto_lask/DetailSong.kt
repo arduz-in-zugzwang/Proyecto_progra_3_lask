@@ -229,13 +229,6 @@ class DetailSong : AppCompatActivity() {
             // aqui ojo con la IP
         val url = "http://10.26.170.49/lask_bd/public/" + cancion.path_link
 
-        Toast.makeText(
-            this@DetailSong,
-            url,
-            Toast.LENGTH_LONG
-        ).show()
-
-
         if (url.isEmpty()) {
             Toast.makeText(this, "Esta canción no tiene archivo de audio", Toast.LENGTH_SHORT).show()
             return
