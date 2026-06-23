@@ -10,6 +10,7 @@ import android.util.Base64
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -34,6 +35,7 @@ class DetailSong : AppCompatActivity() {
     private lateinit var backSong: ImageButton
     private lateinit var nextSong: ImageButton
     private lateinit var btnVerLetra: Button
+    private lateinit var logouito: ImageView
 
     // Reproductor
     private var mediaPlayer: MediaPlayer? = null
@@ -76,6 +78,10 @@ class DetailSong : AppCompatActivity() {
             )
 
             startActivity(intent)
+        }
+
+        logouito.setOnClickListener {
+            finish()
         }
 
         // Recibir datos desde el Intent
@@ -214,7 +220,7 @@ class DetailSong : AppCompatActivity() {
         }
     }
 
-    // ---------------- REPRODUCTOR ----------------
+    // REPRODUCTOR
 
     private fun reproducir() {
         val cancion = listaCanciones[posicionActual]
