@@ -18,11 +18,13 @@ import com.example.proyecto_lask.canciones.respuestaGetCanciones
 import com.example.proyecto_lask.canciones.respuestaUpdateCancion
 import com.example.proyecto_lask.comentarios.respuestaCreateComentario
 import com.example.proyecto_lask.comentarios.respuestaDeleteComentario
+import com.example.proyecto_lask.comentarios.respuestaGetComentarios
 import com.example.proyecto_lask.letras.respuestaCreateLetra
 import com.example.proyecto_lask.letras.respuestaGetAllLetras
 import com.example.proyecto_lask.letras.respuestaGetLetras
 import com.example.proyecto_lask.letras.respuestaUpdateLetra
 import com.example.proyecto_lask.paises.respuestaGetPaises
+import com.example.proyecto_lask.playlistcanciones.respuestaCreatePlaylistCancion
 import com.example.proyecto_lask.playlists.respuestaCreatePlaylist
 import com.example.proyecto_lask.playlists.respuestaDeletePlaylist
 import com.example.proyecto_lask.playlists.respuestaUpdatePlaylist
@@ -201,6 +203,8 @@ interface ApiService {
         @Field("id_tag") idTag: Int
     ): Response<respuestaCreateCancionTag>
     //comentarios
+    @GET("api/comentarios-artista")
+    suspend fun getComentarios(): Response<respuestaGetComentarios>
     @FormUrlEncoded
     @POST("api/comentarios-artista")
     suspend fun createComentario(
@@ -264,6 +268,14 @@ interface ApiService {
         @Field("privacidad_playlist") privacidad: Boolean?
     ): Response<respuestaUpdatePlaylist>
 
+    //PlaylistCancion
+    @FormUrlEncoded
+    @POST("api/playlist-canciones")
+    suspend fun createPlaylistCancion(
+        @Field("id_playlist") idPlaylist: Int,
+        @Field("id_cancion") idCancion: Int
+    ): Response<respuestaCreatePlaylistCancion>
+
     //para loguin
     @FormUrlEncoded
     @POST("api/login")
@@ -271,6 +283,7 @@ interface ApiService {
         @Field("name") name: String,
         @Field("password") password: String
     ): Response<respuestaLogin>
+
 }
 object RetrofitClient{
     fun create(): com.example.proyecto_lask.ApiService{
