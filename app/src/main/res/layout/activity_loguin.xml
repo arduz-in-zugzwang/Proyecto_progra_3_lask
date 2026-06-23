@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loguin"
-    android:background="@drawable/casetsfondo"
+    android:background="@drawable/cassettee"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="@font/schoolbell"
                     android:text="Iniciar sesión"
                     android:textColor="#FFFFFF"
                     android:textSize="30sp"
@@ -93,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="Nombre de usuario"
+                    android:fontFamily="@font/schoolbell"
                     android:textColor="#DDDDDD"
                     android:textSize="20sp" />
 
@@ -100,6 +101,7 @@
                     android:id="@+id/etUsuario"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:fontFamily="@font/schoolbell"
                     android:layout_marginBottom="16dp"
                     android:background="#FFFFFF"
                     android:inputType="text"
@@ -115,6 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="Contraseña"
+                    android:fontFamily="@font/schoolbell"
                     android:textColor="#DDDDDD"
                     android:textSize="20sp" />
 
@@ -125,6 +128,7 @@
                     android:layout_marginBottom="16dp"
                     android:background="#FFFFFF"
                     android:inputType="textPassword"
+                    android:fontFamily="@font/schoolbell"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:textSize="20sp"
@@ -138,6 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
+                    android:fontFamily="@font/schoolbell"
                     android:text="¿Aún no tienes una cuenta? Registrate!"
                     android:textColor="#CCCCCC"
                     android:textSize="17sp" />
@@ -149,6 +154,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:backgroundTint="#2D2D2D"
+                    android:fontFamily="@font/schoolbell"
                     android:text="Iniciar sesión"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"

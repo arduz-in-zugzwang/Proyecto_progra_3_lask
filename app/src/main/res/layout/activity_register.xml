@@ -212,6 +212,7 @@
                     android:text="Crear cuenta"
                     android:fontFamily="@font/schoolbell"
                     android:backgroundTint="#2D2D2D"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     />
 
