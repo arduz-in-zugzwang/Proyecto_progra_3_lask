@@ -254,7 +254,7 @@ interface ApiService {
     suspend fun createPlaylist(
         @Field("nombre_playlist") nombre_playlist: String,
         @Field("id_usuario") id_usuario: Int,
-        @Field("privacidad_playlist") privacidad_playlist: Boolean
+        @Field("privacidad_playlist") privacidad_playlist: Int
     ): Response<respuestaCreatePlaylist>
     @DELETE("api/playlists/{id}")
     suspend fun deletePlaylist(
