@@ -80,9 +80,10 @@ class DetailSong : AppCompatActivity() {
             startActivity(intent)
         }
 
-//        logouito.setOnClickListener {
-//            finish()
-//        }
+        logouito.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
 
         // Recibir datos desde el Intent
         val idAlbum    = intent.getIntExtra("id_album", -1)
