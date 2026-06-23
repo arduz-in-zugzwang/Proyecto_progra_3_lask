@@ -79,6 +79,7 @@ class DetailSong : AppCompatActivity() {
 
             startActivity(intent)
         }
+        logouito=findViewById(R.id.loguito)
 
         logouito.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
