@@ -26,6 +26,8 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 class ProfileFragment : Fragment() {
+    private lateinit var rvPlaylistsPublicas: RecyclerView
+    private lateinit var rvPlaylistsPrivadas: RecyclerView
     private lateinit var rvMisCanciones: RecyclerView
     private lateinit var rvMisAlbumes: RecyclerView
     private lateinit var tvMisCanciones: TextView
@@ -72,6 +74,8 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        rvPlaylistsPublicas = view.findViewById(R.id.rvPlaylistsPublicas)
+        rvPlaylistsPrivadas = view.findViewById(R.id.rvPlaylistsPrivadas)
 
         tvNombre       = view.findViewById(R.id.tvNombreUsuario)
         tvDescripcion  = view.findViewById(R.id.tvDescripcion)
@@ -255,6 +259,8 @@ class ProfileFragment : Fragment() {
                             .getSharedPreferences("sesion_lask", Context.MODE_PRIVATE)
                             .getInt("user_id_rol", 1)
                         if (idRol == 2) cargarNombreArtistico()
+                        cargarPlaylists()
+
 
                         val pfp = usuario?.pfp?.toString()
                         if (!pfp.isNullOrEmpty()) {
@@ -276,6 +282,66 @@ class ProfileFragment : Fragment() {
                     Toast.makeText(requireContext(),
                         "Error: ${e.message}", Toast.LENGTH_LONG).show()
                 }
+            }
+        }
+    }
+    private fun cargarPlaylists() {
+
+        CoroutineScope(Dispatchers.IO).launch {
+
+            try {
+
+                val response =
+                    RetrofitClient.create()
+                        .getPlaylists()
+
+                withContext(Dispatchers.Main) {
+
+                    if (response.isSuccessful) {
+
+                        val playlists =
+                            response.body()?.data ?: emptyList()
+
+                        val publicas =
+                            playlists.filter {
+                                it.id_usuario == userId &&
+                                        it.privacidad_playlist == 0
+                            }
+
+                        val privadas =
+                            playlists.filter {
+                                it.id_usuario == userId &&
+                                        it.privacidad_playlist == 1
+                            }
+
+                        rvPlaylistsPublicas.layoutManager =
+                            LinearLayoutManager(
+                                requireContext(),
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+
+                        rvPlaylistsPrivadas.layoutManager =
+                            LinearLayoutManager(
+                                requireContext(),
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+
+                        rvPlaylistsPublicas.adapter =
+                            PlaylistAdapter(publicas)
+
+                        rvPlaylistsPrivadas.adapter =
+                            PlaylistAdapter(privadas)
+                    }
+                }
+
+            } catch (e: Exception) {
+
+                android.util.Log.e(
+                    "PLAYLISTS",
+                    e.message ?: "error"
+                )
             }
         }
     }
