@@ -5,5 +5,6 @@ data class Data(
     val id: Int,
     val id_usuario: Int,
     val nombre_artistico: String,
+    val pfp: String?,
     val updated_at: Any
 )
