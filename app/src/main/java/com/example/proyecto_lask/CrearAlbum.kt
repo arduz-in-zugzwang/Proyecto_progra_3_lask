@@ -253,11 +253,16 @@ class CrearAlbum : AppCompatActivity() {
                         portada_cancion = cancion.portadaBase64.toRequestBodyText(),
                         audio = audioPart
                     )
-
-                    if (cancionResponse.isSuccessful)
+                    if (cancionResponse.isSuccessful) {
+                        val idCancion = cancionResponse.body()?.id
+                        if (idCancion != null) {
+                            cancion.tags.forEach { idTag ->
+                                api.createCancionTag(idCancion, idTag)
+                            }
+                        }
                         cancionesOk++
-                    else
-                        cancionesFallidas++
+                    } else { cancionesFallidas++
+                    }
                 }
 
                 // 3. Resultado final
@@ -269,8 +274,7 @@ class CrearAlbum : AppCompatActivity() {
                 Toast.makeText(this@CrearAlbum, msg, Toast.LENGTH_LONG).show()
                 finish()
 
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } catch (e: Exception) { e.printStackTrace()
 
                 Toast.makeText(
                     this@CrearAlbum,
