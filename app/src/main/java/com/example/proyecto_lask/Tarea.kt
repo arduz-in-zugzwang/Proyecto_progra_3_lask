@@ -45,9 +45,7 @@ class Tarea : AppCompatActivity() {
         }
 
         btnBuscarTag.setOnClickListener {
-
             val idTexto = etIdBuscar.text.toString()
-
             if(idTexto.isBlank()){
                 Toast.makeText(
                     this,
@@ -56,59 +54,34 @@ class Tarea : AppCompatActivity() {
                 ).show()
                 return@setOnClickListener
             }
-
             buscarTag(idTexto.toInt())
         }
 
-
         btnModificarTag.setOnClickListener {
-
             val id = etIdBuscar.text.toString().toInt()
-
             val nombre = etNombreTag.text.toString()
-
             val descripcion =etDescripcionTag.text.toString()
 
-            modificarTag(
-                id,
-                nombre,
-                descripcion
-            )
+            modificarTag(id, nombre, descripcion)
         }
 
         btnEliminarTag.setOnClickListener {
-
             val id =etIdBuscar.text.toString().toInt()
-
             eliminarTag(id)
         }
-
         getTags()
     }
     private fun getTags() {
-
         val tableTags = findViewById<TableLayout>(R.id.tableTags)
-
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-
                 val call = RetrofitClient.create().getTags()
-
                 val response = call.body()
-
                 withContext(Dispatchers.Main) {
-
                     if(call.isSuccessful){
-
                         val data = response?.data ?: emptyList()
-
                         val childCount = tableTags.childCount
-
-                        if (childCount > 1) {
-                            tableTags.removeViews(1, childCount - 1)
-                        }
-
+                        if (childCount > 1) { tableTags.removeViews(1, childCount - 1) }
                         data.forEach { tag ->
                             val row = TableRow(this@Tarea).apply {
                                 layoutParams = TableRow.LayoutParams(
@@ -117,39 +90,32 @@ class Tarea : AppCompatActivity() {
                                 )
                                 setPadding(0, 8, 0, 8) // Un poco de espacio entre filas
                             }
-
                             // Celda ID (Peso: 1)
                             val tvId = TextView(this@Tarea).apply {
                                 layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
                                 text = tag.id.toString()
                             }
-
                             // Celda Nombre (Peso: 2)
                             val tvNombre = TextView(this@Tarea).apply {
                                 layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2f)
                                 text = tag.nombre_tag
                             }
-
                             // Celda Descripción (Peso: 3)
                             val tvDescripcion = TextView(this@Tarea).apply {
                                 layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 3f)
                                 // Controlamos los nulos de tu base de datos para que no muestre la palabra "null"
                                 text = tag.descripcion_tag?.toString() ?: ""
                             }
-
                             row.addView(tvId)
                             row.addView(tvNombre)
                             row.addView(tvDescripcion)
-
                             tableTags.addView(row)
                         }
                     }
                 }
 
             } catch(e: Exception){
-
                 e.printStackTrace()
-
             }
         }
     }
@@ -159,32 +125,21 @@ class Tarea : AppCompatActivity() {
         descripcion: String
     ){
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-
                 val call =
-                    RetrofitClient.create()
-                        .createTags(
-                            nombre,
-                            descripcion
-                        )
-
+                    RetrofitClient.create().createTags(nombre, descripcion)
                 withContext(Dispatchers.Main){
-
                     if(call.isSuccessful){
                         findViewById<EditText>(R.id.etNombreTag).text.clear()
                         findViewById<EditText>(R.id.etDescripcionTag).text.clear()
-
                         Toast.makeText(
                             this@Tarea,
                             "Tag creado correctamente",
                             Toast.LENGTH_LONG
                         ).show()
-
                         getTags()
 
                     }else{
-
                         Toast.makeText(
                             this@Tarea,
                             "Error al crear tag",
@@ -192,11 +147,8 @@ class Tarea : AppCompatActivity() {
                         ).show()
                     }
                 }
-
             }catch(e:Exception){
-
                 withContext(Dispatchers.Main){
-
                     Toast.makeText(
                         this@Tarea,
                         e.message,
@@ -208,15 +160,10 @@ class Tarea : AppCompatActivity() {
     }
 
     private fun buscarTag(id: Int){
-
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-
                 val call = RetrofitClient.create().getTag(id)
-
                 val response = call.body()
-
                 withContext(Dispatchers.Main){
 
                     if(call.isSuccessful && response != null){
