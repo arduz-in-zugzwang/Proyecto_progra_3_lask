@@ -26,6 +26,14 @@ class CrearCancion : AppCompatActivity() {
     private var audioPathLink: String = ""
     private var idArtista: Int = -1
 
+
+    //para redireccionar a letra
+
+    private lateinit var btnAgregarLetra: Button
+
+    private var letraCancion: String = ""
+    private var letraFonetica: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crear_cancion)
@@ -44,18 +52,30 @@ class CrearCancion : AppCompatActivity() {
         btnAudio        = findViewById(R.id.btnAudio)
         btnAgregar      = findViewById(R.id.btnSubirCancion)
         listaTags       = findViewById(R.id.listaTags)
-
+        //boton de agregar letra
+        btnAgregarLetra = findViewById(R.id.btnSubirLetras)
         btnPortada.scaleType = ImageView.ScaleType.CENTER_CROP
         btnPortada.adjustViewBounds = false
 
         // Cambiar texto del botón — ahora agrega, no sube
         btnAgregar.text = "Agregar canción"
+
     }
 
     private fun setupListeners() {
         btnPortada.setOnClickListener { abrirGaleria() }
         btnAudio.setOnClickListener { abrirAudio() }
         btnAgregar.setOnClickListener { agregarCancion() }
+
+        //pa las letras
+        btnAgregarLetra.setOnClickListener {
+            val intent = Intent(this, CrearLetras::class.java)
+
+            // opcional pero recomendado
+            intent.putExtra("id_cancion", -1)
+
+            startActivityForResult(intent, 300)
+        }
     }
 
     private fun abrirGaleria() {
@@ -96,6 +116,12 @@ class CrearCancion : AppCompatActivity() {
             )
             audioPathLink = obtenerNombreArchivo(uri)
             btnAudio.text = audioPathLink
+        }
+        if (requestCode == 300 && resultCode == RESULT_OK) {
+            letraCancion = data?.getStringExtra("letra_cancion") ?: ""
+            letraFonetica = data?.getStringExtra("texto_fonetico") ?: ""
+
+            Toast.makeText(this, "Letra guardada temporalmente", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -185,6 +211,8 @@ class CrearCancion : AppCompatActivity() {
             putExtra("path_link",       audioPathLink)
             putExtra("audio_uri", audioUri?.toString())
             putIntegerArrayListExtra("tags", tagsSeleccionados)
+            putExtra("letra_cancion", letraCancion)
+            putExtra("texto_fonetico", letraFonetica)
         }
         setResult(Activity.RESULT_OK, result)
         finish()

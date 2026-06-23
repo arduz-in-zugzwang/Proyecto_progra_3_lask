@@ -27,7 +27,9 @@ data class CancionTemporal(
     val portadaBase64: String,
     val pathLink: String,
     val audioUri: String,
-    val tags: ArrayList<Int>
+    val tags: ArrayList<Int>,
+    val letra: String,
+    val fonetica: String
 )
 
 class CrearAlbum : AppCompatActivity() {
@@ -115,10 +117,11 @@ class CrearAlbum : AppCompatActivity() {
             val portada  = data.getStringExtra("portada_cancion") ?: ""
             val pathLink = data.getStringExtra("path_link") ?: ""
             val audioUri = data.getStringExtra("audio_uri") ?: ""
-            val tags = data.getIntegerArrayListExtra("tags") ?: arrayListOf()
+            val tags     = data.getIntegerArrayListExtra("tags") ?: arrayListOf()
+            val letra    = data.getStringExtra("letra_cancion") ?: ""
+            val fonetica = data.getStringExtra("texto_fonetico") ?: ""
 
-
-            canciones.add(CancionTemporal(nombre, portada, pathLink, audioUri,tags))
+            canciones.add(CancionTemporal(nombre, portada, pathLink, audioUri, tags, letra, fonetica))
             mostrarCanciones()
         }
     }
@@ -256,8 +259,13 @@ class CrearAlbum : AppCompatActivity() {
                     if (cancionResponse.isSuccessful) {
                         val idCancion = cancionResponse.body()?.id
                         if (idCancion != null) {
+                            // Subir Tags
                             cancion.tags.forEach { idTag ->
                                 api.createCancionTag(idCancion, idTag)
+                            }
+                            // Subir Letras si existen
+                            if (cancion.letra.isNotEmpty() || cancion.fonetica.isNotEmpty()) {
+                                api.createLetra(idCancion, cancion.fonetica, cancion.letra)
                             }
                         }
                         cancionesOk++

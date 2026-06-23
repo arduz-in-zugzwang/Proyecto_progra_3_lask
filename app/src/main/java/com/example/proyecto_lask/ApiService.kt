@@ -240,11 +240,11 @@ interface ApiService {
         @Path("id") id: Int
     ): Response<respuestaDelete>
     @GET("api/letras")
-    suspend fun getLetras(): Response<respuestaGetAllLetras>
+    suspend fun getLetras(): Response<respuestaGetLetras>
     @GET("api/letras/{id}")
     suspend fun getLetra(
         @Path("id") id: Int
-    ): Response<respuestaGetLetras>
+    ): Response<respuestaGetAllLetras>
 
     //roles
     @GET("api/roles")

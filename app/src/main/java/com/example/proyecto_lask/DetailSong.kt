@@ -1,5 +1,6 @@
 package com.example.proyecto_lask
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -31,6 +32,7 @@ class DetailSong : AppCompatActivity() {
     private lateinit var playBtn: Button
     private lateinit var backSong: Button
     private lateinit var nextSong: Button
+    private lateinit var btnVerLetra: Button
 
     // Reproductor
     private var mediaPlayer: MediaPlayer? = null
@@ -50,6 +52,30 @@ class DetailSong : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_song)
         initViews()
+        btnVerLetra.setOnClickListener {
+
+            if (listaCanciones.isEmpty()) return@setOnClickListener
+
+            val cancion = listaCanciones[posicionActual]
+
+            val intent =
+                Intent(
+                    this,
+                    DetailLetra::class.java
+                )
+
+            intent.putExtra(
+                "id_cancion",
+                cancion.id
+            )
+
+            intent.putExtra(
+                "nombre_cancion",
+                cancion.nombre_cancion
+            )
+
+            startActivity(intent)
+        }
 
         // Recibir datos desde el Intent
         val idAlbum    = intent.getIntExtra("id_album", -1)
@@ -75,6 +101,7 @@ class DetailSong : AppCompatActivity() {
         playBtn        = findViewById(R.id.playBtn)
         backSong       = findViewById(R.id.backSong)
         nextSong       = findViewById(R.id.nextSong)
+        btnVerLetra = findViewById(R.id.btnVerLetra)
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
