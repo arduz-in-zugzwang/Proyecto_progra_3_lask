@@ -1,6 +1,7 @@
 package com.example.proyecto_lask
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
@@ -204,7 +205,16 @@ class PerfilArtistaActivity : AppCompatActivity() {
                                 false
                             )
 
-                        rvPlaylistsArtista.adapter = PlaylistAdapter(publicas)
+                        rvPlaylistsArtista.adapter =
+                            PlaylistAdapter(publicas) { playlist ->
+                                val intent = Intent(
+                                    this@PerfilArtistaActivity,
+                                    PlaylistDetalle::class.java
+                                )
+                                intent.putExtra("id_playlist", playlist.id)
+                                intent.putExtra("nombre_playlist", playlist.nombre_playlist)
+                                startActivity(intent)
+                            }
                     }
                 }
             } catch (e: Exception) {
