@@ -9,6 +9,7 @@ import android.os.Looper
 import android.util.Base64
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -29,9 +30,9 @@ class DetailSong : AppCompatActivity() {
     private lateinit var seekBar: SeekBar
     private lateinit var tvTiempoActual: TextView
     private lateinit var tvDuracion: TextView
-    private lateinit var playBtn: Button
-    private lateinit var backSong: Button
-    private lateinit var nextSong: Button
+    private lateinit var playBtn: ImageButton
+    private lateinit var backSong: ImageButton
+    private lateinit var nextSong: ImageButton
     private lateinit var btnVerLetra: Button
 
     // Reproductor
@@ -358,9 +359,9 @@ class DetailSong : AppCompatActivity() {
 
     private fun actualizarIconoPlay(reproduciendo: Boolean) {
         if (reproduciendo) {
-            playBtn.setBackgroundResource(R.drawable.outline_pause_circle_24)
+            playBtn.setImageResource(R.drawable.outline_pause_circle_24)
         } else {
-            playBtn.setBackgroundResource(R.drawable.outline_play_circle_24)
+            playBtn.setImageResource(R.drawable.outline_play_circle_24)
         }
     }
 
