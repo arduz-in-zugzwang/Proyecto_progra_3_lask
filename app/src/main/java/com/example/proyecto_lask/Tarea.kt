@@ -37,10 +37,8 @@ class Tarea : AppCompatActivity() {
         val btnEliminarTag =findViewById<Button>(R.id.btnEliminarTag)
 
         btnInsertarTag.setOnClickListener {
-
             val nombre = etNombreTag.text.toString()
             val descripcion = etDescripcionTag.text.toString()
-
             createTag(nombre, descripcion)
         }
 
@@ -61,7 +59,6 @@ class Tarea : AppCompatActivity() {
             val id = etIdBuscar.text.toString().toInt()
             val nombre = etNombreTag.text.toString()
             val descripcion =etDescripcionTag.text.toString()
-
             modificarTag(id, nombre, descripcion)
         }
 
@@ -164,7 +161,6 @@ class Tarea : AppCompatActivity() {
                 withContext(Dispatchers.Main){
 
                     if(call.isSuccessful && response != null){
-
 //                        findViewById<TextView>(R.id.tvResultadoNombre)
 //                            .text = "Nombre: ${response.nombre_tag}"
 //
@@ -172,7 +168,6 @@ class Tarea : AppCompatActivity() {
 //                            .text = "Descripción: ${response.descripcion_tag}"
 
                         findViewById<EditText>(R.id.etNombreTag).setText(response.nombre_tag)
-
                         findViewById<EditText>(R.id.etDescripcionTag).setText(response.descripcion_tag.toString())
 
                     }else{
@@ -183,7 +178,6 @@ class Tarea : AppCompatActivity() {
                         ).show()
                     }
                 }
-
             }catch(e:Exception){
 
                 withContext(Dispatchers.Main){
@@ -196,21 +190,11 @@ class Tarea : AppCompatActivity() {
             }
         }
     }
-    private fun modificarTag(
-        id:Int,
-        nombre:String,
-        descripcion:String
-    ){
-
+    private fun modificarTag(id:Int, nombre:String, descripcion:String){
         CoroutineScope(Dispatchers.IO).launch {
-            try {val call = RetrofitClient.create().actualizarTag(
-                            id,
-                            nombre,
-                            descripcion)
-
+            try {val call = RetrofitClient.create().actualizarTag(id, nombre, descripcion)
                 withContext(Dispatchers.Main){
                     if(call.isSuccessful){
-
                         Toast.makeText(
                             this@Tarea,
                             "Tag actualizado",
@@ -225,7 +209,6 @@ class Tarea : AppCompatActivity() {
                         ).show()
                     }
                 }
-
             }catch(e:Exception){
                 withContext(Dispatchers.Main){
                     Toast.makeText(
@@ -240,8 +223,7 @@ class Tarea : AppCompatActivity() {
     private fun eliminarTag(id:Int){
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val call =
-                    RetrofitClient.create().deleteTag(id)
+                val call = RetrofitClient.create().deleteTag(id)
                 withContext(Dispatchers.Main){
                     if(call.isSuccessful){
                         Toast.makeText(
