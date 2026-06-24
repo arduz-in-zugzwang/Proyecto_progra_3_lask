@@ -1,0 +1,12 @@
+package com.example.proyecto_lask.albumes
+
+data class respuestaGetAlbum(
+    val created_at: String,
+    val descripcion_album: String,
+    val fecha_lanzamiento: Any,
+    val id: Int,
+    val id_artista: Int,
+    val nombre_album: String,
+    val portada_album: String,
+    val updated_at: String
+)
