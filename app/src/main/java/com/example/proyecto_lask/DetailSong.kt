@@ -121,7 +121,7 @@ class DetailSong : AppCompatActivity() {
         })
     }
 
-    // ---------------- CARGA DE DATOS ----------------
+    // CARGA DE DATOS
 
     private fun cargarCancionesDelAlbum(idAlbum: Int) {
         lifecycleScope.launch {
@@ -278,7 +278,7 @@ class DetailSong : AppCompatActivity() {
         }
     }
 
-    // ---------------- BOTONES ----------------
+    //  BOTONES
 
     fun PlayButton(view: android.view.View) {
         val mp = mediaPlayer ?: return
@@ -323,7 +323,7 @@ class DetailSong : AppCompatActivity() {
         reproducir()
     }
 
-    // ---------------- ANIMACIÓN ----------------
+    //  ANIMACIÓN
 
     private fun iniciarRotacion() {
         if (!animacionActiva) {
@@ -337,7 +337,7 @@ class DetailSong : AppCompatActivity() {
         animacionActiva = false
     }
 
-    // ---------------- SEEKBAR ----------------
+    // SEEKBAR
 
     private val actualizarSeekBar = object : Runnable {
         override fun run() {
@@ -356,7 +356,7 @@ class DetailSong : AppCompatActivity() {
         handler.post(actualizarSeekBar)
     }
 
-    // ---------------- UTILIDADES ----------------
+    // UTILIDADES
 
     private fun actualizarIconoPlay(reproduciendo: Boolean) {
         if (reproduciendo) {
@@ -386,8 +386,7 @@ class DetailSong : AppCompatActivity() {
         tvDuracion.text = "0:00"
     }
 
-    // ---------------- CICLO DE VIDA ----------------
-    // ---------------- CICLO DE VIDA ----------------
+    //  CICLO DE VIDA
 
     override fun onPause() {
         super.onPause()
