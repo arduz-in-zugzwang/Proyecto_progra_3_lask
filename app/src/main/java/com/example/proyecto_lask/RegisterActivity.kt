@@ -32,12 +32,10 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var imgLogo: ImageView
     private var listaPaises = mutableListOf<com.example.proyecto_lask.paises.Data>()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        // Referencias
         etUsername = findViewById(R.id.etUsername)
         etPassword = findViewById(R.id.etPassword)
         etArtisticName = findViewById(R.id.etArtisticName)
@@ -53,17 +51,12 @@ class RegisterActivity : AppCompatActivity() {
 
         //cargar paises
         cargarPaises()
-
-
         imgLogo.setOnClickListener {
-            startActivity(Intent(
-                this, Bienvenido::class.java))
+            startActivity(Intent(this, Bienvenido::class.java))
             finish()
         }
-
         // Botón Registrar
         btnRegister.setOnClickListener {
-
             val username = etUsername.text.toString().trim()
             val password = etPassword.text.toString().trim()
             val artisticName = etArtisticName.text.toString().trim()
@@ -71,19 +64,16 @@ class RegisterActivity : AppCompatActivity() {
 
             // Obtener rol seleccionado
             val selectedRoleId = rgRole.checkedRadioButtonId
-
             if (username.isEmpty()) {
                 etUsername.error = "Ingresa un nombre de usuario"
                 etUsername.requestFocus()
                 return@setOnClickListener
             }
-
             if (password.isEmpty()) {
                 etPassword.error = "Ingresa una contraseña"
                 etPassword.requestFocus()
                 return@setOnClickListener
             }
-
             if (country == "Selecciona un país") {
                 Toast.makeText(
                     this,
@@ -92,7 +82,6 @@ class RegisterActivity : AppCompatActivity() {
                 ).show()
                 return@setOnClickListener
             }
-
             if (selectedRoleId == -1) {
                 Toast.makeText(
                     this,
@@ -101,13 +90,11 @@ class RegisterActivity : AppCompatActivity() {
                 ).show()
                 return@setOnClickListener
             }
-
             if (rbArtist.isChecked && artisticName.isEmpty()) {
                 etArtisticName.error = "Ingresa tu nombre artístico"
                 etArtisticName.requestFocus()
                 return@setOnClickListener
             }
-
             if (!cbTerms.isChecked) {
                 Toast.makeText(
                     this,
@@ -118,11 +105,8 @@ class RegisterActivity : AppCompatActivity() {
             }
             val idRol = if (rbListener.isChecked) 1 else 2
             CoroutineScope(Dispatchers.IO).launch {
-                val idPais =
-                    listaPaises[spCountry.selectedItemPosition].id
-
+                val idPais = listaPaises[spCountry.selectedItemPosition].id
                 try {
-
                     val respuesta =
                         RetrofitClient.create().createUser(
                             name = username,
@@ -131,22 +115,13 @@ class RegisterActivity : AppCompatActivity() {
                             idRol = idRol,
                             email = "${username}@lask.com"
                         )
-
                     if (respuesta.isSuccessful) {
-
                         val usuario = respuesta.body()
-
                         if (usuario != null && idRol == 2) {
-                            val respuestaArtista = RetrofitClient.create().createArtista(
-                                usuario.id,
-                                artisticName
-                            )
+                            val respuestaArtista = RetrofitClient.create().createArtista(usuario.id, artisticName)
                             if (respuestaArtista.isSuccessful) {
                                 val idArtista = respuestaArtista.body()?.id ?: -1
-                                getSharedPreferences("sesion_lask", MODE_PRIVATE)
-                                    .edit()
-                                    .putInt("artista_id", idArtista)
-                                    .apply()
+                                getSharedPreferences("sesion_lask", MODE_PRIVATE).edit().putInt("artista_id", idArtista).apply()
                             } else {
                                 withContext(Dispatchers.Main) {
                                     Toast.makeText(
@@ -157,28 +132,20 @@ class RegisterActivity : AppCompatActivity() {
                                 }
                             }
                         }
-
                         withContext(Dispatchers.Main) {
                             Toast.makeText(
                                 this@RegisterActivity,
                                 "Cuenta creada correctamente",
                                 Toast.LENGTH_LONG
                             ).show()
-                            val intent = Intent(
-                                this@RegisterActivity,
-                                Bienvenido::class.java
-                            )
-
+                            val intent = Intent(this@RegisterActivity, Bienvenido::class.java)
                             startActivity(intent)
-
                             finish()
                         }
                     }
 
                 } catch (e: Exception) {
-
                     withContext(Dispatchers.Main) {
-
                         Toast.makeText(
                             this@RegisterActivity,
                             e.toString(),
@@ -191,45 +158,30 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
     private fun cargarPaises() {
-
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-
-                val respuesta =
-                    RetrofitClient.create().getPaises()
-
+                val respuesta = RetrofitClient.create().getPaises()
                 if (respuesta.isSuccessful) {
-
-                    val paises =
-                        respuesta.body()?.data ?: emptyList()
-
+                    val paises = respuesta.body()?.data ?: emptyList()
                     listaPaises.clear()
                     listaPaises.addAll(paises)
 
-                    val nombresPaises =
-                        paises.map { it.nombre_pais }
+                    val nombresPaises = paises.map { it.nombre_pais }
 
                     withContext(Dispatchers.Main) {
-
                         val adapter = ArrayAdapter(
                             this@RegisterActivity,
                             android.R.layout.simple_spinner_item,
                             nombresPaises
                         )
-
                         adapter.setDropDownViewResource(
-                            android.R.layout.simple_spinner_dropdown_item
-                        )
-
+                            android.R.layout.simple_spinner_dropdown_item)
                         spCountry.adapter = adapter
                     }
                 }
 
             } catch (e: Exception) {
-
                 withContext(Dispatchers.Main) {
-
                     Toast.makeText(
                         this@RegisterActivity,
                         e.message,

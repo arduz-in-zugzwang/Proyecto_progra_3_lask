@@ -33,12 +33,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // --- VISTAS DE CANCIONES ---
+        // VISTAS DE CANCIONES
         rvCanciones = view.findViewById(R.id.rvCanciones)
         tvNuevos = view.findViewById(R.id.tvNuevos)
         val tvVerMasCanciones = view.findViewById<TextView>(R.id.tvVerMasCanciones)
 
-        // --- ANIMACIÓN DEL VINILO Y CARGA DEL GIF ---
+        // ANIMACIÓN DEL VINILO Y CARGA DEL GIF
         val ivVinilo = view.findViewById<ImageView>(R.id.ivVinilo)
         val ivDestacado = view.findViewById<ImageView>(R.id.ivDestacado)
 
@@ -47,21 +47,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         ivVinilo.startAnimation(rotarDisco)
 
         // Carga el GIF de portada usando Glide
-        Glide.with(this)
-            .asGif()
-            .load(R.drawable.go_kitty_go)
-            .placeholder(R.drawable.portadadefault)
-            .into(ivDestacado)
+        Glide.with(this).asGif().load(R.drawable.go_kitty_go).placeholder(R.drawable.portadadefault).into(ivDestacado)
 
-        // --- ACCIONES Y CARGAS ---
-        tvVerMasCanciones.setOnClickListener {
-            tvNuevos.text = "Nuevos Lanzamientos Canciones"
+        //ACCIONES Y CARGAS
+        tvVerMasCanciones.setOnClickListener { tvNuevos.text = "Nuevos Lanzamientos Canciones"
             cargarCanciones()
         }
 
         cargarCanciones()
 
-        // --- CARGAR TAGS DESDE LA API ---
+        // CARGAR TAGS DESDE LA API
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val respuesta = RetrofitClient.create().getTags()
@@ -78,7 +73,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        // --- CARGAR ARTISTAS ---
+        // CARGAR ARTISTAS
         rvArtistas = view.findViewById(R.id.rvArtistas)
         val tvVerMasArtistas = view.findViewById<TextView>(R.id.tvVerMasArtistas)
 
@@ -117,7 +112,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        // --- CARGAR ÁLBUMES ---
+        // CARGAR ÁLBUMES
         rvAlbumes = view.findViewById(R.id.rvAlbumes)
         CoroutineScope(Dispatchers.IO).launch {
             try {
